@@ -2,7 +2,10 @@ import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
 
 // Tauri expects a fixed port in dev and a static build in dist/.
+// VITE_BASE lets the same build deploy under a subpath (GitHub Pages serves
+// at /<repo>/); it defaults to "/" for dev, Tauri, and root-path hosting.
 export default defineConfig({
+  base: process.env.VITE_BASE ?? "/",
   plugins: [react()],
   clearScreen: false,
   server: {
