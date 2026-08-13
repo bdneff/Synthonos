@@ -1,0 +1,10 @@
+node_modules/
+dist/
+*.local
+.DS_Store
+
+# Tauri build output
+src-tauri/target/
+
+# Offline render output (WAVs written by the harness during local runs)
+test/output/

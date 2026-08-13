@@ -1,0 +1,253 @@
+{
+  "$comment": "GENERATED FILE. Do not edit by hand. Source of truth: params.schema.json. Regenerate with: npm run codegen",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SynthonosPatchEdit",
+  "description": "A partial patch edit. Include ONLY the parameters that should change. Values outside the stated bounds are rejected, not clamped.",
+  "type": "object",
+  "properties": {
+    "explanation": {
+      "type": "string",
+      "description": "One sentence, in plain musician language, describing what changed and why. Example: 'Lowered the filter cutoff and slowed the attack for a darker, softer pad.'"
+    },
+    "suggested_name": {
+      "type": "string",
+      "description": "A short evocative name for the edited patch."
+    },
+    "params": {
+      "type": "object",
+      "properties": {
+        "osc1_waveform": {
+          "type": "string",
+          "enum": [
+            "sine",
+            "triangle",
+            "saw",
+            "square"
+          ],
+          "description": "Oscillator A / Waveform. Sine is purest, saw is buzziest and brightest, square is hollow. Related words: shape, tone character, buzzy, smooth, hollow."
+        },
+        "osc1_octave": {
+          "type": "integer",
+          "minimum": -3,
+          "maximum": 3,
+          "description": "Oscillator A / Octave (oct). Higher is a higher register; negative values go toward bass and sub territory. Related words: register, low, high, sub, bass, deep."
+        },
+        "osc1_semitone": {
+          "type": "integer",
+          "minimum": -12,
+          "maximum": 12,
+          "description": "Oscillator A / Semitone (st). Higher shifts pitch up in semitone steps. Related words: pitch offset, interval, transpose."
+        },
+        "osc1_fine": {
+          "type": "number",
+          "minimum": -100,
+          "maximum": 100,
+          "description": "Oscillator A / Fine (cents). Further from zero drifts the pitch and creates slow beating against other oscillators. Related words: detune, drift, beating."
+        },
+        "osc1_level": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Oscillator A / Level. Higher is louder. Related words: volume, loudness, presence, balance."
+        },
+        "osc1_pan": {
+          "type": "number",
+          "minimum": -1,
+          "maximum": 1,
+          "description": "Oscillator A / Pan. Negative is left, positive is right, zero is center. Related words: stereo position, left, right, placement."
+        },
+        "osc1_unison_voices": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8,
+          "description": "Oscillator A / Unison (voices). More voices is thicker and bigger; 1 is a single plain voice. Related words: thickness, fatness, supersaw, stacked, big."
+        },
+        "osc1_unison_detune": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Oscillator A / Detune (cents). Higher spreads the unison voices further apart, sounding wider and lusher; too high sounds out of tune. Related words: spread, width, lushness, wobble, chorus."
+        },
+        "osc2_waveform": {
+          "type": "string",
+          "enum": [
+            "sine",
+            "triangle",
+            "saw",
+            "square"
+          ],
+          "description": "Oscillator B / Waveform. Sine is purest, saw is buzziest and brightest, square is hollow. Related words: shape, tone character, buzzy, smooth, hollow."
+        },
+        "osc2_octave": {
+          "type": "integer",
+          "minimum": -3,
+          "maximum": 3,
+          "description": "Oscillator B / Octave (oct). Higher is a higher register; negative values go toward bass and sub territory. Related words: register, low, high, sub, bass, deep."
+        },
+        "osc2_semitone": {
+          "type": "integer",
+          "minimum": -12,
+          "maximum": 12,
+          "description": "Oscillator B / Semitone (st). Higher shifts pitch up in semitone steps; +7 is a fifth, +12 an octave. Related words: pitch offset, interval, transpose, fifth, octave up."
+        },
+        "osc2_fine": {
+          "type": "number",
+          "minimum": -100,
+          "maximum": 100,
+          "description": "Oscillator B / Fine (cents). Further from zero drifts the pitch and creates slow beating against oscillator A. Related words: detune, drift, beating."
+        },
+        "osc2_level": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Oscillator B / Level. Higher is louder; zero turns oscillator B off. Related words: volume, loudness, presence, balance, layer."
+        },
+        "osc2_pan": {
+          "type": "number",
+          "minimum": -1,
+          "maximum": 1,
+          "description": "Oscillator B / Pan. Negative is left, positive is right, zero is center. Related words: stereo position, left, right, placement."
+        },
+        "osc2_unison_voices": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8,
+          "description": "Oscillator B / Unison (voices). More voices is thicker and bigger; 1 is a single plain voice. Related words: thickness, fatness, supersaw, stacked, big."
+        },
+        "osc2_unison_detune": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Oscillator B / Detune (cents). Higher spreads the unison voices further apart, sounding wider and lusher; too high sounds out of tune. Related words: spread, width, lushness, wobble, chorus."
+        },
+        "filter_type": {
+          "type": "string",
+          "enum": [
+            "lowpass",
+            "highpass",
+            "bandpass"
+          ],
+          "description": "Filter / Type. Lowpass removes highs (darker), highpass removes lows (thinner), bandpass keeps only the middle (nasal, telephone-like). Related words: filter mode, dark, thin, nasal."
+        },
+        "filter_cutoff": {
+          "type": "number",
+          "minimum": 20,
+          "maximum": 20000,
+          "description": "Filter / Cutoff (Hz). Higher is brighter and more open; lower is darker and more muffled. Related words: brightness, darkness, openness, muffled, tone, dull, crisp."
+        },
+        "filter_resonance": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Filter / Resonance. Higher emphasizes the cutoff frequency, from subtle sharpening to a squelchy acid whistle. Related words: peak, squelch, acid, whistle, emphasis, sharpness."
+        },
+        "filter_env_amount": {
+          "type": "number",
+          "minimum": -1,
+          "maximum": 1,
+          "description": "Filter / Env Amount. Further from zero makes the filter envelope sweep the cutoff more; positive opens then closes (plucky), negative closes then opens. Related words: filter movement, sweep, pluck, wah, bite."
+        },
+        "filter_keytrack": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Filter / Keytrack. Higher makes high notes open the filter more, keeping brightness consistent up the keyboard. Related words: key follow, even brightness across keys."
+        },
+        "amp_attack": {
+          "type": "number",
+          "minimum": 0.001,
+          "maximum": 5,
+          "description": "Amp Envelope / Attack (s). Higher fades the note in slowly (pads, swells); lower snaps instantly (plucks, keys, punch). Related words: softness, fade in, swell, punchy, immediate."
+        },
+        "amp_decay": {
+          "type": "number",
+          "minimum": 0.01,
+          "maximum": 10,
+          "description": "Amp Envelope / Decay (s). Lower falls to the sustain level faster, sounding more percussive and plucky. Related words: fall time, pluckiness, percussive."
+        },
+        "amp_sustain": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Amp Envelope / Sustain. Higher holds the note at a louder level while the key is down; zero makes every note die away like a pluck. Related words: held level, body, staccato, sustained."
+        },
+        "amp_release": {
+          "type": "number",
+          "minimum": 0.01,
+          "maximum": 10,
+          "description": "Amp Envelope / Release (s). Higher lets the note ring out after the key is released; lower cuts it off quickly. Related words: tail, ring out, abrupt, lingering."
+        },
+        "fenv_attack": {
+          "type": "number",
+          "minimum": 0.001,
+          "maximum": 5,
+          "description": "Filter Envelope / Attack (s). Higher makes the filter open gradually after the note starts. Related words: sweep in, opening speed."
+        },
+        "fenv_decay": {
+          "type": "number",
+          "minimum": 0.01,
+          "maximum": 10,
+          "description": "Filter Envelope / Decay (s). Lower makes the filter sweep close quickly, giving a short plucky bite. Related words: pluck length, bite length, wow."
+        },
+        "fenv_sustain": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Filter Envelope / Sustain. Higher keeps the filter more open while the key is held. Related words: held brightness."
+        },
+        "fenv_release": {
+          "type": "number",
+          "minimum": 0.01,
+          "maximum": 10,
+          "description": "Filter Envelope / Release (s). Higher lets the filter close slowly after the key is released. Related words: closing tail."
+        },
+        "lfo_waveform": {
+          "type": "string",
+          "enum": [
+            "sine",
+            "triangle",
+            "saw",
+            "square",
+            "sample_hold"
+          ],
+          "description": "LFO / Waveform. Sine and triangle wobble smoothly, square chops on and off, sample and hold jumps randomly. Related words: wobble shape, smooth wobble, choppy, random."
+        },
+        "lfo_rate": {
+          "type": "number",
+          "minimum": 0.01,
+          "maximum": 20,
+          "description": "LFO / Rate (Hz). Higher wobbles faster; very low is a slow drift, very high is a nervous flutter. Related words: speed, wobble speed, slow drift, fast flutter, vibrato speed."
+        },
+        "lfo_depth": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "LFO / Depth. Higher is more movement; zero is completely still. Related words: movement, wobble amount, intensity, vibrato amount, static."
+        },
+        "lfo_target": {
+          "type": "string",
+          "enum": [
+            "none",
+            "cutoff",
+            "pitch",
+            "amp",
+            "pan"
+          ],
+          "description": "LFO / Target. Cutoff gives wah and wobble, pitch gives vibrato, amp gives tremolo, pan sweeps side to side. Related words: what moves, wah, vibrato, tremolo, auto-pan."
+        },
+        "master_volume": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Master / Volume. Higher is louder overall. Related words: overall volume, output, quieter, louder."
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "explanation",
+    "params"
+  ],
+  "additionalProperties": false
+}

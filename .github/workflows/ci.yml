@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      # Every parameter is defined once in params.schema.json. If any
+      # generated file is stale, the build stops here.
+      - name: Codegen drift check
+        run: npm run codegen:check
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      # Includes the spectral harness self-tests, the real-time safety scan
+      # of src/dsp, and the golden render comparison.
+      - name: Tests
+        run: npm test

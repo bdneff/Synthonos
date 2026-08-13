@@ -1,0 +1,445 @@
+{
+  "$comment": "GENERATED FILE. Do not edit by hand. Source of truth: params.schema.json. Regenerate with: npm run codegen",
+  "groups": [
+    {
+      "name": "Oscillator A",
+      "controls": [
+        {
+          "id": "osc1_waveform",
+          "label": "Waveform",
+          "type": "enum",
+          "values": [
+            "sine",
+            "triangle",
+            "saw",
+            "square"
+          ],
+          "min": 0,
+          "max": 3,
+          "default": "saw",
+          "curve": "linear",
+          "unit": "",
+          "tooltip": "Sine is purest, saw is buzziest and brightest, square is hollow."
+        },
+        {
+          "id": "osc1_octave",
+          "label": "Octave",
+          "type": "int",
+          "min": -3,
+          "max": 3,
+          "default": 0,
+          "curve": "linear",
+          "unit": "oct",
+          "tooltip": "Higher is a higher register; negative values go toward bass and sub territory."
+        },
+        {
+          "id": "osc1_semitone",
+          "label": "Semitone",
+          "type": "int",
+          "min": -12,
+          "max": 12,
+          "default": 0,
+          "curve": "linear",
+          "unit": "st",
+          "tooltip": "Higher shifts pitch up in semitone steps."
+        },
+        {
+          "id": "osc1_fine",
+          "label": "Fine",
+          "type": "float",
+          "min": -100,
+          "max": 100,
+          "default": 0,
+          "curve": "linear",
+          "unit": "cents",
+          "tooltip": "Further from zero drifts the pitch and creates slow beating against other oscillators."
+        },
+        {
+          "id": "osc1_level",
+          "label": "Level",
+          "type": "float",
+          "min": 0,
+          "max": 1,
+          "default": 0.8,
+          "curve": "linear",
+          "unit": "",
+          "tooltip": "Higher is louder."
+        },
+        {
+          "id": "osc1_pan",
+          "label": "Pan",
+          "type": "float",
+          "min": -1,
+          "max": 1,
+          "default": 0,
+          "curve": "linear",
+          "unit": "",
+          "tooltip": "Negative is left, positive is right, zero is center."
+        },
+        {
+          "id": "osc1_unison_voices",
+          "label": "Unison",
+          "type": "int",
+          "min": 1,
+          "max": 8,
+          "default": 1,
+          "curve": "linear",
+          "unit": "voices",
+          "tooltip": "More voices is thicker and bigger; 1 is a single plain voice."
+        },
+        {
+          "id": "osc1_unison_detune",
+          "label": "Detune",
+          "type": "float",
+          "min": 0,
+          "max": 100,
+          "default": 15,
+          "curve": "linear",
+          "unit": "cents",
+          "tooltip": "Higher spreads the unison voices further apart, sounding wider and lusher; too high sounds out of tune."
+        }
+      ]
+    },
+    {
+      "name": "Oscillator B",
+      "controls": [
+        {
+          "id": "osc2_waveform",
+          "label": "Waveform",
+          "type": "enum",
+          "values": [
+            "sine",
+            "triangle",
+            "saw",
+            "square"
+          ],
+          "min": 0,
+          "max": 3,
+          "default": "saw",
+          "curve": "linear",
+          "unit": "",
+          "tooltip": "Sine is purest, saw is buzziest and brightest, square is hollow."
+        },
+        {
+          "id": "osc2_octave",
+          "label": "Octave",
+          "type": "int",
+          "min": -3,
+          "max": 3,
+          "default": 0,
+          "curve": "linear",
+          "unit": "oct",
+          "tooltip": "Higher is a higher register; negative values go toward bass and sub territory."
+        },
+        {
+          "id": "osc2_semitone",
+          "label": "Semitone",
+          "type": "int",
+          "min": -12,
+          "max": 12,
+          "default": 0,
+          "curve": "linear",
+          "unit": "st",
+          "tooltip": "Higher shifts pitch up in semitone steps; +7 is a fifth, +12 an octave."
+        },
+        {
+          "id": "osc2_fine",
+          "label": "Fine",
+          "type": "float",
+          "min": -100,
+          "max": 100,
+          "default": 0,
+          "curve": "linear",
+          "unit": "cents",
+          "tooltip": "Further from zero drifts the pitch and creates slow beating against oscillator A."
+        },
+        {
+          "id": "osc2_level",
+          "label": "Level",
+          "type": "float",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "curve": "linear",
+          "unit": "",
+          "tooltip": "Higher is louder; zero turns oscillator B off."
+        },
+        {
+          "id": "osc2_pan",
+          "label": "Pan",
+          "type": "float",
+          "min": -1,
+          "max": 1,
+          "default": 0,
+          "curve": "linear",
+          "unit": "",
+          "tooltip": "Negative is left, positive is right, zero is center."
+        },
+        {
+          "id": "osc2_unison_voices",
+          "label": "Unison",
+          "type": "int",
+          "min": 1,
+          "max": 8,
+          "default": 1,
+          "curve": "linear",
+          "unit": "voices",
+          "tooltip": "More voices is thicker and bigger; 1 is a single plain voice."
+        },
+        {
+          "id": "osc2_unison_detune",
+          "label": "Detune",
+          "type": "float",
+          "min": 0,
+          "max": 100,
+          "default": 15,
+          "curve": "linear",
+          "unit": "cents",
+          "tooltip": "Higher spreads the unison voices further apart, sounding wider and lusher; too high sounds out of tune."
+        }
+      ]
+    },
+    {
+      "name": "Filter",
+      "controls": [
+        {
+          "id": "filter_type",
+          "label": "Type",
+          "type": "enum",
+          "values": [
+            "lowpass",
+            "highpass",
+            "bandpass"
+          ],
+          "min": 0,
+          "max": 2,
+          "default": "lowpass",
+          "curve": "linear",
+          "unit": "",
+          "tooltip": "Lowpass removes highs (darker), highpass removes lows (thinner), bandpass keeps only the middle (nasal, telephone-like)."
+        },
+        {
+          "id": "filter_cutoff",
+          "label": "Cutoff",
+          "type": "float",
+          "min": 20,
+          "max": 20000,
+          "default": 12000,
+          "curve": "log",
+          "unit": "Hz",
+          "tooltip": "Higher is brighter and more open; lower is darker and more muffled."
+        },
+        {
+          "id": "filter_resonance",
+          "label": "Resonance",
+          "type": "float",
+          "min": 0,
+          "max": 1,
+          "default": 0.1,
+          "curve": "linear",
+          "unit": "",
+          "tooltip": "Higher emphasizes the cutoff frequency, from subtle sharpening to a squelchy acid whistle."
+        },
+        {
+          "id": "filter_env_amount",
+          "label": "Env Amount",
+          "type": "float",
+          "min": -1,
+          "max": 1,
+          "default": 0,
+          "curve": "linear",
+          "unit": "",
+          "tooltip": "Further from zero makes the filter envelope sweep the cutoff more; positive opens then closes (plucky), negative closes then opens."
+        },
+        {
+          "id": "filter_keytrack",
+          "label": "Keytrack",
+          "type": "float",
+          "min": 0,
+          "max": 1,
+          "default": 0.5,
+          "curve": "linear",
+          "unit": "",
+          "tooltip": "Higher makes high notes open the filter more, keeping brightness consistent up the keyboard."
+        }
+      ]
+    },
+    {
+      "name": "Amp Envelope",
+      "controls": [
+        {
+          "id": "amp_attack",
+          "label": "Attack",
+          "type": "float",
+          "min": 0.001,
+          "max": 5,
+          "default": 0.005,
+          "curve": "log",
+          "unit": "s",
+          "tooltip": "Higher fades the note in slowly (pads, swells); lower snaps instantly (plucks, keys, punch)."
+        },
+        {
+          "id": "amp_decay",
+          "label": "Decay",
+          "type": "float",
+          "min": 0.01,
+          "max": 10,
+          "default": 0.5,
+          "curve": "log",
+          "unit": "s",
+          "tooltip": "Lower falls to the sustain level faster, sounding more percussive and plucky."
+        },
+        {
+          "id": "amp_sustain",
+          "label": "Sustain",
+          "type": "float",
+          "min": 0,
+          "max": 1,
+          "default": 0.8,
+          "curve": "linear",
+          "unit": "",
+          "tooltip": "Higher holds the note at a louder level while the key is down; zero makes every note die away like a pluck."
+        },
+        {
+          "id": "amp_release",
+          "label": "Release",
+          "type": "float",
+          "min": 0.01,
+          "max": 10,
+          "default": 0.2,
+          "curve": "log",
+          "unit": "s",
+          "tooltip": "Higher lets the note ring out after the key is released; lower cuts it off quickly."
+        }
+      ]
+    },
+    {
+      "name": "Filter Envelope",
+      "controls": [
+        {
+          "id": "fenv_attack",
+          "label": "Attack",
+          "type": "float",
+          "min": 0.001,
+          "max": 5,
+          "default": 0.005,
+          "curve": "log",
+          "unit": "s",
+          "tooltip": "Higher makes the filter open gradually after the note starts."
+        },
+        {
+          "id": "fenv_decay",
+          "label": "Decay",
+          "type": "float",
+          "min": 0.01,
+          "max": 10,
+          "default": 0.3,
+          "curve": "log",
+          "unit": "s",
+          "tooltip": "Lower makes the filter sweep close quickly, giving a short plucky bite."
+        },
+        {
+          "id": "fenv_sustain",
+          "label": "Sustain",
+          "type": "float",
+          "min": 0,
+          "max": 1,
+          "default": 0.2,
+          "curve": "linear",
+          "unit": "",
+          "tooltip": "Higher keeps the filter more open while the key is held."
+        },
+        {
+          "id": "fenv_release",
+          "label": "Release",
+          "type": "float",
+          "min": 0.01,
+          "max": 10,
+          "default": 0.2,
+          "curve": "log",
+          "unit": "s",
+          "tooltip": "Higher lets the filter close slowly after the key is released."
+        }
+      ]
+    },
+    {
+      "name": "LFO",
+      "controls": [
+        {
+          "id": "lfo_waveform",
+          "label": "Waveform",
+          "type": "enum",
+          "values": [
+            "sine",
+            "triangle",
+            "saw",
+            "square",
+            "sample_hold"
+          ],
+          "min": 0,
+          "max": 4,
+          "default": "sine",
+          "curve": "linear",
+          "unit": "",
+          "tooltip": "Sine and triangle wobble smoothly, square chops on and off, sample and hold jumps randomly."
+        },
+        {
+          "id": "lfo_rate",
+          "label": "Rate",
+          "type": "float",
+          "min": 0.01,
+          "max": 20,
+          "default": 1,
+          "curve": "log",
+          "unit": "Hz",
+          "tooltip": "Higher wobbles faster; very low is a slow drift, very high is a nervous flutter."
+        },
+        {
+          "id": "lfo_depth",
+          "label": "Depth",
+          "type": "float",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "curve": "linear",
+          "unit": "",
+          "tooltip": "Higher is more movement; zero is completely still."
+        },
+        {
+          "id": "lfo_target",
+          "label": "Target",
+          "type": "enum",
+          "values": [
+            "none",
+            "cutoff",
+            "pitch",
+            "amp",
+            "pan"
+          ],
+          "min": 0,
+          "max": 4,
+          "default": "none",
+          "curve": "linear",
+          "unit": "",
+          "tooltip": "Cutoff gives wah and wobble, pitch gives vibrato, amp gives tremolo, pan sweeps side to side."
+        }
+      ]
+    },
+    {
+      "name": "Master",
+      "controls": [
+        {
+          "id": "master_volume",
+          "label": "Volume",
+          "type": "float",
+          "min": 0,
+          "max": 1,
+          "default": 0.7,
+          "curve": "linear",
+          "unit": "",
+          "tooltip": "Higher is louder overall."
+        }
+      ]
+    }
+  ]
+}
