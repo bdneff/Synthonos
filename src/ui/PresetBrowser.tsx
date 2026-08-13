@@ -9,6 +9,7 @@
 
 import { useCallback, useState } from "react";
 import defaultPresetJson from "../generated/default-preset.json";
+import { FACTORY_CATEGORIES, FACTORY_PRESETS } from "../presets";
 import { useSynth } from "./store";
 import type { PatchParams } from "./store";
 import {
@@ -102,6 +103,33 @@ export function PresetBrowser() {
           </button>
           <span className="preset-tag">factory</span>
         </div>
+
+        {FACTORY_CATEGORIES.map((category) => (
+          <div key={category} className="preset-group">
+            <div className="preset-group-header">{category}</div>
+            {FACTORY_PRESETS.filter((p) => p.category === category).map(
+              (preset) => (
+                <div
+                  key={preset.name}
+                  className={`preset-row${presetName === preset.name ? " current" : ""}`}
+                >
+                  <button
+                    type="button"
+                    className="preset-name"
+                    onClick={() =>
+                      handleLoad(preset.name, preset.params as PatchParams)
+                    }
+                  >
+                    {preset.name}
+                  </button>
+                  <span className="preset-tag">factory</span>
+                </div>
+              ),
+            )}
+          </div>
+        ))}
+
+        <div className="preset-group-header">Your sounds</div>
 
         {userPresets.map((preset) => (
           <div

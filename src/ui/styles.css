@@ -570,6 +570,22 @@ input:focus-visible {
   background: rgba(0, 0, 0, 0.25);
 }
 
+.preset-group {
+  margin-top: 2px;
+}
+
+.preset-group-header {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  padding: 8px 7px 3px;
+  border-bottom: 1px solid var(--edge-soft);
+  margin-bottom: 3px;
+  user-select: none;
+}
+
 .preset-actions {
   display: none;
   gap: 4px;

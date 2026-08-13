@@ -56,9 +56,10 @@ real bugs before any synthesis code existed).
 | M1/M2 engine: 16 voices, aliasing-free oscillators, click-free stealing | done |
 | M4 interface: three layers, scopes, presets, undo | done |
 | M5 natural language control | done |
-| M6 audio match (tier 2 parameter search) | core done, UI wiring pending |
+| M6 audio match: parameter search service + in-app match panel | done |
 | Effects chain + expanded schema (53 params: drive, glide, chorus, delay, reverb...) | done |
-| M7 packaging: Tauri desktop build, onboarding, 40 factory presets | next |
+| 40 factory presets, organized by vibe, golden-rendered | done |
+| M7 packaging: Tauri desktop build and onboarding | next (needs a desktop machine to compile) |
 
 ## Commands
 
