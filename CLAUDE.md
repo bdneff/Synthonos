@@ -47,6 +47,49 @@ behind them.
 - UI tooltips and control labels come from the schema (`nl_direction`,
   `label`), never hardcoded strings.
 
+## Design discipline (anti AI slop)
+
+Any session touching src/ui must follow this. The rubric of record is
+Anthropic's frontend-design skill:
+https://github.com/anthropics/skills/blob/main/skills/frontend-design/SKILL.md
+(read it before designing; a local snapshot may exist in the session
+scratchpad but the repo link is canonical). Impeccable
+(https://impeccable.style) is a reported collection of design skills for
+AI harnesses; it was unreachable from the build environment and is noted
+here unverified. Key process from the skill: work in two passes (token
+plan first: 4-6 named colors, type roles, layout concept, one signature
+element; self-critique it against the skill's three "calibration default"
+looks before writing code), spend all boldness in ONE signature element,
+apply the Chanel rule before finishing, and critique from screenshots,
+never from memory of what you wrote.
+
+Lessons this project paid for, do not relearn them:
+
+- Slop is structural before it is chromatic. Two full restyles failed
+  because they changed palette and fonts on an unchanged wireframe. The
+  tells that read as AI regardless of color: nested rounded-rectangle
+  cards with per-card headers; identical controls evenly spaced in a
+  large empty panel; uniform gaps and uniform 9-13px labels everywhere;
+  decorative numbering that encodes no real sequence; small-caps label
+  confetti on every zone; glow spread evenly over everything.
+- Build interfaces for hardware the way hardware is built: one
+  continuous panel surface; regions drawn by engraved rules with
+  silkscreen titles interrupting them, not by cards; recessed wells only
+  where a physical instrument would have glass or a slot; staged control
+  sizes (primary knobs visibly larger); real scale markings, units, and
+  fine print (model plate, calibration text) as the texture of realness.
+- One accent with a semantic rule beats two accents used decoratively.
+  Current rule: signal orange means the machine is live or acting
+  (focus, active key, machine-driven knob motion, busy state, enabled
+  primary action). Never use the accent as decoration.
+- The signature element is the describe lane, where language becomes
+  sound: Instrument Serif italic for the human sentence and the reply.
+  Everything else stays quiet and disciplined.
+- Verify with a screenshot loop (headless Chromium, playwright-core is a
+  devDependency) and, for large passes, a fresh-context critic agent that
+  reviews the screenshots against the skill before anything ships.
+  Design fit constraint: 1280x800 with no scrolling, advanced closed.
+
 ## What this project is not
 
 - Not a Nexus or Omnisphere clone. Those are sample based. We are virtual
