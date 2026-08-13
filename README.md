@@ -1,41 +1,74 @@
 # Synthonos
 
-A natural language controlled virtual analog synthesizer that runs locally as
-a desktop app. Type "make it darker and wider" and watch the knobs move.
-Built for people who have never opened a DAW.
+A natural language controlled virtual analog synthesizer that runs locally.
+Type "make it darker and wider" and watch the knobs move. Built for people
+who have never opened a DAW.
 
-Status: **Phase 1 integrated (M1/M2 audio, M4 shell)**. The 16-voice
-subtractive engine (bandlimited wavetable oscillators at -119 dBFS worst
-aliasing, TPT state variable filter, exponential envelopes, LFO, click-free
-voice stealing) runs in an AudioWorklet behind the full three-layer UI:
-describe bar, eight macro knobs, schema-generated advanced panel, scopes,
-keyboard, presets, undo. `npm run dev` and press a key to play. Next:
-natural language control (Phase 2), effects and factory presets (Phase 3).
+![Synthonos interface, annotated with how to interact](docs/assets/ui-guide.png)
 
-## What this is
+<details>
+<summary><b>The full engine behind the Advanced toggle</b></summary>
 
-- A Sylenth-class subtractive synth (plus a wavetable mode later), engine in
-  dependency-free TypeScript running in an AudioWorklet, UI in React,
-  desktop shell in Tauri.
-- Natural language patch editing via schema-constrained JSON, never free
-  text, with every edit animated and undoable.
-- Audio-to-patch matching that finds the closest sound in our parameter
-  space. Match, not Clone: it approximates, it does not recover the original
-  preset.
+![The advanced panel: every oscillator, filter, envelope, LFO and effect parameter, generated from the schema](docs/assets/ui-advanced.png)
 
-Read SYNTH_BUILD_PLAN.md for the full plan and reasoning, CLAUDE.md for the
-hard rules, and docs/TESTING.md for how the audio is kept honest.
+</details>
 
-## Getting started
+## Try it in two minutes
 
 ```
 npm install
-npm test              # full suite, including harness self-tests
+npm run dev        # open http://localhost:1420
+```
+
+Press any key (browser audio needs one gesture), then play `A S D F G H J K L ;`
+on your computer keyboard. `Z` and `X` shift the octave. Drag the eight big
+knobs; double-click resets one; `Ctrl+Z` undoes anything.
+
+To talk to it: open **Settings** (top right), paste an Anthropic API key
+(stored on your machine, sent only to the Anthropic API), then type into the
+describe bar: *"warm wide pad"*, *"more bite"*, *"same but plucky"*.
+
+## What this is
+
+- A Sylenth-class 16-voice subtractive synth: bandlimited wavetable
+  oscillators (worst-case aliasing -119 dBFS), an 8-voice-unison stack per
+  oscillator, a TPT state variable filter, exponential envelopes, and an
+  engine written in dependency-free TypeScript running in an AudioWorklet,
+  mechanically portable to Rust for a future VST3/CLAP build.
+- Natural language patch editing via schema-constrained JSON, never free
+  text. Out-of-range edits are rejected, never clamped; every edit is
+  animated and undoable.
+- Audio-to-patch matching (`python/`): give it a WAV and a parameter search
+  (differential evolution over a multi-resolution STFT loss, candidates
+  rendered through the real engine) finds the closest sound our engine can
+  make. Match, not Clone: it approximates, it does not recover presets.
+
+Read SYNTH_BUILD_PLAN.md for the full plan and reasoning, CLAUDE.md for the
+hard rules, and docs/TESTING.md for how the audio is kept honest (spectral
+test harness, golden renders, real-time safety scans; the harness caught
+real bugs before any synthesis code existed).
+
+## Status
+
+| Milestone | State |
+| --- | --- |
+| M0 foundation: schema, codegen, spectral harness, CI | done |
+| M1/M2 engine: 16 voices, aliasing-free oscillators, click-free stealing | done |
+| M4 interface: three layers, scopes, presets, undo | done |
+| M5 natural language control | done |
+| M6 audio match (tier 2 parameter search) | core done, UI wiring pending |
+| Effects chain + expanded schema (drive, glide, chorus, delay, reverb...) | in progress |
+| M7 packaging: Tauri desktop build, onboarding, 40 factory presets | next |
+
+## Commands
+
+```
+npm test              # full suite incl. harness self-tests and golden renders
 npm run typecheck
 npm run codegen       # regenerate everything from params.schema.json
 npm run codegen:check # what CI runs; fails on drift
 npm run render        # render the default preset to test/output/*.wav
-npm run dev           # Vite dev server (UI shell)
+python3 -m pytest python/tests   # audio matcher (needs pip install -r python/requirements.txt)
 ```
 
 ## Layout
@@ -43,11 +76,12 @@ npm run dev           # Vite dev server (UI shell)
 ```
 params.schema.json    single source of truth for every parameter
 scripts/codegen.ts    emits types, presets, UI manifest, LLM schema, bounds
-src/dsp/              the engine; imports nothing, portable to Rust
+src/dsp/              the engine; imports nothing external, portable to Rust
+src/audio/            AudioWorklet shell and bridge
+src/nl/               natural language control (Claude API, BYO key)
+src/ui/               React interface; advanced panel is 100% schema-generated
 src/generated/        codegen output; never edit by hand
-src/                  React UI shell
-src-tauri/            desktop shell
-test/harness/         offline renderer, hand-written FFT, WAV, assertions
+python/synthmatch/    audio-to-patch matching service (FastAPI, localhost)
+test/harness/         offline renderer, hand-written FFT, spectral assertions
 test/golden/          reference renders; changes must be deliberate
-docs/TESTING.md       what each assertion catches and why
 ```
