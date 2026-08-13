@@ -16,6 +16,7 @@ import { PresetBrowser } from "./ui/PresetBrowser";
 import { Keyboard } from "./ui/Keyboard";
 import { SpectrumAnalyzer } from "./ui/SpectrumAnalyzer";
 import { Oscilloscope } from "./ui/Oscilloscope";
+import { Settings } from "./ui/Settings";
 import "./ui/styles.css";
 
 function isTextEntryTarget(target: EventTarget | null): boolean {
@@ -108,6 +109,7 @@ function Shell() {
           >
             {store.presetName}
           </div>
+          <Settings />
         </div>
       </header>
 

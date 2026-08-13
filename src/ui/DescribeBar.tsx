@@ -6,7 +6,7 @@
  */
 
 import { useCallback, useState } from "react";
-import { describeSound } from "./nl-stub";
+import { describeSound } from "../nl";
 import { useSynth } from "./store";
 
 export function DescribeBar() {

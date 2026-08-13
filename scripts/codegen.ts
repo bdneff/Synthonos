@@ -329,17 +329,23 @@ function emitLlmSchema(schema: Schema): string {
   const properties: Record<string, unknown> = {};
   for (const [id, p] of Object.entries(schema.params)) {
     const aliasText = p.nl_aliases.join(", ");
+    // Structured-output backends often reject numeric minimum/maximum
+    // constraints, so the allowed range is stated in the description and the
+    // generated validator remains the hard gatekeeper (reject, never clamp).
+    const range =
+      p.type === "enum"
+        ? ""
+        : ` Allowed range ${p.min} to ${p.max}${p.unit ? ` ${p.unit}` : ""}` +
+          `${p.curve === "log" ? ", perceived logarithmically" : ""}.`;
     const description =
       `${p.group} / ${p.label}` +
       (p.unit ? ` (${p.unit})` : "") +
-      `. ${capitalize(p.nl_direction)}. Related words: ${aliasText}.`;
+      `.${range} ${capitalize(p.nl_direction)}. Related words: ${aliasText}.`;
     if (p.type === "enum") {
       properties[id] = { type: "string", enum: p.values, description };
     } else {
       properties[id] = {
         type: p.type === "int" ? "integer" : "number",
-        minimum: p.min,
-        maximum: p.max,
         description,
       };
     }
