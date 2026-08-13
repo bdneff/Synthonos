@@ -87,7 +87,10 @@ export function PresetBrowser() {
 
   return (
     <aside className="preset-browser panel">
-      <div className="panel-title">Presets</div>
+      <div className="panel-title library-title">
+        Library
+        <span className="library-count">{FACTORY_PRESETS.length + 1 + userPresets.length}</span>
+      </div>
 
       <div className="preset-list">
         <div

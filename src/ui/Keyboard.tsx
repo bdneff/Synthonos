@@ -118,7 +118,9 @@ export function Keyboard() {
 
   return (
     <div className="keyboard-strip">
+      <div className="deck-frame">
       <div className="keyboard-side">
+        <span className="deck-label">Keys</span>
         <div className="octave-controls">
           <button
             type="button"
@@ -191,6 +193,7 @@ export function Keyboard() {
             </div>
           );
         })}
+      </div>
       </div>
       </div>
     </div>

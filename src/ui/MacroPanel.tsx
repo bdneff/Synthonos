@@ -57,25 +57,29 @@ export function MacroPanel() {
   };
 
   return (
-    <section className="macro-panel panel">
-      <div className="panel-title">
-        Shape the sound
-        <span className="panel-subtitle">Eight knobs, plain words. Watch the advanced panel move with them.</span>
+    <section className="macro-panel panel machined">
+      <div className="panel-title macro-title">
+        Performance
+        <span className="panel-subtitle">Shape the sound with eight knobs in plain words. The advanced rack moves with them.</span>
       </div>
       <div className="macro-row">
-        {MACROS.map((def) => (
-          <Knob
-            key={def.id}
-            size="large"
-            label={def.name}
-            tooltip={def.description}
-            spec={MACRO_SPEC}
-            value={store.macros[def.id]}
-            format={(v) => `${Math.round(v * 100)}%`}
-            onGestureStart={() => beginGesture(def)}
-            onChange={(v) => moveMacro(def, v)}
-            onGestureEnd={endGesture}
-          />
+        {MACROS.map((def, index) => (
+          <div key={def.id} className="macro-channel">
+            <span className="macro-channel-index" aria-hidden="true">
+              {String(index + 1).padStart(2, "0")}
+            </span>
+            <Knob
+              size="large"
+              label={def.name}
+              tooltip={def.description}
+              spec={MACRO_SPEC}
+              value={store.macros[def.id]}
+              format={(v) => `${Math.round(v * 100)}%`}
+              onGestureStart={() => beginGesture(def)}
+              onChange={(v) => moveMacro(def, v)}
+              onGestureEnd={endGesture}
+            />
+          </div>
         ))}
       </div>
     </section>

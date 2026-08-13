@@ -157,13 +157,13 @@ input:focus-visible {
     linear-gradient(180deg, #0c0d10 0%, var(--bg0) 55%);
 }
 
-/* ---------- Header: brand, describe bar, history ---------- */
+/* ---------- Header: brand, loaded-sound display, history ---------- */
 
 .app-header {
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 9px 14px;
+  padding: 8px 14px;
   background: linear-gradient(180deg, #181b21, #101216);
   border-bottom: 1px solid #05060a;
   box-shadow:
@@ -171,6 +171,26 @@ input:focus-visible {
     0 1px 0 #05060a,
     0 4px 14px rgba(0, 0, 0, 0.4);
   z-index: 5;
+}
+
+/* The loaded-sound display sits center header like the track title lane
+   in DJ software: a wide inset readout with a small-caps tag. */
+.header-track {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.header-track-tag {
+  font-family: var(--font-cond);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--text-faint);
 }
 
 .brand {
@@ -220,6 +240,16 @@ input:focus-visible {
   text-transform: uppercase;
 }
 
+/* ---------- Describe strip: its own full-width command lane ---------- */
+
+.describe-strip {
+  padding: 7px 10px;
+  background: linear-gradient(180deg, #0d0f12, #0a0b0e);
+  border-bottom: 1px solid #05060a;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+  z-index: 4;
+}
+
 .describe-bar {
   flex: 1;
   min-width: 320px;
@@ -248,7 +278,7 @@ input:focus-visible {
 
 .describe-input-row:focus-within {
   border-color: rgba(232, 161, 63, 0.55);
-  border-left-color: var(--accent-warm);
+  border-left-color: var(--warm);
   box-shadow:
     inset 0 2px 5px rgba(0, 0, 0, 0.45),
     0 0 0 3px rgba(232, 161, 63, 0.14),
@@ -270,7 +300,7 @@ input:focus-visible {
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--accent-warm);
+  color: var(--warm);
   padding: 0 8px 0 10px;
   border-right: 1px solid var(--well-edge);
   align-self: stretch;
@@ -281,7 +311,7 @@ input:focus-visible {
 }
 
 .describe-prompt {
-  color: var(--accent-warm);
+  color: var(--warm);
   font-size: 11px;
   padding-left: 10px;
   pointer-events: none;
@@ -297,7 +327,7 @@ input:focus-visible {
   font-family: var(--font-ui);
   font-size: 13.5px;
   outline: none;
-  caret-color: var(--accent-warm);
+  caret-color: var(--warm);
 }
 
 .describe-input::placeholder {
@@ -359,7 +389,10 @@ input:focus-visible {
 
 /* The current preset readout, styled like a small hardware display. */
 .current-preset {
-  max-width: 170px;
+  flex: 1;
+  max-width: 380px;
+  min-width: 160px;
+  text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -529,7 +562,9 @@ input:focus-visible {
   padding-bottom: 2px;
 }
 
-/* ---------- Preset browser ---------- */
+/* ---------- Preset browser, styled as the library: a track list.
+   Compact rows, category headers as dividers, the loaded sound marked
+   like the playing track. ---------- */
 
 .preset-browser {
   width: 232px;
@@ -539,10 +574,33 @@ input:focus-visible {
   min-height: 0;
 }
 
+.library-title {
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--edge-soft);
+}
+
+.library-count {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--text-faint);
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--edge-soft);
+  border-radius: 4px;
+  padding: 1px 6px;
+}
+
+.library-title::after {
+  display: none;
+}
+
 .preset-list {
   flex: 1;
   overflow-y: auto;
-  margin: 8px 8px 0;
+  margin: 4px 8px 0;
   min-height: 60px;
 }
 
@@ -550,8 +608,8 @@ input:focus-visible {
   display: flex;
   align-items: center;
   gap: 6px;
-  border-radius: 5px;
-  padding: 2px 7px;
+  border-radius: 3px;
+  padding: 0 7px;
   transition: background 140ms ease;
 }
 
@@ -573,10 +631,10 @@ input:focus-visible {
   text-align: left;
   background: none;
   border: none;
-  padding: 6px 2px;
+  padding: 4px 2px;
   cursor: pointer;
   color: var(--text);
-  font-size: 12.5px;
+  font-size: 12px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -587,16 +645,15 @@ input:focus-visible {
   color: var(--accent-bright);
 }
 
+/* Row tags stay quiet, like the key and BPM columns of a track list:
+   plain faint mono, no chrome, visible but never louder than the name. */
 .preset-tag {
   font-family: var(--font-mono);
-  font-size: 8.5px;
-  letter-spacing: 0.1em;
+  font-size: 7.5px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--text-faint);
-  border: 1px solid var(--edge);
-  border-radius: 4px;
-  padding: 1px 5px;
-  background: rgba(0, 0, 0, 0.25);
+  color: rgba(90, 96, 105, 0.6);
+  padding: 1px 0;
 }
 
 .preset-group {
@@ -852,26 +909,63 @@ input:focus-visible {
   text-shadow: 0 0 6px rgba(232, 161, 63, 0.25);
 }
 
-/* ---------- Macro panel ---------- */
+/* ---------- Macro panel: the performance module. Sits center like the
+   top row of a DJ mixer, grows to fill the free space so the knobs are
+   where the hands live. ---------- */
 
 .macro-panel {
+  flex: 1 0 auto;
+  min-height: 176px;
+  display: flex;
+  flex-direction: column;
   padding-bottom: 10px;
 }
 
+.macro-panel .macro-row {
+  flex: 1;
+}
+
+/* Machined module details: screw heads in the corners and a beveled
+   top rail, so the module reads as bolted-in hardware. */
+.machined {
+  position: relative;
+  background-image:
+    radial-gradient(circle 4.5px at 11px 13px, #101216 0 1.6px, #454d58 2.2px, #14171c 3.1px, transparent 4px),
+    radial-gradient(circle 4.5px at calc(100% - 11px) 13px, #101216 0 1.6px, #454d58 2.2px, #14171c 3.1px, transparent 4px),
+    radial-gradient(circle 4.5px at 11px calc(100% - 11px), #101216 0 1.6px, #454d58 2.2px, #14171c 3.1px, transparent 4px),
+    radial-gradient(circle 4.5px at calc(100% - 11px) calc(100% - 11px), #101216 0 1.6px, #454d58 2.2px, #14171c 3.1px, transparent 4px),
+    linear-gradient(180deg, var(--panel-hi), var(--panel-lo));
+}
+
+.macro-title {
+  align-items: center;
+  padding-left: 26px;
+  padding-right: 26px;
+}
+
+.macro-title::before {
+  content: "";
+  width: 3px;
+  height: 11px;
+  border-radius: 1.5px;
+  background: var(--warm);
+  box-shadow: 0 0 6px var(--warm-glow);
+}
+
 /* Macro tooltips open downward so the scroll container never clips
-   them, and the end knobs pin to their own edge instead of centering
+   them, and the end channels pin to their own edge instead of centering
    off the panel. */
 .macro-row .knob.has-tooltip::after {
   bottom: auto;
   top: calc(100% + 6px);
 }
 
-.macro-row .knob.has-tooltip:first-child::after {
+.macro-channel:first-child .knob.has-tooltip::after {
   left: 0;
   transform: none;
 }
 
-.macro-row .knob.has-tooltip:last-child::after {
+.macro-channel:last-child .knob.has-tooltip::after {
   left: auto;
   right: 0;
   transform: none;
@@ -879,20 +973,54 @@ input:focus-visible {
 
 .macro-row {
   display: flex;
-  justify-content: space-between;
-  padding: 8px 20px 0;
-  max-width: 1240px;
-  margin: 0 auto;
+  align-items: stretch;
+  padding: 6px 12px 0;
   width: 100%;
 }
 
-/* ---------- Scopes ---------- */
-
-.scope-row {
+/* Inside the performance module each macro is a full-height channel,
+   numbered and separated by hairline rails like the channels across a
+   mixer. The knob block centers in the free run of the channel. */
+.macro-channel {
   flex: 1;
-  min-height: 140px;
+  min-width: 0;
   display: flex;
-  gap: 10px;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 4px 12px;
+}
+
+.macro-channel + .macro-channel {
+  border-left: 1px solid rgba(255, 255, 255, 0.045);
+  box-shadow: -1px 0 0 rgba(0, 0, 0, 0.4);
+}
+
+.macro-channel-index {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: rgba(90, 96, 105, 0.55);
+  user-select: none;
+}
+
+.macro-channel .knob {
+  margin: auto 0;
+}
+
+/* ---------- Scope lane: slim full-width displays under the header,
+   the way DJ software runs its waveforms across the top. Spectrum takes
+   two thirds, waveform one third. ---------- */
+
+.scope-lane {
+  display: flex;
+  gap: 8px;
+  height: 104px;
+  flex-shrink: 0;
+  padding: 8px 10px;
+  background: linear-gradient(180deg, #0b0d10, #08090c);
+  border-bottom: 1px solid #05060a;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
 }
 
 .scope {
@@ -902,20 +1030,24 @@ input:focus-visible {
   display: flex;
   background: #0a0c0f;
   border: 1px solid var(--edge-soft);
-  border-radius: 9px;
+  border-radius: 6px;
   box-shadow:
     inset 0 2px 10px rgba(0, 0, 0, 0.55),
     0 1px 0 rgba(255, 255, 255, 0.03);
-  padding: 5px;
+  padding: 4px;
+}
+
+.scope-lane .scope:first-child {
+  flex: 2;
 }
 
 .scope-label {
   position: absolute;
-  top: 9px;
-  left: 13px;
+  top: 7px;
+  left: 11px;
   z-index: 2;
   font-family: var(--font-cond);
-  font-size: 10.5px;
+  font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.24em;
   text-transform: uppercase;
@@ -923,13 +1055,21 @@ input:focus-visible {
   pointer-events: none;
 }
 
+/* Scope tooltips open downward: the lane sits at the top of the window
+   and an upward tooltip would clip. */
+.scope.has-tooltip::after {
+  bottom: auto;
+  top: calc(100% + 6px);
+  z-index: 30;
+}
+
 .scope-canvas {
   flex: 1;
   display: block;
   width: 100%;
   height: 100%;
-  min-height: 96px;
-  border-radius: 5px;
+  min-height: 64px;
+  border-radius: 4px;
 }
 
 /* ---------- Advanced panel ---------- */
@@ -990,27 +1130,40 @@ input:focus-visible {
   font-size: 11px;
 }
 
+/* The rack: generated groups rendered as channel-strip modules in a
+   responsive grid, each with a header rail, like the strips across a
+   mixer. Group-level styling only; controls stay manifest-generated. */
 .advanced-panel {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(236px, 1fr));
+  align-items: stretch;
+  gap: 8px;
 }
 
 .param-group {
+  display: flex;
+  flex-direction: column;
   padding-bottom: 8px;
+  border-radius: 7px;
+  overflow: hidden;
 }
 
+/* The strip header rail: a solid machined band across the top of the
+   module, not a floating caption. */
 .group-title {
   display: flex;
   align-items: center;
   gap: 8px;
   font-family: var(--font-cond);
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: #b3bac6;
-  padding: 10px 14px 2px;
+  padding: 6px 10px;
+  background: linear-gradient(180deg, #20242c, #171a20);
+  border-bottom: 1px solid #0b0d10;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .group-title::before {
@@ -1025,16 +1178,22 @@ input:focus-visible {
 .group-title::after {
   content: "";
   flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, #2b3039, transparent);
+  height: 3px;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 0 1px,
+    transparent 1px 5px
+  );
 }
 
 .group-controls {
+  flex: 1;
   display: flex;
   flex-wrap: wrap;
+  align-content: flex-start;
   align-items: flex-start;
   gap: 8px 2px;
-  padding: 6px 10px 0;
+  padding: 8px 8px 0;
 }
 
 /* ---------- Enum selector ---------- */
@@ -1094,25 +1253,52 @@ input:focus-visible {
   box-shadow: inset 0 1px 0 rgba(79, 216, 196, 0.2);
 }
 
-/* ---------- Keyboard ---------- */
+/* ---------- Keyboard: the performance deck. A darker chassis rail
+   frames the keys; the octave controls sit at the left end like deck
+   buttons. ---------- */
 
 .keyboard-strip {
-  display: flex;
-  align-items: stretch;
-  gap: 12px;
-  padding: 10px 12px 12px;
+  padding: 8px 10px 10px;
   background: linear-gradient(180deg, #0e1013, #090a0c);
   border-top: 1px solid #1e2229;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
+.deck-frame {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  padding: 8px 10px;
+  background:
+    radial-gradient(circle 4px at 9px 11px, #0a0c0f 0 1.4px, #3c434d 2px, #101318 2.9px, transparent 3.8px),
+    radial-gradient(circle 4px at calc(100% - 9px) 11px, #0a0c0f 0 1.4px, #3c434d 2px, #101318 2.9px, transparent 3.8px),
+    radial-gradient(circle 4px at 9px calc(100% - 11px), #0a0c0f 0 1.4px, #3c434d 2px, #101318 2.9px, transparent 3.8px),
+    radial-gradient(circle 4px at calc(100% - 9px) calc(100% - 11px), #0a0c0f 0 1.4px, #3c434d 2px, #101318 2.9px, transparent 3.8px),
+    linear-gradient(180deg, #14161b, #0d0f13);
+  border: 1px solid #1e232b;
+  border-top-color: #262c35;
+  border-radius: 9px;
+  box-shadow:
+    var(--bevel),
+    0 2px 10px rgba(0, 0, 0, 0.45);
+}
+
 .keyboard-side {
-  width: 220px;
+  width: 190px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 6px;
+  gap: 5px;
+}
+
+.deck-label {
+  font-family: var(--font-cond);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--text-faint);
 }
 
 .octave-controls {
@@ -1121,13 +1307,18 @@ input:focus-visible {
   gap: 8px;
 }
 
+/* Deck buttons: square rubber pads with a hard corner, like the hot
+   cue row on a player. */
 .octave-button {
-  width: 30px;
-  height: 30px;
-  border-radius: 6px;
+  width: 34px;
+  height: 28px;
+  border-radius: 4px;
   border: 1px solid #2c313a;
-  border-bottom-color: #22262d;
-  background: linear-gradient(180deg, #23272f, #1a1d23);
+  border-bottom-color: #1d2127;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 40%),
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.012) 0 2px, transparent 2px 4px),
+    linear-gradient(180deg, #22262e, #171a20);
   color: #c8cdd6;
   font-family: var(--font-mono);
   font-size: 12px;
@@ -1135,13 +1326,17 @@ input:focus-visible {
   cursor: pointer;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 1px 2px rgba(0, 0, 0, 0.4);
-  transition: border-color 140ms ease, color 140ms ease;
+    0 2px 3px rgba(0, 0, 0, 0.5);
+  transition: border-color 140ms ease, color 140ms ease, box-shadow 140ms ease;
 }
 
 .octave-button:hover:not(:disabled) {
   border-color: #3a414c;
   color: #e8ebf0;
+}
+
+.octave-button:active:not(:disabled) {
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .octave-button:disabled {
@@ -1174,9 +1369,9 @@ input:focus-visible {
 }
 
 .keyboard-hint {
-  font-size: 10.5px;
+  font-size: 10px;
   color: var(--text-faint);
-  line-height: 1.4;
+  line-height: 1.35;
 }
 
 .piano-bed {
@@ -1195,7 +1390,7 @@ input:focus-visible {
   position: relative;
   display: flex;
   flex: 1;
-  height: 92px;
+  height: 80px;
   user-select: none;
   touch-action: none;
 }
@@ -1302,6 +1497,30 @@ input:focus-visible {
   font-size: 8px;
   color: rgba(80, 90, 105, 0.55);
   pointer-events: none;
+}
+
+/* ---------- Tall windows: the lane, the macro knobs, and the deck all
+   gain a little height so the free space lands in the instrument, not
+   in empty chassis. ---------- */
+
+@media (min-height: 900px) {
+  .scope-lane {
+    height: 132px;
+  }
+
+  .piano {
+    height: 108px;
+  }
+
+  .knob-large .knob-hit {
+    width: 104px;
+    height: 104px;
+  }
+
+  .knob-large,
+  .knob.knob-large {
+    width: 124px;
+  }
 }
 
 /* ---------- Scrollbars ---------- */

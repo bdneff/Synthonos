@@ -88,7 +88,15 @@ function Shell() {
             <div className="brand-sub">say it, hear it</div>
           </div>
         </div>
-        <DescribeBar />
+        <div className="header-track">
+          <span className="header-track-tag">sound</span>
+          <div
+            className="current-preset has-tooltip"
+            data-tooltip="The sound you are editing right now."
+          >
+            {store.presetName}
+          </div>
+        </div>
         <div className="header-right">
           <div className="history-buttons">
             <button
@@ -110,15 +118,18 @@ function Shell() {
               Redo
             </button>
           </div>
-          <div
-            className="current-preset has-tooltip"
-            data-tooltip="The sound you are editing right now."
-          >
-            {store.presetName}
-          </div>
           <Settings />
         </div>
       </header>
+
+      <div className="describe-strip">
+        <DescribeBar />
+      </div>
+
+      <div className="scope-lane">
+        <SpectrumAnalyzer source={spectrumSource} />
+        <Oscilloscope source={scopeSource} />
+      </div>
 
       <div className="app-body">
         <div className="left-column">
@@ -127,10 +138,6 @@ function Shell() {
         </div>
         <main className="app-main">
           <MacroPanel />
-          <div className="scope-row">
-            <SpectrumAnalyzer source={spectrumSource} />
-            <Oscilloscope source={scopeSource} />
-          </div>
           <section className="advanced-section">
             <button
               type="button"
@@ -143,7 +150,7 @@ function Shell() {
               <span className="advanced-hint">
                 {advancedOpen
                   ? "every control, hover any of them for a plain explanation"
-                  : "open the full panel"}
+                  : "open the full rack"}
               </span>
             </button>
             {advancedOpen ? <AdvancedPanel /> : null}
