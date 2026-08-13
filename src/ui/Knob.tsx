@@ -262,23 +262,23 @@ export function Knob({
         <svg viewBox={`0 0 ${view} ${view}`} className="knob-svg">
           <defs>
             <radialGradient id={capId} cx="0.36" cy="0.28" r="0.85">
-              <stop offset="0%" stopColor="#3d444e" />
-              <stop offset="45%" stopColor="#272c34" />
-              <stop offset="100%" stopColor="#171a20" />
+              <stop offset="0%" stopColor="#4a4136" />
+              <stop offset="45%" stopColor="#2f2921" />
+              <stop offset="100%" stopColor="#1c1712" />
             </radialGradient>
             <linearGradient id={rimId} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="rgba(255,255,255,0.28)" />
-              <stop offset="55%" stopColor="rgba(255,255,255,0.04)" />
+              <stop offset="0%" stopColor="rgba(255,248,236,0.26)" />
+              <stop offset="55%" stopColor="rgba(255,248,236,0.04)" />
               <stop offset="100%" stopColor="rgba(0,0,0,0.55)" />
             </linearGradient>
             <linearGradient id={wellId} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#050607" />
-              <stop offset="80%" stopColor="#0c0e11" />
-              <stop offset="100%" stopColor="#181c22" />
+              <stop offset="0%" stopColor="#070504" />
+              <stop offset="80%" stopColor="#0f0c0a" />
+              <stop offset="100%" stopColor="#1e1913" />
             </linearGradient>
             <radialGradient id={dimpleId} cx="0.4" cy="0.35" r="1">
-              <stop offset="0%" stopColor="#12151a" />
-              <stop offset="100%" stopColor="#2c323b" />
+              <stop offset="0%" stopColor="#171210" />
+              <stop offset="100%" stopColor="#373025" />
             </radialGradient>
           </defs>
           {ticks}

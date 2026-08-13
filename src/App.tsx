@@ -149,7 +149,7 @@ function Shell() {
               Advanced
               <span className="advanced-hint">
                 {advancedOpen
-                  ? "every control, hover any of them for a plain explanation"
+                  ? "hover any control for a plain explanation"
                   : "open the full rack"}
               </span>
             </button>

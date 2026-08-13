@@ -57,17 +57,11 @@ export function MacroPanel() {
   };
 
   return (
-    <section className="macro-panel panel machined">
-      <div className="panel-title macro-title">
-        Performance
-        <span className="panel-subtitle">Shape the sound with eight knobs in plain words. The advanced rack moves with them.</span>
-      </div>
+    <section className="macro-panel panel">
+      <div className="panel-title macro-title">Performance</div>
       <div className="macro-row">
-        {MACROS.map((def, index) => (
+        {MACROS.map((def) => (
           <div key={def.id} className="macro-channel">
-            <span className="macro-channel-index" aria-hidden="true">
-              {String(index + 1).padStart(2, "0")}
-            </span>
             <Knob
               size="large"
               label={def.name}

@@ -120,7 +120,6 @@ export function Keyboard() {
     <div className="keyboard-strip">
       <div className="deck-frame">
       <div className="keyboard-side">
-        <span className="deck-label">Keys</span>
         <div className="octave-controls">
           <button
             type="button"

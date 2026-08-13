@@ -41,14 +41,14 @@ export function SpectrumAnalyzer({ source }: SpectrumAnalyzerProps) {
 
       // Panel well with a faint top-down falloff.
       const bg = ctx.createLinearGradient(0, 0, 0, h);
-      bg.addColorStop(0, "#08090c");
-      bg.addColorStop(1, "#0b0e11");
+      bg.addColorStop(0, "#0c0a08");
+      bg.addColorStop(1, "#100d0a");
       ctx.fillStyle = bg;
       ctx.fillRect(0, 0, w, h);
 
-      // Fine grid, minor and major lines.
+      // Grid: nearly gone, just enough to place the trace against.
       ctx.lineWidth = 1;
-      ctx.strokeStyle = "rgba(122, 138, 160, 0.05)";
+      ctx.strokeStyle = "rgba(236, 229, 216, 0.025)";
       ctx.beginPath();
       for (let i = 1; i <= DB_LINES * 2 + 1; i += 1) {
         const y = (h * i) / (DB_LINES * 2 + 2);
@@ -61,7 +61,7 @@ export function SpectrumAnalyzer({ source }: SpectrumAnalyzerProps) {
         ctx.lineTo(x + 0.5, h);
       }
       ctx.stroke();
-      ctx.strokeStyle = "rgba(122, 138, 160, 0.1)";
+      ctx.strokeStyle = "rgba(236, 229, 216, 0.05)";
       ctx.beginPath();
       for (let i = 1; i <= DB_LINES; i += 1) {
         const y = (h * i) / (DB_LINES + 1);
@@ -87,7 +87,7 @@ export function SpectrumAnalyzer({ source }: SpectrumAnalyzerProps) {
       }
       if (peak < 0.01) {
         const breath = 0.5 + 0.5 * Math.sin(performance.now() / 1400);
-        ctx.strokeStyle = `rgba(79, 216, 196, ${0.04 + 0.06 * breath})`;
+        ctx.strokeStyle = `rgba(232, 161, 63, ${0.04 + 0.06 * breath})`;
         ctx.lineWidth = 6;
         ctx.beginPath();
         ctx.moveTo(0, floor - 1);
@@ -107,9 +107,9 @@ export function SpectrumAnalyzer({ source }: SpectrumAnalyzerProps) {
       ctx.lineTo(w, floor);
       ctx.closePath();
       const fill = ctx.createLinearGradient(0, 0, 0, h);
-      fill.addColorStop(0, "rgba(79, 216, 196, 0.32)");
-      fill.addColorStop(0.7, "rgba(79, 216, 196, 0.08)");
-      fill.addColorStop(1, "rgba(79, 216, 196, 0.02)");
+      fill.addColorStop(0, "rgba(232, 161, 63, 0.22)");
+      fill.addColorStop(0.7, "rgba(232, 161, 63, 0.06)");
+      fill.addColorStop(1, "rgba(232, 161, 63, 0.015)");
       ctx.fillStyle = fill;
       ctx.fill();
 
@@ -125,16 +125,16 @@ export function SpectrumAnalyzer({ source }: SpectrumAnalyzerProps) {
         }
         ctx.strokeStyle = style;
         ctx.lineWidth = width;
-        ctx.shadowColor = "rgba(79, 216, 196, 0.55)";
+        ctx.shadowColor = "rgba(232, 161, 63, 0.5)";
         ctx.shadowBlur = blur;
         ctx.stroke();
         ctx.shadowBlur = 0;
       };
-      trace(4, "rgba(79, 216, 196, 0.10)", 0);
-      trace(1.5, "rgba(134, 232, 217, 0.9)", 7);
+      trace(4, "rgba(232, 161, 63, 0.08)", 0);
+      trace(1.5, "rgba(245, 188, 107, 0.9)", 7);
 
       // Scale hints, small caps in the corners.
-      ctx.fillStyle = "rgba(140, 155, 175, 0.38)";
+      ctx.fillStyle = "rgba(154, 145, 127, 0.42)";
       ctx.font = "500 8.5px 'IBM Plex Mono', monospace";
       ctx.textAlign = "right";
       ctx.fillText("0 DB", w - 8, 12);

@@ -37,15 +37,14 @@ export function Oscilloscope({ source }: OscilloscopeProps) {
 
       // Panel well with a faint top-down falloff.
       const bg = ctx.createLinearGradient(0, 0, 0, h);
-      bg.addColorStop(0, "#08090c");
-      bg.addColorStop(1, "#0b0e11");
+      bg.addColorStop(0, "#0c0a08");
+      bg.addColorStop(1, "#100d0a");
       ctx.fillStyle = bg;
       ctx.fillRect(0, 0, w, h);
 
-      // Fine grid: eighths vertically, sixteenths horizontally, with
-      // brighter quarter lines over them.
+      // Grid: nearly gone, just enough to place the trace against.
       ctx.lineWidth = 1;
-      ctx.strokeStyle = "rgba(122, 138, 160, 0.05)";
+      ctx.strokeStyle = "rgba(236, 229, 216, 0.025)";
       ctx.beginPath();
       for (let i = 1; i < 8; i += 1) {
         const y = (h * i) / 8;
@@ -58,7 +57,7 @@ export function Oscilloscope({ source }: OscilloscopeProps) {
         ctx.lineTo(x + 0.5, h);
       }
       ctx.stroke();
-      ctx.strokeStyle = "rgba(122, 138, 160, 0.1)";
+      ctx.strokeStyle = "rgba(236, 229, 216, 0.05)";
       ctx.beginPath();
       for (let i = 1; i < 4; i += 1) {
         const y = (h * i) / 4;
@@ -73,7 +72,7 @@ export function Oscilloscope({ source }: OscilloscopeProps) {
       ctx.stroke();
 
       // Center axis, slightly brighter.
-      ctx.strokeStyle = "rgba(122, 138, 160, 0.22)";
+      ctx.strokeStyle = "rgba(236, 229, 216, 0.12)";
       ctx.beginPath();
       ctx.moveTo(0, h / 2 + 0.5);
       ctx.lineTo(w, h / 2 + 0.5);
@@ -120,7 +119,7 @@ export function Oscilloscope({ source }: OscilloscopeProps) {
       trace(1.5, "rgba(245, 188, 107, 0.9)", 7);
 
       // Amplitude scale in the right margin.
-      ctx.fillStyle = "rgba(140, 155, 175, 0.38)";
+      ctx.fillStyle = "rgba(154, 145, 127, 0.42)";
       ctx.font = "500 8.5px 'IBM Plex Mono', monospace";
       ctx.textAlign = "right";
       ctx.fillText("+1.0", w - 8, 12);

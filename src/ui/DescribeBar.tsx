@@ -42,16 +42,13 @@ export function DescribeBar() {
   return (
     <div className="describe-bar">
       <div className={`describe-input-row${busy ? " busy" : ""}`}>
-        <span className="describe-tag" aria-hidden="true">
-          describe
-        </span>
         <span className="describe-prompt" aria-hidden="true">
           ✦
         </span>
         <input
           className="describe-input"
           type="text"
-          placeholder={'tell it what to be: "a warm wide pad", "more bite", "same but plucky"'}
+          placeholder={'Say what you hear in your head: "a warm wide pad", "more bite", "same but plucky"'}
           value={text}
           disabled={busy}
           onChange={(e) => setText(e.target.value)}
@@ -65,7 +62,7 @@ export function DescribeBar() {
           disabled={busy || text.trim() === ""}
           onClick={() => void submit()}
         >
-          {busy ? "Listening..." : "Shape it"}
+          {busy ? "Shaping..." : "Shape"}
         </button>
       </div>
       {response !== null ? (

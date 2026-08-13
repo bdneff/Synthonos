@@ -104,7 +104,6 @@ export function PresetBrowser() {
           >
             {INIT_NAME}
           </button>
-          <span className="preset-tag">factory</span>
         </div>
 
         {FACTORY_CATEGORIES.map((category) => (
@@ -125,8 +124,7 @@ export function PresetBrowser() {
                   >
                     {preset.name}
                   </button>
-                  <span className="preset-tag">factory</span>
-                </div>
+                        </div>
               ),
             )}
           </div>
@@ -190,7 +188,7 @@ export function PresetBrowser() {
         ))}
 
         {userPresets.length === 0 ? (
-          <div className="preset-empty">Your saved sounds will appear here.</div>
+          <div className="preset-empty">Nothing saved yet. Shape a sound, name it below, and it lives here.</div>
         ) : null}
       </div>
 
