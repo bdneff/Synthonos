@@ -40,10 +40,30 @@ describe("real-time safety scan", () => {
         ].join("\n"),
       );
       const rules = scanDspSource(dir).map((v) => v.rule);
-      expect(rules).toContain("no imports of any kind in src/dsp");
+      expect(rules).toContain("only relative src/dsp imports allowed");
       expect(rules).toContain("no console usage");
       expect(rules).toContain("no allocation in process()");
       expect(rules).toContain("no throw in process()");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("allows relative sibling imports but not escapes or externals", () => {
+    const dir = mkdtempSync(join(tmpdir(), "synthonos-rt-"));
+    try {
+      writeFileSync(
+        join(dir, "ok.ts"),
+        `import { Osc } from "./osc";\nexport const x = Osc;\n`,
+      );
+      writeFileSync(join(dir, "osc.ts"), `export const Osc = 1;\n`);
+      expect(scanDspSource(dir)).toEqual([]);
+      writeFileSync(
+        join(dir, "escape.ts"),
+        `import { PARAMS } from "./../generated/params";\nexport const y = PARAMS;\n`,
+      );
+      const rules = scanDspSource(dir).map((v) => v.rule);
+      expect(rules).toContain("dsp imports must not reach outside src/dsp");
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }

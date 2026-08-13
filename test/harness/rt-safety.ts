@@ -18,7 +18,6 @@ export interface SourceViolation {
 
 /** Rules that apply to every line of every file in src/dsp/. */
 const MODULE_RULES: { rule: string; pattern: RegExp }[] = [
-  { rule: "no imports of any kind in src/dsp", pattern: /^\s*import[\s{"']/ },
   { rule: "no require()", pattern: /\brequire\s*\(/ },
   { rule: "no console usage", pattern: /\bconsole\s*\./ },
   { rule: "no async functions", pattern: /\basync\b/ },
@@ -84,6 +83,30 @@ export function scanDspSource(dspDir: string): SourceViolation[] {
 
   for (const file of files) {
     const source = stripComments(readFileSync(file, "utf8"));
+    // Imports: only relative imports of sibling src/dsp modules are allowed.
+    // React, npm packages, node builtins, and anything outside src/dsp would
+    // break the mechanical-port-to-Rust guarantee.
+    for (const m of source.matchAll(
+      /import\b[\s\S]*?from\s+["']([^"']+)["']|import\s+["']([^"']+)["']/g,
+    )) {
+      const spec = m[1] ?? m[2] ?? "";
+      const line = source.slice(0, m.index).split("\n").length;
+      if (!spec.startsWith("./")) {
+        violations.push({
+          file,
+          line,
+          rule: "only relative src/dsp imports allowed",
+          text: spec,
+        });
+      } else if (spec.includes("..")) {
+        violations.push({
+          file,
+          line,
+          rule: "dsp imports must not reach outside src/dsp",
+          text: spec,
+        });
+      }
+    }
     const lines = source.split("\n");
     for (let i = 0; i < lines.length; i += 1) {
       for (const { rule, pattern } of MODULE_RULES) {

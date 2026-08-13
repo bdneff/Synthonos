@@ -12,9 +12,11 @@ behind them.
 - All parameters are defined ONLY in params.schema.json. Never hardcode a
   parameter name, range, or default anywhere else. Run `npm run codegen` after
   schema edits; CI fails on drift.
-- DSP code in src/dsp/ imports nothing. No React, no DOM, no npm packages, no
-  async, not even other project files. It must remain mechanically portable to
-  Rust. A static scan in test/rt-safety.test.ts enforces this.
+- DSP code in src/dsp/ imports nothing external. Relative imports of sibling
+  src/dsp modules are the only imports allowed: no React, no DOM, no npm
+  packages, no node builtins, no async, nothing from outside src/dsp. It must
+  remain mechanically portable to Rust. A static scan in
+  test/rt-safety.test.ts enforces this.
 - Nothing in the audio callback (`process()`) allocates, logs, throws, or
   awaits. The same scan enforces this on the source, not just at runtime.
 - No DSP module is done without spectral tests. See docs/TESTING.md. The
