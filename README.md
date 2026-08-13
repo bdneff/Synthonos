@@ -57,7 +57,7 @@ real bugs before any synthesis code existed).
 | M4 interface: three layers, scopes, presets, undo | done |
 | M5 natural language control | done |
 | M6 audio match (tier 2 parameter search) | core done, UI wiring pending |
-| Effects chain + expanded schema (drive, glide, chorus, delay, reverb...) | in progress |
+| Effects chain + expanded schema (53 params: drive, glide, chorus, delay, reverb...) | done |
 | M7 packaging: Tauri desktop build, onboarding, 40 factory presets | next |
 
 ## Commands

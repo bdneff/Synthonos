@@ -200,6 +200,38 @@
       ]
     },
     {
+      "name": "Mixer",
+      "controls": [
+        {
+          "id": "osc_noise_level",
+          "label": "Noise",
+          "type": "float",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "curve": "linear",
+          "unit": "",
+          "tooltip": "Higher mixes white noise in with the oscillators for air, breath, and texture; zero is none."
+        }
+      ]
+    },
+    {
+      "name": "Pitch",
+      "controls": [
+        {
+          "id": "glide_time",
+          "label": "Glide",
+          "type": "float",
+          "min": 0.001,
+          "max": 2,
+          "default": 0.001,
+          "curve": "log",
+          "unit": "s",
+          "tooltip": "Higher makes the pitch slide slowly from the previous note into each new one; at the minimum every note starts exactly on pitch."
+        }
+      ]
+    },
+    {
       "name": "Filter",
       "controls": [
         {
@@ -261,6 +293,32 @@
           "curve": "linear",
           "unit": "",
           "tooltip": "Higher makes high notes open the filter more, keeping brightness consistent up the keyboard."
+        },
+        {
+          "id": "filter_drive",
+          "label": "Drive",
+          "type": "float",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "curve": "linear",
+          "unit": "",
+          "tooltip": "Higher saturates the signal inside the filter, adding warmth at low settings and grit and bite when pushed hard."
+        },
+        {
+          "id": "filter_slope",
+          "label": "Slope",
+          "type": "enum",
+          "values": [
+            "12",
+            "24"
+          ],
+          "min": 0,
+          "max": 1,
+          "default": "24",
+          "curve": "linear",
+          "unit": "dB/oct",
+          "tooltip": "24 cuts everything above the cutoff harder (darker, more synthetic); 12 rolls off gently, leaving the top end airier and more open."
         }
       ]
     },
@@ -310,6 +368,17 @@
           "curve": "log",
           "unit": "s",
           "tooltip": "Higher lets the note ring out after the key is released; lower cuts it off quickly."
+        },
+        {
+          "id": "amp_velocity",
+          "label": "Velocity",
+          "type": "float",
+          "min": 0,
+          "max": 1,
+          "default": 0.4,
+          "curve": "linear",
+          "unit": "",
+          "tooltip": "Higher makes how hard a key is hit change the loudness more (expressive, dynamic); zero plays every note at the same level."
         }
       ]
     },
@@ -422,6 +491,173 @@
           "curve": "linear",
           "unit": "",
           "tooltip": "Cutoff gives wah and wobble, pitch gives vibrato, amp gives tremolo, pan sweeps side to side."
+        },
+        {
+          "id": "lfo_fade",
+          "label": "Fade In",
+          "type": "float",
+          "min": 0,
+          "max": 3,
+          "default": 0,
+          "curve": "linear",
+          "unit": "s",
+          "tooltip": "Higher makes the LFO movement fade in gradually after each note starts, like a singer adding vibrato late; zero starts the movement immediately."
+        },
+        {
+          "id": "lfo_retrigger",
+          "label": "Retrigger",
+          "type": "enum",
+          "values": [
+            "free",
+            "note"
+          ],
+          "min": 0,
+          "max": 1,
+          "default": "free",
+          "curve": "linear",
+          "unit": "",
+          "tooltip": "Note restarts the wobble at the start of every note so each attack moves identically; free lets one wobble run continuously underneath all notes."
+        }
+      ]
+    },
+    {
+      "name": "Distortion",
+      "controls": [
+        {
+          "id": "distortion_drive",
+          "label": "Drive",
+          "type": "float",
+          "min": 0,
+          "max": 1,
+          "default": 0.3,
+          "curve": "linear",
+          "unit": "",
+          "tooltip": "Higher pushes the sound harder into the distortion, from mild crunch to full fuzz; only audible once distortion mix is turned up."
+        },
+        {
+          "id": "distortion_mix",
+          "label": "Mix",
+          "type": "float",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "curve": "linear",
+          "unit": "",
+          "tooltip": "Higher blends in more of the distorted signal for grit and aggression; zero is completely clean."
+        }
+      ]
+    },
+    {
+      "name": "Chorus",
+      "controls": [
+        {
+          "id": "chorus_rate",
+          "label": "Rate",
+          "type": "float",
+          "min": 0.05,
+          "max": 8,
+          "default": 0.8,
+          "curve": "log",
+          "unit": "Hz",
+          "tooltip": "Higher makes the chorus swirl faster; slow rates sound lush and dreamy, fast rates sound watery."
+        },
+        {
+          "id": "chorus_depth",
+          "label": "Depth",
+          "type": "float",
+          "min": 0,
+          "max": 1,
+          "default": 0.35,
+          "curve": "linear",
+          "unit": "",
+          "tooltip": "Higher sweeps the chorus pitch further for a deeper, lusher, more detuned shimmer."
+        },
+        {
+          "id": "chorus_mix",
+          "label": "Mix",
+          "type": "float",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "curve": "linear",
+          "unit": "",
+          "tooltip": "Higher blends in more chorus, sounding wider, lusher, and shimmering; zero is off."
+        }
+      ]
+    },
+    {
+      "name": "Delay",
+      "controls": [
+        {
+          "id": "delay_time",
+          "label": "Time",
+          "type": "float",
+          "min": 0.02,
+          "max": 2,
+          "default": 0.35,
+          "curve": "log",
+          "unit": "s",
+          "tooltip": "Higher spaces the echoes further apart; very short times give a tight slapback, long times give spacious repeats."
+        },
+        {
+          "id": "delay_feedback",
+          "label": "Feedback",
+          "type": "float",
+          "min": 0,
+          "max": 0.9,
+          "default": 0.35,
+          "curve": "linear",
+          "unit": "",
+          "tooltip": "Higher makes each echo repeat more times before dying away."
+        },
+        {
+          "id": "delay_mix",
+          "label": "Mix",
+          "type": "float",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "curve": "linear",
+          "unit": "",
+          "tooltip": "Higher blends in more echo; zero is off."
+        }
+      ]
+    },
+    {
+      "name": "Reverb",
+      "controls": [
+        {
+          "id": "reverb_size",
+          "label": "Size",
+          "type": "float",
+          "min": 0,
+          "max": 1,
+          "default": 0.5,
+          "curve": "linear",
+          "unit": "",
+          "tooltip": "Higher sounds like a bigger space, from a small room up to a huge hall."
+        },
+        {
+          "id": "reverb_decay",
+          "label": "Decay",
+          "type": "float",
+          "min": 0.1,
+          "max": 10,
+          "default": 1.6,
+          "curve": "log",
+          "unit": "s",
+          "tooltip": "Higher lets the reverb tail ring out longer after each note."
+        },
+        {
+          "id": "reverb_mix",
+          "label": "Mix",
+          "type": "float",
+          "min": 0,
+          "max": 1,
+          "default": 0,
+          "curve": "linear",
+          "unit": "",
+          "tooltip": "Higher blends in more reverb, sounding wetter, more spacious, and more distant; zero is completely dry."
         }
       ]
     },
@@ -438,6 +674,17 @@
           "curve": "linear",
           "unit": "",
           "tooltip": "Higher is louder overall."
+        },
+        {
+          "id": "master_width",
+          "label": "Width",
+          "type": "float",
+          "min": 0,
+          "max": 2,
+          "default": 1,
+          "curve": "linear",
+          "unit": "",
+          "tooltip": "Higher is wider; 1 leaves the stereo image unchanged, 0 collapses it to mono, 2 exaggerates the sides."
         }
       ]
     }

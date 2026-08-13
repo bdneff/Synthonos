@@ -195,6 +195,30 @@
       "nl_aliases": ["spread", "width", "lushness", "wobble", "chorus"],
       "nl_direction": "higher spreads the unison voices further apart, sounding wider and lusher; too high sounds out of tune"
     },
+    "osc_noise_level": {
+      "label": "Noise",
+      "group": "Mixer",
+      "type": "float",
+      "min": 0,
+      "max": 1,
+      "default": 0,
+      "curve": "linear",
+      "unit": "",
+      "nl_aliases": ["noise", "air", "airy", "breathy", "hiss", "texture", "wind"],
+      "nl_direction": "higher mixes white noise in with the oscillators for air, breath, and texture; zero is none"
+    },
+    "glide_time": {
+      "label": "Glide",
+      "group": "Pitch",
+      "type": "float",
+      "min": 0.001,
+      "max": 2,
+      "default": 0.001,
+      "curve": "log",
+      "unit": "s",
+      "nl_aliases": ["portamento", "glide", "slide", "pitch slide", "smooth pitch", "lazy pitch"],
+      "nl_direction": "higher makes the pitch slide slowly from the previous note into each new one; at the minimum every note starts exactly on pitch"
+    },
     "filter_type": {
       "label": "Type",
       "group": "Filter",
@@ -256,6 +280,31 @@
       "nl_aliases": ["key follow", "even brightness across keys"],
       "nl_direction": "higher makes high notes open the filter more, keeping brightness consistent up the keyboard"
     },
+    "filter_drive": {
+      "label": "Drive",
+      "group": "Filter",
+      "type": "float",
+      "min": 0,
+      "max": 1,
+      "default": 0,
+      "curve": "linear",
+      "unit": "",
+      "nl_aliases": ["warmth", "saturation", "grit", "bite", "filter overdrive", "analog"],
+      "nl_direction": "higher saturates the signal inside the filter, adding warmth at low settings and grit and bite when pushed hard"
+    },
+    "filter_slope": {
+      "label": "Slope",
+      "group": "Filter",
+      "type": "enum",
+      "values": ["12", "24"],
+      "min": 0,
+      "max": 1,
+      "default": 1,
+      "curve": "linear",
+      "unit": "dB/oct",
+      "nl_aliases": ["steepness", "gentle rolloff", "steep rolloff", "vintage slope", "airy top"],
+      "nl_direction": "24 cuts everything above the cutoff harder (darker, more synthetic); 12 rolls off gently, leaving the top end airier and more open"
+    },
     "amp_attack": {
       "label": "Attack",
       "group": "Amp Envelope",
@@ -303,6 +352,18 @@
       "unit": "s",
       "nl_aliases": ["tail", "ring out", "abrupt", "lingering"],
       "nl_direction": "higher lets the note ring out after the key is released; lower cuts it off quickly"
+    },
+    "amp_velocity": {
+      "label": "Velocity",
+      "group": "Amp Envelope",
+      "type": "float",
+      "min": 0,
+      "max": 1,
+      "default": 0.4,
+      "curve": "linear",
+      "unit": "",
+      "nl_aliases": ["velocity sensitivity", "touch response", "dynamics", "expressive", "even level"],
+      "nl_direction": "higher makes how hard a key is hit change the loudness more (expressive, dynamic); zero plays every note at the same level"
     },
     "fenv_attack": {
       "label": "Attack",
@@ -402,6 +463,163 @@
       "nl_aliases": ["what moves", "wah", "vibrato", "tremolo", "auto-pan"],
       "nl_direction": "cutoff gives wah and wobble, pitch gives vibrato, amp gives tremolo, pan sweeps side to side"
     },
+    "lfo_fade": {
+      "label": "Fade In",
+      "group": "LFO",
+      "type": "float",
+      "min": 0,
+      "max": 3,
+      "default": 0,
+      "curve": "linear",
+      "unit": "s",
+      "nl_aliases": ["delayed vibrato", "vibrato fade in", "gradual wobble", "movement fades in"],
+      "nl_direction": "higher makes the LFO movement fade in gradually after each note starts, like a singer adding vibrato late; zero starts the movement immediately"
+    },
+    "lfo_retrigger": {
+      "label": "Retrigger",
+      "group": "LFO",
+      "type": "enum",
+      "values": ["free", "note"],
+      "min": 0,
+      "max": 1,
+      "default": 0,
+      "curve": "linear",
+      "unit": "",
+      "nl_aliases": ["lfo restart", "per-note wobble", "consistent attack movement", "free running"],
+      "nl_direction": "note restarts the wobble at the start of every note so each attack moves identically; free lets one wobble run continuously underneath all notes"
+    },
+    "distortion_drive": {
+      "label": "Drive",
+      "group": "Distortion",
+      "type": "float",
+      "min": 0,
+      "max": 1,
+      "default": 0.3,
+      "curve": "linear",
+      "unit": "",
+      "nl_aliases": ["drive", "gritty", "dirty", "crunchy", "fuzzy", "aggressive", "overdrive"],
+      "nl_direction": "higher pushes the sound harder into the distortion, from mild crunch to full fuzz; only audible once distortion mix is turned up"
+    },
+    "distortion_mix": {
+      "label": "Mix",
+      "group": "Distortion",
+      "type": "float",
+      "min": 0,
+      "max": 1,
+      "default": 0,
+      "curve": "linear",
+      "unit": "",
+      "nl_aliases": ["distortion amount", "grit amount", "dirt", "crunch", "clean"],
+      "nl_direction": "higher blends in more of the distorted signal for grit and aggression; zero is completely clean"
+    },
+    "chorus_rate": {
+      "label": "Rate",
+      "group": "Chorus",
+      "type": "float",
+      "min": 0.05,
+      "max": 8,
+      "default": 0.8,
+      "curve": "log",
+      "unit": "Hz",
+      "nl_aliases": ["chorus speed", "shimmer speed", "ensemble speed", "swirl"],
+      "nl_direction": "higher makes the chorus swirl faster; slow rates sound lush and dreamy, fast rates sound watery"
+    },
+    "chorus_depth": {
+      "label": "Depth",
+      "group": "Chorus",
+      "type": "float",
+      "min": 0,
+      "max": 1,
+      "default": 0.35,
+      "curve": "linear",
+      "unit": "",
+      "nl_aliases": ["chorus intensity", "detune shimmer", "lushness", "thickening"],
+      "nl_direction": "higher sweeps the chorus pitch further for a deeper, lusher, more detuned shimmer"
+    },
+    "chorus_mix": {
+      "label": "Mix",
+      "group": "Chorus",
+      "type": "float",
+      "min": 0,
+      "max": 1,
+      "default": 0,
+      "curve": "linear",
+      "unit": "",
+      "nl_aliases": ["chorus", "chorused", "ensemble", "shimmering", "lush", "dreamy", "wide"],
+      "nl_direction": "higher blends in more chorus, sounding wider, lusher, and shimmering; zero is off"
+    },
+    "delay_time": {
+      "label": "Time",
+      "group": "Delay",
+      "type": "float",
+      "min": 0.02,
+      "max": 2,
+      "default": 0.35,
+      "curve": "log",
+      "unit": "s",
+      "nl_aliases": ["echo time", "echo spacing", "slapback", "long echo"],
+      "nl_direction": "higher spaces the echoes further apart; very short times give a tight slapback, long times give spacious repeats"
+    },
+    "delay_feedback": {
+      "label": "Feedback",
+      "group": "Delay",
+      "type": "float",
+      "min": 0,
+      "max": 0.9,
+      "default": 0.35,
+      "curve": "linear",
+      "unit": "",
+      "nl_aliases": ["echo repeats", "echo tail", "regeneration", "endless echo"],
+      "nl_direction": "higher makes each echo repeat more times before dying away"
+    },
+    "delay_mix": {
+      "label": "Mix",
+      "group": "Delay",
+      "type": "float",
+      "min": 0,
+      "max": 1,
+      "default": 0,
+      "curve": "linear",
+      "unit": "",
+      "nl_aliases": ["echo", "delay", "echoey", "repeats", "bouncing"],
+      "nl_direction": "higher blends in more echo; zero is off"
+    },
+    "reverb_size": {
+      "label": "Size",
+      "group": "Reverb",
+      "type": "float",
+      "min": 0,
+      "max": 1,
+      "default": 0.5,
+      "curve": "linear",
+      "unit": "",
+      "nl_aliases": ["room size", "hall", "small room", "big room", "cavern"],
+      "nl_direction": "higher sounds like a bigger space, from a small room up to a huge hall"
+    },
+    "reverb_decay": {
+      "label": "Decay",
+      "group": "Reverb",
+      "type": "float",
+      "min": 0.1,
+      "max": 10,
+      "default": 1.6,
+      "curve": "log",
+      "unit": "s",
+      "nl_aliases": ["reverb tail", "ring out", "wash", "lingering space"],
+      "nl_direction": "higher lets the reverb tail ring out longer after each note"
+    },
+    "reverb_mix": {
+      "label": "Mix",
+      "group": "Reverb",
+      "type": "float",
+      "min": 0,
+      "max": 1,
+      "default": 0,
+      "curve": "linear",
+      "unit": "",
+      "nl_aliases": ["reverb", "space", "spacious", "wet", "dry", "distant", "ambience", "roomy"],
+      "nl_direction": "higher blends in more reverb, sounding wetter, more spacious, and more distant; zero is completely dry"
+    },
     "master_volume": {
       "label": "Volume",
       "group": "Master",
@@ -413,6 +631,18 @@
       "unit": "",
       "nl_aliases": ["overall volume", "output", "quieter", "louder"],
       "nl_direction": "higher is louder overall"
+    },
+    "master_width": {
+      "label": "Width",
+      "group": "Master",
+      "type": "float",
+      "min": 0,
+      "max": 2,
+      "default": 1,
+      "curve": "linear",
+      "unit": "",
+      "nl_aliases": ["stereo width", "wide", "narrow", "mono", "spacious", "big stereo", "focused"],
+      "nl_direction": "higher is wider; 1 leaves the stereo image unchanged, 0 collapses it to mono, 2 exaggerates the sides"
     }
   }
 }

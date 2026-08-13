@@ -204,6 +204,44 @@ describe("engine", () => {
     }
   });
 
+  it("tail gate: with reverb and delay engaged, the tail snaps to exact zero within bounded time", () => {
+    // Reverb decay 0.5 s at mix 0.5 plus a short low-feedback delay: the
+    // audible tail dies in well under 2 s, and the chain-level tail gate
+    // must then flush every effect memory so the output is EXACT 0.0 (the
+    // silence invariant), not a -300 dB recirculating residue. Bound: exact
+    // zero within 4 s of the release.
+    const sr = 48000;
+    const releaseAt = 0.35;
+    const { left, right } = renderOffline({
+      durationSec: releaseAt + 4.0,
+      sampleRate: sr,
+      params: {
+        reverb_mix: 0.5,
+        reverb_decay: 0.5,
+        reverb_size: 0.5,
+        delay_mix: 0.5,
+        delay_time: 0.15,
+        delay_feedback: 0.2,
+      },
+      events: [
+        { timeSec: 0.05, type: "on", note: 60, velocity: 1 },
+        { timeSec: releaseAt, type: "off", note: 60 },
+      ],
+    });
+    // The wet tail audibly exists right after the release...
+    expect(rmsDb(left, Math.round(0.45 * sr), Math.round(0.7 * sr))).toBeGreaterThan(-60);
+    // ...and the last stretch is exact digital zero.
+    const tailStart = Math.round((releaseAt + 4.0 - 0.25) * sr);
+    assertSilent(left.subarray(tailStart), "gated tail left");
+    assertSilent(right.subarray(tailStart), "gated tail right");
+    // Report-grade bound: find when exact zero becomes permanent.
+    let lastNonZero = -1;
+    for (let i = 0; i < left.length; i += 1) {
+      if (left[i] !== 0 || right[i] !== 0) lastNonZero = i;
+    }
+    expect(lastNonZero / sr - releaseAt).toBeLessThan(4.0);
+  });
+
   it("matches the golden render for the Init preset, at a sane loudness, ending in exact zero", () => {
     const audio = renderOffline({
       durationSec: 1.0,

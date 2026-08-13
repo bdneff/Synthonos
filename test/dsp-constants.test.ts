@@ -29,6 +29,13 @@ import {
   LFO_TARGET_PITCH,
   LFO_TARGET_AMP,
   LFO_TARGET_PAN,
+  FILTER_SLOPE_VALUES,
+  FILTER_SLOPE_12,
+  FILTER_SLOPE_24,
+  LFO_RETRIGGER_VALUES,
+  LFO_RETRIGGER_FREE,
+  LFO_RETRIGGER_NOTE,
+  DELAY_MAX_SEC,
   MAX_UNISON,
   MAX_VOICES,
 } from "../src/dsp/constants";
@@ -69,6 +76,22 @@ describe("dsp constants mirror the generated schema metadata", () => {
     expect(LFO_TARGET_PITCH).toBe(LFO_TARGET_VALUES.indexOf("pitch"));
     expect(LFO_TARGET_AMP).toBe(LFO_TARGET_VALUES.indexOf("amp"));
     expect(LFO_TARGET_PAN).toBe(LFO_TARGET_VALUES.indexOf("pan"));
+  });
+
+  it("filter slope order matches", () => {
+    expect(FILTER_SLOPE_VALUES).toEqual([...(PARAMS.filter_slope.values ?? [])]);
+    expect(FILTER_SLOPE_12).toBe(FILTER_SLOPE_VALUES.indexOf("12"));
+    expect(FILTER_SLOPE_24).toBe(FILTER_SLOPE_VALUES.indexOf("24"));
+  });
+
+  it("lfo retrigger order matches", () => {
+    expect(LFO_RETRIGGER_VALUES).toEqual([...(PARAMS.lfo_retrigger.values ?? [])]);
+    expect(LFO_RETRIGGER_FREE).toBe(LFO_RETRIGGER_VALUES.indexOf("free"));
+    expect(LFO_RETRIGGER_NOTE).toBe(LFO_RETRIGGER_VALUES.indexOf("note"));
+  });
+
+  it("delay line sizing covers the schema's delay_time range", () => {
+    expect(DELAY_MAX_SEC).toBe(PARAMS.delay_time.max);
   });
 
   it("engine sizing agrees with the schema's unison range", () => {

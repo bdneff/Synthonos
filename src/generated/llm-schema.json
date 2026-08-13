@@ -92,6 +92,14 @@
           "type": "number",
           "description": "Oscillator B / Detune (cents). Allowed range 0 to 100 cents. Higher spreads the unison voices further apart, sounding wider and lusher; too high sounds out of tune. Related words: spread, width, lushness, wobble, chorus."
         },
+        "osc_noise_level": {
+          "type": "number",
+          "description": "Mixer / Noise. Allowed range 0 to 1. Higher mixes white noise in with the oscillators for air, breath, and texture; zero is none. Related words: noise, air, airy, breathy, hiss, texture, wind."
+        },
+        "glide_time": {
+          "type": "number",
+          "description": "Pitch / Glide (s). Allowed range 0.001 to 2 s, perceived logarithmically. Higher makes the pitch slide slowly from the previous note into each new one; at the minimum every note starts exactly on pitch. Related words: portamento, glide, slide, pitch slide, smooth pitch, lazy pitch."
+        },
         "filter_type": {
           "type": "string",
           "enum": [
@@ -117,6 +125,18 @@
           "type": "number",
           "description": "Filter / Keytrack. Allowed range 0 to 1. Higher makes high notes open the filter more, keeping brightness consistent up the keyboard. Related words: key follow, even brightness across keys."
         },
+        "filter_drive": {
+          "type": "number",
+          "description": "Filter / Drive. Allowed range 0 to 1. Higher saturates the signal inside the filter, adding warmth at low settings and grit and bite when pushed hard. Related words: warmth, saturation, grit, bite, filter overdrive, analog."
+        },
+        "filter_slope": {
+          "type": "string",
+          "enum": [
+            "12",
+            "24"
+          ],
+          "description": "Filter / Slope (dB/oct). 24 cuts everything above the cutoff harder (darker, more synthetic); 12 rolls off gently, leaving the top end airier and more open. Related words: steepness, gentle rolloff, steep rolloff, vintage slope, airy top."
+        },
         "amp_attack": {
           "type": "number",
           "description": "Amp Envelope / Attack (s). Allowed range 0.001 to 5 s, perceived logarithmically. Higher fades the note in slowly (pads, swells); lower snaps instantly (plucks, keys, punch). Related words: softness, fade in, swell, punchy, immediate."
@@ -132,6 +152,10 @@
         "amp_release": {
           "type": "number",
           "description": "Amp Envelope / Release (s). Allowed range 0.01 to 10 s, perceived logarithmically. Higher lets the note ring out after the key is released; lower cuts it off quickly. Related words: tail, ring out, abrupt, lingering."
+        },
+        "amp_velocity": {
+          "type": "number",
+          "description": "Amp Envelope / Velocity. Allowed range 0 to 1. Higher makes how hard a key is hit change the loudness more (expressive, dynamic); zero plays every note at the same level. Related words: velocity sensitivity, touch response, dynamics, expressive, even level."
         },
         "fenv_attack": {
           "type": "number",
@@ -179,9 +203,69 @@
           ],
           "description": "LFO / Target. Cutoff gives wah and wobble, pitch gives vibrato, amp gives tremolo, pan sweeps side to side. Related words: what moves, wah, vibrato, tremolo, auto-pan."
         },
+        "lfo_fade": {
+          "type": "number",
+          "description": "LFO / Fade In (s). Allowed range 0 to 3 s. Higher makes the LFO movement fade in gradually after each note starts, like a singer adding vibrato late; zero starts the movement immediately. Related words: delayed vibrato, vibrato fade in, gradual wobble, movement fades in."
+        },
+        "lfo_retrigger": {
+          "type": "string",
+          "enum": [
+            "free",
+            "note"
+          ],
+          "description": "LFO / Retrigger. Note restarts the wobble at the start of every note so each attack moves identically; free lets one wobble run continuously underneath all notes. Related words: lfo restart, per-note wobble, consistent attack movement, free running."
+        },
+        "distortion_drive": {
+          "type": "number",
+          "description": "Distortion / Drive. Allowed range 0 to 1. Higher pushes the sound harder into the distortion, from mild crunch to full fuzz; only audible once distortion mix is turned up. Related words: drive, gritty, dirty, crunchy, fuzzy, aggressive, overdrive."
+        },
+        "distortion_mix": {
+          "type": "number",
+          "description": "Distortion / Mix. Allowed range 0 to 1. Higher blends in more of the distorted signal for grit and aggression; zero is completely clean. Related words: distortion amount, grit amount, dirt, crunch, clean."
+        },
+        "chorus_rate": {
+          "type": "number",
+          "description": "Chorus / Rate (Hz). Allowed range 0.05 to 8 Hz, perceived logarithmically. Higher makes the chorus swirl faster; slow rates sound lush and dreamy, fast rates sound watery. Related words: chorus speed, shimmer speed, ensemble speed, swirl."
+        },
+        "chorus_depth": {
+          "type": "number",
+          "description": "Chorus / Depth. Allowed range 0 to 1. Higher sweeps the chorus pitch further for a deeper, lusher, more detuned shimmer. Related words: chorus intensity, detune shimmer, lushness, thickening."
+        },
+        "chorus_mix": {
+          "type": "number",
+          "description": "Chorus / Mix. Allowed range 0 to 1. Higher blends in more chorus, sounding wider, lusher, and shimmering; zero is off. Related words: chorus, chorused, ensemble, shimmering, lush, dreamy, wide."
+        },
+        "delay_time": {
+          "type": "number",
+          "description": "Delay / Time (s). Allowed range 0.02 to 2 s, perceived logarithmically. Higher spaces the echoes further apart; very short times give a tight slapback, long times give spacious repeats. Related words: echo time, echo spacing, slapback, long echo."
+        },
+        "delay_feedback": {
+          "type": "number",
+          "description": "Delay / Feedback. Allowed range 0 to 0.9. Higher makes each echo repeat more times before dying away. Related words: echo repeats, echo tail, regeneration, endless echo."
+        },
+        "delay_mix": {
+          "type": "number",
+          "description": "Delay / Mix. Allowed range 0 to 1. Higher blends in more echo; zero is off. Related words: echo, delay, echoey, repeats, bouncing."
+        },
+        "reverb_size": {
+          "type": "number",
+          "description": "Reverb / Size. Allowed range 0 to 1. Higher sounds like a bigger space, from a small room up to a huge hall. Related words: room size, hall, small room, big room, cavern."
+        },
+        "reverb_decay": {
+          "type": "number",
+          "description": "Reverb / Decay (s). Allowed range 0.1 to 10 s, perceived logarithmically. Higher lets the reverb tail ring out longer after each note. Related words: reverb tail, ring out, wash, lingering space."
+        },
+        "reverb_mix": {
+          "type": "number",
+          "description": "Reverb / Mix. Allowed range 0 to 1. Higher blends in more reverb, sounding wetter, more spacious, and more distant; zero is completely dry. Related words: reverb, space, spacious, wet, dry, distant, ambience, roomy."
+        },
         "master_volume": {
           "type": "number",
           "description": "Master / Volume. Allowed range 0 to 1. Higher is louder overall. Related words: overall volume, output, quieter, louder."
+        },
+        "master_width": {
+          "type": "number",
+          "description": "Master / Width. Allowed range 0 to 2. Higher is wider; 1 leaves the stereo image unchanged, 0 collapses it to mono, 2 exaggerates the sides. Related words: stereo width, wide, narrow, mono, spacious, big stereo, focused."
         }
       },
       "additionalProperties": false

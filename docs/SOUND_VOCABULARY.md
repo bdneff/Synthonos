@@ -57,8 +57,8 @@ Moves:
 - `osc1_waveform` toward saw or triangle rather than square
 - `osc2_level` up slightly with `osc2_octave` down 1, a quiet layer an
   octave below adds body
-- (future: `filter_drive`) up slightly
-- (future: `chorus_mix`) up slightly
+- `filter_drive` up slightly
+- `chorus_mix` up slightly
 Reference: the pads in Boards of Canada "Roygbiv".
 
 ### bright
@@ -110,7 +110,7 @@ Moves:
 - `filter_resonance` down moderately
 - `filter_cutoff` to a middle region (toward 2000 to 6000 Hz)
 - `amp_attack` up slightly
-- (future: `distortion_mix`) down to zero
+- `distortion_mix` down to zero
 Reference: the synth lines in Air "La Femme d'Argent".
 
 ### harsh
@@ -120,7 +120,7 @@ Moves:
 - `filter_cutoff` up hard (toward the top of its range)
 - `filter_resonance` up hard
 - `osc1_waveform` toward square or saw
-- (future: `distortion_drive`) up hard
+- `distortion_drive` up hard
 Reference: the leads in Skrillex "Bangarang". For "less harsh", invert
 these moves.
 
@@ -188,19 +188,19 @@ Moves:
 - `filter_cutoff` up moderately
 - `filter_resonance` up slightly
 - `osc1_waveform` toward square or saw
-- (future: `chorus_mix`) down to zero
+- `chorus_mix` down to zero
 Reference: Kraftwerk "The Robots".
 
 ### airy
 Definition: light, open, with a breath of very high frequency around the
 tone. Feels like air moving.
 Moves:
-- (future: `osc_noise_level`) up moderately, this is the real mechanism
+- `osc_noise_level` up moderately, this is the real mechanism
 - `filter_cutoff` up hard (toward 10000 Hz and above)
 - `osc2_waveform` toward sine with `osc2_octave` up 2 at a low
   `osc2_level` (around 0.15 to 0.3)
 - `amp_attack` up slightly
-- (future: `reverb_mix`) up moderately
+- `reverb_mix` up moderately
 Reference: the pads under Enya "Orinoco Flow". Note: without a noise
 source the current schema only gestures at this term.
 
@@ -208,7 +208,7 @@ source the current schema only gestures at this term.
 Definition: audible breath in the tone, like a flute or a whispering
 voice. Noise blended with pitch.
 Moves:
-- (future: `osc_noise_level`) up hard, this is the essential move
+- `osc_noise_level` up hard, this is the essential move
 - `filter_cutoff` to a middle region (toward 2000 to 5000 Hz)
 - `amp_attack` up slightly (toward 0.05 to 0.2 s)
 - `osc1_waveform` toward triangle or sine
@@ -225,7 +225,7 @@ Moves:
 - `osc1_unison_detune` to a moderate region (toward 10 to 25 cents)
 - `osc2_level` up moderately with `osc2_octave` down 1
 - `filter_cutoff` down slightly
-- (future: `filter_drive`) up moderately
+- `filter_drive` up moderately
 Reference: a Minimoog bass, the sound "fat" was coined for.
 
 ### thin
@@ -249,7 +249,7 @@ Moves:
 - `osc1_pan` hard left and `osc2_pan` hard right
 - `osc2_octave` down 1
 - `amp_release` up moderately
-- (future: `master_width`) up hard, (future: `reverb_mix`) up moderately
+- `master_width` up hard, `reverb_mix` up moderately
 Reference: Tiësto "Adagio for Strings".
 
 ### small
@@ -261,7 +261,7 @@ Moves:
 - `osc1_octave` up 1 or 2
 - `amp_release` down hard
 - `osc1_level` down slightly
-- (future: `reverb_mix`) down to zero
+- `reverb_mix` down to zero
 Reference: a music box.
 
 ### deep
@@ -300,8 +300,8 @@ Reference: a TR-808 kick with the decay turned up.
 Definition: a rough, sandpapery surface on the tone. Dirt that adds
 attitude without destroying the note.
 Moves:
-- (future: `distortion_drive`) up moderately, the primary mechanism
-- (future: `filter_drive`) up moderately
+- `distortion_drive` up moderately, the primary mechanism
+- `filter_drive` up moderately
 - `osc1_waveform` toward saw
 - `filter_resonance` up slightly
 - `osc1_unison_detune` up slightly if unison is active
@@ -312,7 +312,7 @@ weakly expressible until drive and distortion parameters land.
 Definition: unpolished and slightly distorted, in a good way. Looser and
 lower-fi than gritty.
 Moves:
-- (future: `distortion_drive`) up moderately with (future:
+- `distortion_drive` up moderately with (future:
   `distortion_mix`) around half
 - `osc2_waveform` matching osc1 with `osc2_fine` offset (toward 8 to 15
   cents) for a loose unstable pitch
@@ -327,14 +327,14 @@ Moves:
 - `osc1_unison_voices` down to 1 or 2 with `osc1_unison_detune` low
 - `filter_resonance` down moderately
 - `osc1_waveform` toward triangle or sine
-- (future: `distortion_mix`) down to zero
+- `distortion_mix` down to zero
 Reference: Hot Butter "Popcorn".
 
 ### crunchy
 Definition: hard-clipped, broken-speaker distortion with a brittle edge.
 More damaged than gritty.
 Moves:
-- (future: `distortion_drive`) up hard with (future: `distortion_mix`)
+- `distortion_drive` up hard with `distortion_mix`
   up hard, the real mechanism
 - `osc1_waveform` toward square
 - `filter_resonance` up moderately
@@ -345,7 +345,7 @@ until distortion lands; the current schema can only hint at it.
 Definition: thick, wooly, sustained distortion, like a fuzz pedal. Rounder
 than crunchy, the edges blur together.
 Moves:
-- (future: `distortion_drive`) up hard, the real mechanism
+- `distortion_drive` up hard, the real mechanism
 - `osc1_waveform` toward saw with `osc2_waveform` square and `osc2_fine`
   offset slightly
 - `filter_cutoff` down moderately to round off the top
@@ -381,8 +381,8 @@ Moves:
 - `osc2_fine` offset slightly (toward 3 to 8 cents against osc1)
 - `filter_cutoff` down slightly
 - `filter_resonance` up slightly
-- (future: `filter_drive`) up slightly
-- (future: `chorus_mix`) up slightly
+- `filter_drive` up slightly
+- `chorus_mix` up slightly
 Reference: a Roland Juno-106.
 
 ### organic
@@ -407,7 +407,7 @@ Moves:
 - `filter_resonance` up moderately
 - `lfo_target` to cutoff with `lfo_rate` toward 1 to 4 Hz and
   `lfo_depth` up moderately
-- (future: `distortion_drive`) up hard
+- `distortion_drive` up hard
 Reference: Skrillex "Scary Monsters and Nice Sprites". Note: real growls
 also need formant movement and heavy distortion; partial for now.
 
@@ -420,7 +420,7 @@ Moves:
 - `osc1_waveform` toward saw with `osc1_unison_voices` up and
   `osc1_unison_detune` up moderately
 - `amp_attack` down to the minimum
-- (future: `distortion_drive`) up hard
+- `distortion_drive` up hard
 Reference: the synth stabs in The Prodigy "Smack My Bitch Up".
 
 ## Width and space
@@ -432,8 +432,8 @@ Moves:
 - `osc1_pan` hard left and `osc2_pan` hard right
 - `osc1_unison_voices` up moderately (4 or more)
 - `osc1_unison_detune` up moderately
-- (future: `master_width`) up hard
-- (future: `chorus_mix`) up moderately
+- `master_width` up hard
+- `chorus_mix` up moderately
 Reference: the Roland JP-8000 "SuperSaw" spread.
 
 ### narrow
@@ -443,13 +443,13 @@ Moves:
 - `osc1_pan` and `osc2_pan` to center
 - `osc1_unison_voices` and `osc2_unison_voices` down toward 1
 - `osc1_unison_detune` and `osc2_unison_detune` down hard
-- (future: `master_width`) down toward mono
+- `master_width` down toward mono
 Reference: a Moog Taurus bass pedal, a mono instrument by design.
 
 ### spacious
 Definition: sits in a large space, air and room around the sound.
 Moves:
-- (future: `reverb_mix`) up hard with (future: `reverb_size`) large, the
+- `reverb_mix` up hard with `reverb_size` large, the
   real mechanism
 - `amp_release` up moderately
 - `amp_attack` up slightly
@@ -463,7 +463,7 @@ and washed in room sound.
 Moves:
 - `filter_cutoff` down moderately (distance eats treble first)
 - `osc1_level` down slightly
-- (future: `reverb_mix`) up hard with (future: `reverb_size`) large
+- `reverb_mix` up hard with `reverb_size` large
 Reference: the pads in Burial "Archangel".
 
 ### close
@@ -472,13 +472,13 @@ Moves:
 - `filter_cutoff` up slightly
 - `amp_attack` down toward the minimum
 - `osc1_level` up slightly
-- (future: `reverb_mix`) and (future: `delay_mix`) down to zero
+- `reverb_mix` and `delay_mix` down to zero
 Reference: the dry upfront synth lines of Prince "1999".
 
 ### dry
 Definition: no reverb, no echo, no space at all. The raw signal.
 Moves:
-- (future: `reverb_mix`) and (future: `delay_mix`) down to zero, the
+- `reverb_mix` and `delay_mix` down to zero, the
   entire meaning of the term
 - `amp_release` down slightly
 Reference: Kraftwerk "Computer World", famously bone dry. Note: until
@@ -487,8 +487,8 @@ effects land every patch is already dry, so this term is a no-op today.
 ### wet
 Definition: soaked in reverb and echo, more space than source.
 Moves:
-- (future: `reverb_mix`) up hard, (future: `delay_mix`) up moderately,
-  (future: `delay_feedback`) up moderately
+- `reverb_mix` up hard, `delay_mix` up moderately,
+  `delay_feedback` up moderately
 - `amp_release` up moderately as a weak stand-in
 Reference: the dub echoes of King Tubby. Note: not honestly expressible
 until effects land.
@@ -501,7 +501,7 @@ Moves:
 - `osc1_unison_detune` toward 15 to 30 cents
 - `amp_attack` up moderately, `amp_release` up moderately
 - `osc1_pan` and `osc2_pan` spread apart moderately
-- (future: `chorus_mix`) up hard, (future: `reverb_mix`) up moderately
+- `chorus_mix` up hard, `reverb_mix` up moderately
 Reference: The Cure "Plainsong".
 
 ### dreamy
@@ -512,7 +512,7 @@ Moves:
 - `lfo_target` to pitch with `lfo_waveform` sine, `lfo_rate` low (toward
   0.2 to 1 Hz), `lfo_depth` up very slightly for a gentle waver
 - `osc2_fine` offset slightly
-- (future: `reverb_mix`) up hard, (future: `chorus_mix`) up moderately
+- `reverb_mix` up hard, `chorus_mix` up moderately
 Reference: Beach House "Space Song".
 
 ## Envelope and dynamics
@@ -537,7 +537,7 @@ Moves:
 - `filter_env_amount` up moderately with `fenv_decay` very short (toward
   0.03 to 0.1 s) for a bright bite on the front
 - `amp_decay` down moderately with `amp_sustain` at a middle level
-- (future: `amp_velocity`) up moderately
+- `amp_velocity` up moderately
 - (future: `osc*_phase`) fixed rather than random, so every hit lands
   identically
 Reference: the bass in Daft Punk "Around the World".
@@ -629,7 +629,7 @@ Moves:
 - `lfo_waveform` to sine
 - `lfo_rate` toward 4 to 7 Hz
 - `lfo_depth` up slightly, vibrato is subtle or it sounds seasick
-- (future: `lfo_fade`) up moderately so the vibrato arrives after the
+- `lfo_fade` up moderately so the vibrato arrives after the
   note starts, which is how players actually do it
 Reference: a theremin.
 
@@ -689,8 +689,8 @@ Reference: the detuned lead of Kavinsky "Nightcall".
 Definition: a watery doubled shimmer, as if several copies of the sound
 play at once slightly out of tune.
 Moves:
-- (future: `chorus_mix`) up hard with (future: `chorus_rate`) slow and
-  (future: `chorus_depth`) moderate, the real mechanism
+- `chorus_mix` up hard with `chorus_rate` slow and
+  `chorus_depth` moderate, the real mechanism
 - `osc2_waveform` matching osc1 with `osc2_fine` offset (toward 5 to 15
   cents) as the current approximation
 - `osc1_pan` and `osc2_pan` spread apart slightly
@@ -707,7 +707,7 @@ Moves:
 - `filter_cutoff` up hard
 - `lfo_target` to pan with `lfo_waveform` sine, `lfo_rate` low (toward
   0.3 to 1.5 Hz), `lfo_depth` up slightly
-- (future: `reverb_mix`) up moderately
+- `reverb_mix` up moderately
 Reference: the glittering arpeggios of Owl City "Fireflies".
 
 ## Archetypes
@@ -730,8 +730,8 @@ Moves:
   `filter_resonance` low
 - `amp_attack` near minimum, `amp_decay` around 0.3 s, `amp_sustain`
   around 0.8, `amp_release` around 0.3 s
-- (future: `master_width`) up hard, (future: `chorus_mix`) and (future:
-  `reverb_mix`) up moderately, (future: `filter_slope`) 12 dB per octave
+- `master_width` up hard, `chorus_mix` and (future:
+  `reverb_mix`) up moderately, `filter_slope` 12 dB per octave
   for the brighter open top
 Reference: Darude "Sandstorm".
 
@@ -748,7 +748,7 @@ Moves:
 - `filter_type` lowpass, `filter_cutoff` toward 300 to 900 Hz,
   `filter_resonance` low to moderate
 - `amp_attack` near minimum, `amp_sustain` high, `amp_release` short
-- (future: `distortion_drive`) up moderately and (future: `filter_slope`)
+- `distortion_drive` up moderately and `filter_slope`
   24 dB per octave for the modern processed version
 Reference: Renegade "Terrorist" (the Reese bass lineage runs from Kevin
 Saunderson's Reese "Just Want Another Chance" into jungle).
@@ -765,9 +765,9 @@ Moves:
 - `filter_type` lowpass, `filter_cutoff` toward 4000 to 10000 Hz,
   `filter_resonance` up moderately
 - `amp_attack` near minimum, `amp_sustain` high
-- (future: `glide_time`) up moderately, the signature upward pitch slide
+- `glide_time` up moderately, the signature upward pitch slide
   into each note cannot be made without portamento
-- (future: `distortion_drive`) up moderately
+- `distortion_drive` up moderately
 Reference: Human Resource "Dominator".
 
 ### acid
@@ -784,8 +784,8 @@ Moves:
   `fenv_sustain` at 0
 - `amp_attack` at minimum, `amp_decay` around 0.3 s, `amp_sustain`
   around 0.3 to 0.5, `amp_release` short
-- (future: `glide_time`) short for slides between tied notes, (future:
-  `amp_velocity`) up for accents, (future: `distortion_drive`) up
+- `glide_time` short for slides between tied notes, (future:
+  `amp_velocity`) up for accents, `distortion_drive` up
   slightly, all three are core 303 behavior
 Reference: Phuture "Acid Tracks".
 
@@ -802,7 +802,7 @@ Moves:
 - `amp_attack` near minimum, `amp_sustain` high, `amp_release` toward
   0.1 to 0.3 s
 - `lfo_depth` at 0
-- (future: `distortion_drive`) up slightly only if it must be audible on
+- `distortion_drive` up slightly only if it must be audible on
   small speakers
 Reference: the 808 style sine sub under modern trap and drill.
 
@@ -834,7 +834,7 @@ Moves:
 - `lfo_target` to pitch with `lfo_waveform` sine, `lfo_rate` toward 5 to
   7 Hz, `lfo_depth` up slightly for the melody vibrato
 - (future: pulse width control) for the 25 and 12.5 percent duty tones,
-  (future: `osc_noise_level`) for the percussion channel; without pulse
+  `osc_noise_level` for the percussion channel; without pulse
   width only the 50 percent square is reachable
 Reference: the Super Mario Bros. theme on the NES.
 
@@ -852,7 +852,7 @@ Moves:
   the strike is bright and the tail darkens
 - `filter_keytrack` up
 - (future: FM or ring modulation) is how real bell patches are made;
-  (future: `reverb_mix`) up moderately
+  `reverb_mix` up moderately
 Reference: the DX7 "TUB BELLS" preset.
 
 ### brassy
@@ -869,7 +869,7 @@ Moves:
 - `amp_attack` toward 0.02 to 0.08 s, `amp_sustain` high
 - `lfo_target` to pitch with `lfo_rate` toward 4 to 6 Hz and `lfo_depth`
   up very slightly
-- (future: `filter_drive`) up moderately for bite, (future: `glide_time`)
+- `filter_drive` up moderately for bite, `glide_time`
   very short for the swagger between notes
 Reference: the CS-80 brass of the Vangelis "Blade Runner" main titles.
 
@@ -886,7 +886,7 @@ Moves:
   `filter_resonance` low
 - `amp_attack` toward 0.2 to 0.5 s, `amp_sustain` high, `amp_release`
   toward 0.5 to 1.5 s
-- (future: `chorus_mix`) up hard, ensemble chorus is most of the string
+- `chorus_mix` up hard, ensemble chorus is most of the string
   machine sound; (future: `osc*_phase_random`) on, so stacked notes smear
   rather than align
 Reference: the ARP Solina String Ensemble.
@@ -903,7 +903,7 @@ Moves:
 - `filter_keytrack` up
 - `amp_attack` at minimum, `amp_sustain` at 1, `amp_release` very short
   (toward 0.01 to 0.05 s), organs stop dead
-- (future: `osc_noise_level`) a tiny amount for key click, (future:
+- `osc_noise_level` a tiny amount for key click, (future:
   `chorus_rate`) fast for a rotary speaker feel; only two of the nine
   drawbars are reachable with two oscillators
 Reference: the M1 organ bass of Robin S "Show Me Love".
@@ -923,7 +923,7 @@ Moves:
   `amp_release` toward 1 to 3 s
 - `lfo_target` to cutoff with `lfo_waveform` triangle, `lfo_rate` very
   low (toward 0.05 to 0.2 Hz), `lfo_depth` up slightly
-- (future: `reverb_mix`) and (future: `chorus_mix`) up moderately, they
+- `reverb_mix` and `chorus_mix` up moderately, they
   do half the work of a finished pad
 Reference: the pads of Depeche Mode "Enjoy the Silence".
 
@@ -940,8 +940,8 @@ Moves:
   `amp_release` toward 0.1 to 0.3 s
 - `lfo_target` to pitch with `lfo_waveform` sine, `lfo_rate` toward 5 to
   6.5 Hz, `lfo_depth` up slightly
-- (future: `glide_time`) short, expressive mono leads live on portamento;
-  (future: `lfo_fade`) so the vibrato arrives late; (future:
+- `glide_time` short, expressive mono leads live on portamento;
+  `lfo_fade` so the vibrato arrives late; (future:
   `amp_velocity`) up moderately
 Reference: the lead hook of a-ha "Take On Me".
 
@@ -960,6 +960,6 @@ Moves:
 - `filter_keytrack` up
 - `amp_attack` at minimum, `amp_decay` toward 0.2 to 0.5 s,
   `amp_sustain` at or near 0, `amp_release` toward 0.2 to 0.4 s
-- (future: `reverb_mix`) and (future: `delay_mix`) up moderately, the
+- `reverb_mix` and `delay_mix` up moderately, the
   genre lives on plucks feeding a long tail
 Reference: the pluck lead of Avicii "Levels".

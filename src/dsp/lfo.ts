@@ -47,6 +47,19 @@ export class Lfo {
     this.wave = wave | 0;
   }
 
+  /**
+   * Restart the cycle from phase zero (per-voice "note" retrigger mode).
+   * Also reseeds sample_hold so every note hears the same deterministic
+   * random sequence, and clears the slew so the first value ramps from zero
+   * instead of jumping from a previous note's state.
+   */
+  reset(): void {
+    this.phase = 0;
+    this.lcgState = LCG_SEED;
+    this.shValue = this.draw();
+    this.smoothed = 0;
+  }
+
   /** Advance one sample at the given rate (Hz); returns the slewed value in [-1, 1]. */
   tick(rateHz: number): number {
     let inc = rateHz / this.sampleRate;

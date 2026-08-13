@@ -16,7 +16,15 @@ def space() -> ParamSpace:
 
 
 def test_dimension_count_matches_generated_bounds(space: ParamSpace) -> None:
-    assert space.n == len(space.order) == 34
+    # The schema is the single source of truth; derive the expected count
+    # from it instead of pinning a number that grows with every phase.
+    import json
+    from pathlib import Path
+
+    schema = json.loads(
+        (Path(__file__).resolve().parents[2] / "params.schema.json").read_text()
+    )
+    assert space.n == len(space.order) == len(schema["params"])
     assert space.order[0] == "osc1_waveform"
     assert "filter_cutoff" in space.index
 

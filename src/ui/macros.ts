@@ -105,32 +105,25 @@ export const MACROS: readonly MacroDef[] = [
     id: "space",
     name: "Space",
     description:
-      "Spreads the sound out and lets it ring longer after you let go.",
-    // TODO(schema): the ideal targets are reverb size/decay/mix, which do
-    // not exist yet. See docs/SYNTH_REFERENCE.md section 6 (item 8,
-    // effects parameters). Until then: pan spread, unison detune, and
-    // longer releases are the best available stand-ins.
+      "Puts the sound in a room. Up adds reverb and echo and a longer tail.",
     targets: [
-      { paramId: "osc1_pan", weight: -0.5 },
-      { paramId: "osc2_pan", weight: 0.5 },
-      { paramId: "amp_release", weight: 0.4 },
-      { paramId: "fenv_release", weight: 0.25 },
-      { paramId: "osc1_unison_detune", weight: 0.2 },
+      { paramId: "reverb_mix", weight: 0.9 },
+      { paramId: "reverb_size", weight: 0.5 },
+      { paramId: "reverb_decay", weight: 0.35 },
+      { paramId: "delay_mix", weight: 0.3, curve: "easeIn" },
+      { paramId: "amp_release", weight: 0.3 },
     ],
   },
   {
     id: "grit",
     name: "Grit",
     description:
-      "Roughens the tone with resonance and edge. Down is smooth and polite.",
-    // TODO(schema): the ideal targets are filter_drive and a distortion
-    // effect. See docs/SYNTH_REFERENCE.md section 6 (items 1 and 8).
-    // Until then: resonance, a waveform bias toward the buzzier shapes,
-    // and a touch of fine detune roughness stand in.
+      "Roughens the tone with drive and distortion. Down is smooth and polite.",
     targets: [
-      { paramId: "filter_resonance", weight: 0.6, curve: "easeIn" },
-      { paramId: "osc1_waveform", weight: 0.35 },
-      { paramId: "osc1_fine", weight: 0.15 },
+      { paramId: "filter_drive", weight: 0.8 },
+      { paramId: "distortion_mix", weight: 0.5, curve: "easeIn" },
+      { paramId: "distortion_drive", weight: 0.35 },
+      { paramId: "filter_resonance", weight: 0.25, curve: "easeIn" },
     ],
   },
   {
@@ -138,15 +131,12 @@ export const MACROS: readonly MacroDef[] = [
     name: "Width",
     description:
       "How far the sound spreads between the left and right speakers.",
-    // TODO(schema): a master_width (mid/side) control would do this
-    // properly. See docs/SYNTH_REFERENCE.md section 6 (item 9). Until
-    // then: oscillator pan spread plus unison detune.
     targets: [
-      { paramId: "osc1_pan", weight: -0.6 },
-      { paramId: "osc2_pan", weight: 0.6 },
-      { paramId: "osc1_unison_detune", weight: 0.45 },
-      { paramId: "osc2_unison_detune", weight: 0.45 },
-      { paramId: "osc1_unison_voices", weight: 0.3 },
+      { paramId: "master_width", weight: 0.9 },
+      { paramId: "chorus_mix", weight: 0.4, curve: "easeIn" },
+      { paramId: "osc1_unison_detune", weight: 0.35 },
+      { paramId: "osc2_unison_detune", weight: 0.35 },
+      { paramId: "osc1_unison_voices", weight: 0.25 },
     ],
   },
   {
