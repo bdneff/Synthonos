@@ -1,8 +1,10 @@
 name: Deploy web app
 
 # The synth is a fully static build; GitHub Pages hosts it as the web app.
-# First-time setup: if the deploy job fails with a Pages error, enable it
-# once in Settings -> Pages -> Source: GitHub Actions.
+# One-time setup before the first successful run:
+#   Settings -> Pages -> Source: "GitHub Actions"
+# Note: on a free personal plan GitHub serves Pages only from PUBLIC repos;
+# a private repo needs Pro, or make the repo public.
 
 on:
   push:
@@ -38,8 +40,6 @@ jobs:
         run: npm run build
 
       - uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - uses: actions/upload-pages-artifact@v3
         with:
