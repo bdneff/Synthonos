@@ -4,9 +4,13 @@ A natural language controlled virtual analog synthesizer that runs locally as
 a desktop app. Type "make it darker and wider" and watch the knobs move.
 Built for people who have never opened a DAW.
 
-Status: **Phase 0 complete (M0)**. Foundation only: parameter schema, code
-generation, offline spectral test harness, CI, and an engine that renders
-verified, exact silence. Synthesis lands in Phase 1.
+Status: **Phase 1 integrated (M1/M2 audio, M4 shell)**. The 16-voice
+subtractive engine (bandlimited wavetable oscillators at -119 dBFS worst
+aliasing, TPT state variable filter, exponential envelopes, LFO, click-free
+voice stealing) runs in an AudioWorklet behind the full three-layer UI:
+describe bar, eight macro knobs, schema-generated advanced panel, scopes,
+keyboard, presets, undo. `npm run dev` and press a key to play. Next:
+natural language control (Phase 2), effects and factory presets (Phase 3).
 
 ## What this is
 

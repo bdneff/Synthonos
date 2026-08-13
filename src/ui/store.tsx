@@ -112,9 +112,31 @@ export interface SynthStore {
 const SynthContext = createContext<SynthStore | null>(null);
 
 export function SynthProvider({ children }: { children: ReactNode }) {
-  const bridgeRef = useRef<StubEngineBridge | null>(null);
-  if (bridgeRef.current === null) bridgeRef.current = new StubEngineBridge();
-  const bridge = bridgeRef.current;
+  // Start on the stub, then swap in the real AudioWorklet bridge once its
+  // module loads (browser and Tauri only; Node test runs stay on the stub).
+  // The dynamic import keeps worklet asset handling out of non-browser
+  // bundles, and the param-push effect below replays the full patch into
+  // whichever bridge is current.
+  const [bridge, setBridge] = useState<EngineBridge>(
+    () => new StubEngineBridge(),
+  );
+  useEffect(() => {
+    if (
+      typeof AudioContext === "undefined" ||
+      typeof AudioWorkletNode === "undefined"
+    ) {
+      return;
+    }
+    let cancelled = false;
+    void import("../audio/worklet-bridge").then(({ WorkletEngineBridge }) => {
+      if (cancelled) return;
+      pushedRef.current.clear();
+      setBridge(new WorkletEngineBridge());
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const [state, setState] = useState<SynthSnapshot>(initialSnapshot);
   const [activeNotes, setActiveNotes] = useState<ReadonlySet<number>>(

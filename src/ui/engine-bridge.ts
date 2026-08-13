@@ -15,6 +15,12 @@
 import type { ParamId } from "../generated/params";
 
 export interface EngineBridge {
+  /**
+   * Start or resume the audio graph, if this bridge has one. Must be called
+   * from a user gesture the first time (browser autoplay policy). Bridges
+   * without real audio omit it. Calls before start are cached, not lost.
+   */
+  start?(): Promise<void>;
   /** Set a parameter in engine units (enums as option index). */
   setParam(id: ParamId, engineValue: number): void;
   /** Start a note. midiNote 0..127, velocity 0..1. */

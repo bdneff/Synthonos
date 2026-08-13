@@ -28,6 +28,23 @@ function Shell() {
   const store = useSynth();
   const [advancedOpen, setAdvancedOpen] = useState(false);
 
+  // Browsers only allow audio to start from a user gesture. The first
+  // pointer or key press anywhere starts the engine; the bridge caches
+  // everything that happened before, so nothing is lost.
+  useEffect(() => {
+    const kick = () => {
+      void store.bridge.start?.().catch(() => {
+        // A failed start leaves the bridge cached; the next gesture retries.
+      });
+    };
+    window.addEventListener("pointerdown", kick, { passive: true });
+    window.addEventListener("keydown", kick);
+    return () => {
+      window.removeEventListener("pointerdown", kick);
+      window.removeEventListener("keydown", kick);
+    };
+  }, [store.bridge]);
+
   // Ctrl+Z / Ctrl+Shift+Z (or Cmd on Mac). Ctrl+Y also redoes.
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
