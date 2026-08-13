@@ -42,6 +42,16 @@ export function DescribeBar() {
   return (
     <div className="describe-bar">
       <div className="describe-input-row">
+        <svg className="describe-icon" viewBox="0 0 16 16" aria-hidden="true">
+          <path
+            d="M1.5 8 C3 3.5 4.5 3.5 6 8 C7.5 12.5 9 12.5 10.5 8 L12.5 5.5 L12.5 8 L14.5 8"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
         <input
           className="describe-input"
           type="text"

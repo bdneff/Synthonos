@@ -78,8 +78,14 @@ function Shell() {
     <div className="app">
       <header className="app-header">
         <div className="brand">
-          <div className="brand-name">Synthonos</div>
-          <div className="brand-sub">say it, hear it</div>
+          <svg className="brand-mark" viewBox="0 0 30 30" aria-hidden="true">
+            <rect x="0.5" y="0.5" width="29" height="29" rx="7.5" />
+            <path d="M5 15 C7.4 8.4 9.8 8.4 12.2 15 C14.6 21.6 17 21.6 19.4 15 L23.5 9.5 L23.5 15 L26 15" />
+          </svg>
+          <div className="brand-text">
+            <div className="brand-name">Synthonos</div>
+            <div className="brand-sub">say it, hear it</div>
+          </div>
         </div>
         <DescribeBar />
         <div className="header-right">

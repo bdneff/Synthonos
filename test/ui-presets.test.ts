@@ -62,7 +62,8 @@ describe("preset persistence", () => {
     };
     const unknownParam = {
       name: "Mystery",
-      params: { ...VALID_PARAMS, reverb_mix: 0.5 },
+      // A name that can never become a real schema parameter.
+      params: { ...VALID_PARAMS, definitely_not_a_real_param: 0.5 },
       savedAt: 3,
     };
     const missingParam = (() => {

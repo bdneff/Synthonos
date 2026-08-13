@@ -145,6 +145,7 @@ export function Keyboard() {
         </div>
         <div className="keyboard-hint">Play with your computer keyboard. Z and X change octave.</div>
       </div>
+      <div className="piano-bed">
       <div className="piano" role="group" aria-label="On-screen piano">
         {whiteNotes.map((midi) => {
           const letter = letterFor(midi);
@@ -190,6 +191,7 @@ export function Keyboard() {
             </div>
           );
         })}
+      </div>
       </div>
     </div>
   );

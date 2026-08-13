@@ -7,9 +7,14 @@
  * (later) the natural language layer moves this knob, the pointer sweeps
  * to the new position over ~300 ms. That animation is a core product
  * feature: beginners learn the synth by watching it operate itself.
+ *
+ * The rendering aims for machined hardware: a recessed well, a cap with
+ * a radial highlight and a beveled rim, tick marks around the throw, and
+ * a value arc that glows softly when the parameter is away from its
+ * default or has just been moved by the machine.
  */
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
 import type { ParamCurve } from "../generated/params";
 import { clamp01, denormalizeValue, normalizeValue } from "./param-utils";
@@ -42,6 +47,8 @@ export interface KnobProps {
 const ANGLE_MIN = -135;
 const ANGLE_MAX = 135;
 const ANIMATION_MS = 300;
+const GLOW_LINGER_MS = 400;
+const TICK_COUNT = 11;
 
 /** Angle in degrees, 0 at 12 o'clock, clockwise positive. */
 function polar(cx: number, cy: number, r: number, angleDeg: number): [number, number] {
@@ -74,6 +81,11 @@ export function Knob({
   const displayRef = useRef(displayNorm);
   displayRef.current = displayNorm;
 
+  // True while a programmatic tween is running (plus a short linger), so
+  // the arc can glow while the machine is turning the knob.
+  const [machineGlow, setMachineGlow] = useState(false);
+  const glowTimerRef = useRef<number | null>(null);
+
   const dragRef = useRef<{ startY: number; startNorm: number } | null>(null);
   const animRef = useRef<number | null>(null);
 
@@ -81,6 +93,13 @@ export function Knob({
     if (animRef.current !== null) {
       cancelAnimationFrame(animRef.current);
       animRef.current = null;
+    }
+  }, []);
+
+  const clearGlowTimer = useCallback(() => {
+    if (glowTimerRef.current !== null) {
+      window.clearTimeout(glowTimerRef.current);
+      glowTimerRef.current = null;
     }
   }, []);
 
@@ -99,6 +118,8 @@ export function Knob({
       return;
     }
     cancelAnimation();
+    clearGlowTimer();
+    setMachineGlow(true);
     const startedAt = performance.now();
     const step = (now: number) => {
       const t = Math.min(1, (now - startedAt) / ANIMATION_MS);
@@ -108,6 +129,10 @@ export function Knob({
         animRef.current = requestAnimationFrame(step);
       } else {
         animRef.current = null;
+        glowTimerRef.current = window.setTimeout(() => {
+          glowTimerRef.current = null;
+          setMachineGlow(false);
+        }, GLOW_LINGER_MS);
       }
     };
     animRef.current = requestAnimationFrame(step);
@@ -116,19 +141,22 @@ export function Knob({
   }, [targetNorm]);
 
   useEffect(() => cancelAnimation, [cancelAnimation]);
+  useEffect(() => clearGlowTimer, [clearGlowTimer]);
 
   const handlePointerDown = useCallback(
     (e: ReactPointerEvent<HTMLDivElement>) => {
       if (e.button !== 0) return;
       e.currentTarget.setPointerCapture(e.pointerId);
       cancelAnimation();
+      clearGlowTimer();
+      setMachineGlow(false);
       dragRef.current = {
         startY: e.clientY,
         startNorm: normalizeValue(spec, value),
       };
       onGestureStart?.();
     },
-    [spec, value, onGestureStart, cancelAnimation],
+    [spec, value, onGestureStart, cancelAnimation, clearGlowTimer],
   );
 
   const handlePointerMove = useCallback(
@@ -174,15 +202,46 @@ export function Knob({
   const displayValue = denormalizeValue(spec, displayNorm, spec.integer);
   const readout = format ? format(displayValue) : displayValue.toFixed(2);
 
+  const defaultNorm = normalizeValue(spec, spec.default);
+  const offDefault = Math.abs(targetNorm - defaultNorm) > 0.001;
+
   const view = 100;
   const c = view / 2;
-  const r = 38;
-  const [px0, py0] = polar(c, c, 16, angle);
-  const [px1, py1] = polar(c, c, 31, angle);
+  const arcRadius = 40;
+  const [px0, py0] = polar(c, c, 11, angle);
+  const [px1, py1] = polar(c, c, 22.5, angle);
+
+  // Unique, url()-safe gradient ids per knob instance.
+  const uid = useId().replace(/[^a-zA-Z0-9_-]/g, "");
+  const capId = `knob-cap-${uid}`;
+  const rimId = `knob-rim-${uid}`;
+  const wellId = `knob-well-${uid}`;
+  const dimpleId = `knob-dimple-${uid}`;
+
+  const ticks = [];
+  for (let i = 0; i < TICK_COUNT; i += 1) {
+    const tickAngle = ANGLE_MIN + (i / (TICK_COUNT - 1)) * (ANGLE_MAX - ANGLE_MIN);
+    const [tx0, ty0] = polar(c, c, 45, tickAngle);
+    const [tx1, ty1] = polar(c, c, 48.5, tickAngle);
+    const major = i === 0 || i === TICK_COUNT - 1 || i * 2 === TICK_COUNT - 1;
+    ticks.push(
+      <line
+        key={i}
+        className={`knob-tick${major ? " major" : ""}`}
+        x1={tx0}
+        y1={ty0}
+        x2={tx1}
+        y2={ty1}
+      />,
+    );
+  }
+
+  const hotClass = offDefault ? " knob-hot" : "";
+  const glowClass = machineGlow ? " knob-glowing" : "";
 
   return (
     <div
-      className={`knob knob-${size}${tooltip ? " has-tooltip" : ""}`}
+      className={`knob knob-${size}${hotClass}${glowClass}${tooltip ? " has-tooltip" : ""}`}
       data-tooltip={tooltip}
     >
       <div
@@ -201,17 +260,54 @@ export function Knob({
         onDoubleClick={handleDoubleClick}
       >
         <svg viewBox={`0 0 ${view} ${view}`} className="knob-svg">
+          <defs>
+            <radialGradient id={capId} cx="0.36" cy="0.28" r="0.85">
+              <stop offset="0%" stopColor="#3d444e" />
+              <stop offset="45%" stopColor="#272c34" />
+              <stop offset="100%" stopColor="#171a20" />
+            </radialGradient>
+            <linearGradient id={rimId} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="rgba(255,255,255,0.28)" />
+              <stop offset="55%" stopColor="rgba(255,255,255,0.04)" />
+              <stop offset="100%" stopColor="rgba(0,0,0,0.55)" />
+            </linearGradient>
+            <linearGradient id={wellId} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#050607" />
+              <stop offset="80%" stopColor="#0c0e11" />
+              <stop offset="100%" stopColor="#181c22" />
+            </linearGradient>
+            <radialGradient id={dimpleId} cx="0.4" cy="0.35" r="1">
+              <stop offset="0%" stopColor="#12151a" />
+              <stop offset="100%" stopColor="#2c323b" />
+            </radialGradient>
+          </defs>
+          {ticks}
           <path
             className="knob-track"
-            d={arcPath(c, c, r, ANGLE_MIN, ANGLE_MAX)}
+            d={arcPath(c, c, arcRadius, ANGLE_MIN, ANGLE_MAX)}
           />
           {Math.abs(angle - anchorAngle) > 0.5 ? (
             <path
               className="knob-fill"
-              d={arcPath(c, c, r, anchorAngle, angle)}
+              d={arcPath(c, c, arcRadius, anchorAngle, angle)}
             />
           ) : null}
-          <circle className="knob-body" cx={c} cy={c} r={27} />
+          <circle className="knob-well" cx={c} cy={c} r={33} fill={`url(#${wellId})`} />
+          <circle cx={c} cy={c} r={26} fill={`url(#${capId})`} />
+          <circle
+            className="knob-cap-rim"
+            cx={c}
+            cy={c}
+            r={25.5}
+            stroke={`url(#${rimId})`}
+          />
+          <circle
+            className="knob-grip"
+            cx={c}
+            cy={c}
+            r={23.6}
+            strokeDasharray="1.7 2.9"
+          />
           <line
             className="knob-pointer"
             x1={px0}
@@ -219,6 +315,7 @@ export function Knob({
             x2={px1}
             y2={py1}
           />
+          <circle cx={c} cy={c} r={3.2} fill={`url(#${dimpleId})`} />
         </svg>
       </div>
       <div className="knob-label">{label}</div>
