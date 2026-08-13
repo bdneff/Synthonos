@@ -13,6 +13,7 @@ import { DescribeBar } from "./ui/DescribeBar";
 import { MacroPanel } from "./ui/MacroPanel";
 import { AdvancedPanel } from "./ui/AdvancedPanel";
 import { PresetBrowser } from "./ui/PresetBrowser";
+import { MatchPanel } from "./ui/MatchPanel";
 import { Keyboard } from "./ui/Keyboard";
 import { SpectrumAnalyzer } from "./ui/SpectrumAnalyzer";
 import { Oscilloscope } from "./ui/Oscilloscope";
@@ -120,7 +121,10 @@ function Shell() {
       </header>
 
       <div className="app-body">
-        <PresetBrowser />
+        <div className="left-column">
+          <PresetBrowser />
+          <MatchPanel />
+        </div>
         <main className="app-main">
           <MacroPanel />
           <div className="scope-row">
