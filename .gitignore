@@ -8,3 +8,6 @@ src-tauri/target/
 
 # Offline render output (WAVs written by the harness during local runs)
 test/output/
+
+# Agent worktrees (session machinery, never project code)
+.claude/worktrees/
