@@ -1,8 +1,11 @@
 /**
- * Layer 2: the eight macro knobs. Dragging a macro nudges its whole
- * parameter bundle relative to the patch as it was when the gesture
- * started, and the advanced knobs animate along so the user can watch
- * what the macro really does.
+ * Layer 2: the eight macro knobs, mounted as two mirrored 2x2 banks
+ * flanking the center console (Bank A left, Bank B right), the way the
+ * flagship split its panel around the display cluster.
+ *
+ * Dragging a macro nudges its whole parameter bundle relative to the
+ * patch as it was when the gesture started, and the advanced knobs
+ * animate along so the user can watch what the macro really does.
  */
 
 import { useRef } from "react";
@@ -28,7 +31,13 @@ interface MacroGesture {
   from: number;
 }
 
-export function MacroPanel() {
+/** Bank A holds the four macros a beginner reaches for first. */
+const BANK_IDS: Record<"a" | "b", readonly MacroId[]> = {
+  a: ["brightness", "space", "grit", "width"],
+  b: ["thickness", "movement", "attack", "character"],
+};
+
+export function MacroBank({ bank }: { bank: "a" | "b" }) {
   const store = useSynth();
   const gestureRef = useRef<MacroGesture | null>(null);
 
@@ -57,64 +66,45 @@ export function MacroPanel() {
     store.commitGesture();
   };
 
-  // Presentation only: each macro station carries its hot-cue hue as a
-  // CSS custom property; the knob arc, glow, and name strip read it.
-  const renderKnob = (def: MacroDef, size: "medium" | "large") => (
-    <div
-      key={def.id}
-      className="macro-station"
-      style={{ "--knob-hue": MACRO_HUES[def.id] } as CSSProperties}
-    >
-      <Knob
-        size={size}
-        label={def.name}
-        tooltip={def.description}
-        spec={MACRO_SPEC}
-        value={store.macros[def.id]}
-        format={(v) => `${Math.round(v * 100)} %`}
-        onGestureStart={() => beginGesture(def)}
-        onChange={(v) => moveMacro(def, v)}
-        onGestureEnd={endGesture}
-      />
-    </div>
-  );
-
-  // Presentation staging only: the four macros a beginner reaches for
-  // first are mounted large, the shading macros one size down. Macro
-  // behavior is defined in macros.ts and unchanged by this ordering.
-  const primary = PRIMARY_IDS.map(
+  const defs = BANK_IDS[bank].map(
     (id) => MACROS.find((def) => def.id === id) as MacroDef,
   );
-  const secondary = MACROS.filter((def) => !PRIMARY_IDS.includes(def.id));
 
   return (
-    <section className="macro-zone" aria-label="Performance controls">
+    <section
+      className={`macro-block bank-${bank}`}
+      aria-label={`Performance controls, bank ${bank.toUpperCase()}`}
+    >
       <div className="silk-rule">
         <span className="silk-title">Performance</span>
-        <i className="silk-line" aria-hidden="true" />
-        <span className="silk-fine">MACRO CONTROL</span>
+        <span className="silk-fine">Bank {bank.toUpperCase()}</span>
       </div>
-      <div className="macro-row">
-        <div className="macro-group macro-primary">
-          {primary.map((def) => renderKnob(def, "large"))}
-        </div>
-        <i className="macro-divider" aria-hidden="true" />
-        <div className="macro-group macro-secondary">
-          {secondary.map((def) => renderKnob(def, "medium"))}
-        </div>
-      </div>
-      {/* The spec line every flagship printed on its panel: all facts. */}
-      <div className="panel-spec" aria-hidden="true">
-        16 voices &middot; wavetable oscillators &middot; state variable
-        filter &middot; 53 parameters &middot; described in plain words
+      <div className="macro-grid">
+        {defs.map((def) => (
+          <div
+            key={def.id}
+            className="macro-station"
+            style={{ "--knob-hue": MACRO_HUES[def.id] } as CSSProperties}
+          >
+            <Knob
+              size="large"
+              label={def.name}
+              tooltip={def.description}
+              spec={MACRO_SPEC}
+              value={store.macros[def.id]}
+              format={(v) => `${Math.round(v * 100)} %`}
+              onGestureStart={() => beginGesture(def)}
+              onChange={(v) => moveMacro(def, v)}
+              onGestureEnd={endGesture}
+            />
+          </div>
+        ))}
       </div>
     </section>
   );
 }
 
-const PRIMARY_IDS: readonly MacroId[] = ["brightness", "space", "grit", "width"];
-
-/** Law 2 of the visual world: every macro owns a hot-cue hue. */
+/** Law 3 of the visual world: every macro owns one of the eight inks. */
 const MACRO_HUES: Record<MacroId, string> = {
   brightness: "var(--m-brightness)",
   thickness: "var(--m-thickness)",

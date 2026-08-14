@@ -5,7 +5,7 @@
  * one undoable gesture so the knobs animate to their new positions.
  */
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { describeSound } from "../nl";
 import { useSynth } from "./store";
 
@@ -14,6 +14,15 @@ export function DescribeBar() {
   const [text, setText] = useState("");
   const [busy, setBusy] = useState(false);
   const [response, setResponse] = useState<string | null>(null);
+
+  // While the machine shapes a sound, the rainbow band runs a light
+  // chase: the signature is the machine's spine. The flag rides the
+  // document root so the band (in the keys deck) can see it.
+  useEffect(() => {
+    if (busy) document.documentElement.setAttribute("data-shaping", "true");
+    else document.documentElement.removeAttribute("data-shaping");
+    return () => document.documentElement.removeAttribute("data-shaping");
+  }, [busy]);
 
   const submit = useCallback(async () => {
     const trimmed = text.trim();

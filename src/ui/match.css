@@ -1,4 +1,4 @@
-/* Match panel body states, in deck grammar. The section rail and panel
+/* Match panel body states, in Jupiter panel grammar. The section rail and panel
    chrome live in styles.css; this file styles the four bodies: offline
    hint, searching (sparkline scope), done, and error. */
 

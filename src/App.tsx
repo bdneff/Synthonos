@@ -1,23 +1,24 @@
 /**
- * Synthonos shell, in deck grammar: layered slate panels seamed by 1px
- * lines, color as information throughout (see src/ui/styles.css).
- * 1. Top rail: brand mark (the tri-band bars), the describe lane with
- *    its spectrum hairline, the loaded sound readout, history keys.
- * 2. The display strip: tri-band spectrum and white-phosphor waveform.
- * 3. Body: the crate (library + match) on the left, the eight hot-cue
- *    macros center, the advanced rack (manifest-generated) behind a
- *    toggle rail that also prints the signal path.
- * 4. The keys deck across the bottom.
- * Bound to the stub engine bridge until the real engine lands.
+ * Synthonos shell, in Jupiter panel grammar: one painted-steel face,
+ * silkscreen frames, the machine speaking in light (see
+ * src/ui/styles.css).
+ * 1. Top rail: Michroma wordmark over its rainbow quote, the describe
+ *    lane with its rainbow hairline, history keys, settings.
+ * 2. The symmetric console: macro Bank A, the instrument cluster
+ *    (spectrum over green-phosphor scope, patch LED window, spec
+ *    print), macro Bank B.
+ * 3. The advanced rack (manifest-generated) behind a toggle rail that
+ *    also prints the signal path.
+ * 4. The patch bank: presets as named switch caps with category inks.
+ * 5. The keys deck under the full-width rainbow band.
  */
 
 import { useCallback, useEffect, useState } from "react";
 import { SynthProvider, useSynth } from "./ui/store";
 import { DescribeBar } from "./ui/DescribeBar";
-import { MacroPanel } from "./ui/MacroPanel";
+import { MacroBank } from "./ui/MacroPanel";
 import { AdvancedPanel } from "./ui/AdvancedPanel";
-import { PresetBrowser } from "./ui/PresetBrowser";
-import { MatchPanel } from "./ui/MatchPanel";
+import { PatchBank } from "./ui/PatchBank";
 import { Keyboard } from "./ui/Keyboard";
 import { SpectrumAnalyzer } from "./ui/SpectrumAnalyzer";
 import { Oscilloscope } from "./ui/Oscilloscope";
@@ -80,7 +81,7 @@ function Shell() {
   );
 
   return (
-    <div className="app">
+    <div className={`app${advancedOpen ? " rack-open" : ""}`}>
       <header className="top-rail">
         <div className="brand">
           <div className="brand-text">
@@ -94,15 +95,6 @@ function Shell() {
         <i className="rail-divider" aria-hidden="true" />
         <DescribeBar />
         <i className="rail-divider" aria-hidden="true" />
-        <div className="sound-block">
-          <span className="silk-label">Sound</span>
-          <div
-            className="current-preset has-tooltip"
-            data-tooltip="The sound you are editing right now."
-          >
-            <span>{store.presetName}</span>
-          </div>
-        </div>
         <div className="header-right">
           <div className="header-right-row">
             <button
@@ -129,58 +121,73 @@ function Shell() {
         </div>
       </header>
 
-      <div className="glass-deck">
-        <div className="glass">
-          <SpectrumAnalyzer source={spectrumSource} />
-          <i className="glass-divider" aria-hidden="true" />
-          <Oscilloscope source={scopeSource} />
+      {/* The symmetric console: four macros left, the instrument cluster
+          center, four macros right — the flagship's own composition. */}
+      <div className="console-row">
+        <MacroBank bank="a" />
+        <div className="console-center">
+          <div className="glass console-glass">
+            <SpectrumAnalyzer source={spectrumSource} />
+            <i className="glass-divider" aria-hidden="true" />
+            <Oscilloscope source={scopeSource} />
+          </div>
+          <div className="console-readout">
+            <span className="silk-label">Sound</span>
+            <div
+              className="current-preset has-tooltip"
+              data-tooltip="The sound you are editing right now."
+            >
+              {/* Long names scroll across the glass like a real display. */}
+              <span className={store.presetName.length > 18 ? "marquee" : ""}>
+                {store.presetName}
+              </span>
+            </div>
+          </div>
+          {/* The spec line every flagship printed on its panel. */}
+          <div className="panel-spec" aria-hidden="true">
+            16 voices &middot; wavetable oscillators &middot; state variable
+            filter
+          </div>
         </div>
+        <MacroBank bank="b" />
       </div>
 
-      <div className="app-body">
-        <div className="left-column">
-          <PresetBrowser />
-          <MatchPanel />
-        </div>
-        <i className="body-divider" aria-hidden="true" />
-        <main className="app-main">
-          <MacroPanel />
-          <section className={`advanced-section${advancedOpen ? " open" : ""}`}>
-            <button
-              type="button"
-              className={`advanced-toggle${advancedOpen ? " open" : ""}`}
-              onClick={() => setAdvancedOpen((open) => !open)}
-              aria-expanded={advancedOpen}
-            >
-              <svg
-                className="advanced-chevron"
-                viewBox="0 0 10 10"
-                aria-hidden="true"
-              >
-                <path
-                  d="M3 1.5 L7.5 5 L3 8.5"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              <span className="advanced-word">Advanced</span>
-              <span className="flow-legend" aria-hidden="true">
-                OSC A/B&ensp;&#9656;&ensp;MIXER&ensp;&#9656;&ensp;FILTER&ensp;&#9656;&ensp;AMP&ensp;&#9656;&ensp;FX&ensp;&#9656;&ensp;OUT
-              </span>
-              <i className="silk-line" aria-hidden="true" />
-              <span className="advanced-hint">
-                {advancedOpen
-                  ? "hover any control for a plain explanation"
-                  : "open the full rack"}
-              </span>
-            </button>
-            {advancedOpen ? <AdvancedPanel /> : null}
-          </section>
-        </main>
-      </div>
+      <section className={`advanced-section${advancedOpen ? " open" : ""}`}>
+        <button
+          type="button"
+          className={`advanced-toggle${advancedOpen ? " open" : ""}`}
+          onClick={() => setAdvancedOpen((open) => !open)}
+          aria-expanded={advancedOpen}
+        >
+          <svg
+            className="advanced-chevron"
+            viewBox="0 0 10 10"
+            aria-hidden="true"
+          >
+            <path
+              d="M3 1.5 L7.5 5 L3 8.5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          <span className="advanced-word">Advanced</span>
+          <span className="flow-legend" aria-hidden="true">
+            OSCILLATORS&ensp;&#9656;&ensp;MIXER&ensp;&#9656;&ensp;FILTER&ensp;&#9656;&ensp;LOUDNESS&ensp;&#9656;&ensp;EFFECTS&ensp;&#9656;&ensp;OUT
+          </span>
+          <i className="silk-line" aria-hidden="true" />
+          <span className="advanced-hint">
+            {advancedOpen
+              ? "hover any control for a plain explanation"
+              : "open the full rack"}
+          </span>
+        </button>
+        {advancedOpen ? <AdvancedPanel /> : null}
+      </section>
+
+      <PatchBank />
 
       <Keyboard />
     </div>

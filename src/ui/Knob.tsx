@@ -8,14 +8,14 @@
  * new position over ~300 ms. That animation is a core product feature:
  * beginners learn the synth by watching it operate itself.
  *
- * One knob family across the whole instrument, mounted in three staged
- * sizes: "large" primary macros, "medium" secondary macros, "small"
- * rack knobs. Deck construction: a flat slate cap, a bright index
- * pointer, and the value arc carrying the control's function hue
- * (--knob-hue, set by the macro station or the rack group). While the
- * machine turns the knob the arc burns at full hue with a glow: the
- * describe interaction made visible. Tick ring, min and max dots, and
- * 0..10 dial numerals on the large caps.
+ * One knob family across the whole instrument, mounted in staged sizes:
+ * "large" macro stations, "small" rack knobs. Panel construction: a
+ * turned black cap on a printed dial ring, a bright index pointer, and
+ * the value arc carrying the control's ink (--knob-hue, set by the
+ * macro station or the rack group). While the machine turns the knob
+ * the arc burns its ink with a glow: the describe interaction made
+ * visible. Tick ring, min and max dots, 0..10 dial numerals on the
+ * large caps.
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -85,7 +85,7 @@ export function Knob({
   displayRef.current = displayNorm;
 
   // True while a programmatic tween is running (plus a short linger), so
-  // the arc can turn signal orange while the machine turns the knob.
+  // the arc can burn its ink while the machine turns the knob.
   const [machineGlow, setMachineGlow] = useState(false);
   const glowTimerRef = useRef<number | null>(null);
 
@@ -194,6 +194,40 @@ export function Knob({
     onGestureEnd?.();
   }, [spec, onChange, onGestureStart, onGestureEnd]);
 
+  // The focus ring promises operation: arrow keys step the value (Shift
+  // for fine steps), Home and End go to the stops, each press one
+  // committed gesture.
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      let nextNorm: number | null = null;
+      const norm = normalizeValue(spec, value);
+      const step = e.shiftKey ? 0.01 : 0.05;
+      switch (e.key) {
+        case "ArrowUp":
+        case "ArrowRight":
+          nextNorm = clamp01(norm + step);
+          break;
+        case "ArrowDown":
+        case "ArrowLeft":
+          nextNorm = clamp01(norm - step);
+          break;
+        case "Home":
+          nextNorm = 0;
+          break;
+        case "End":
+          nextNorm = 1;
+          break;
+        default:
+          return;
+      }
+      e.preventDefault();
+      onGestureStart?.();
+      onChange(denormalizeValue(spec, nextNorm, spec.integer));
+      onGestureEnd?.();
+    },
+    [spec, value, onChange, onGestureStart, onGestureEnd],
+  );
+
   const angle = ANGLE_MIN + displayNorm * (ANGLE_MAX - ANGLE_MIN);
   // Bipolar parameters (pan, env amount) fill from 12 o'clock; the rest
   // fill from the left stop.
@@ -261,6 +295,7 @@ export function Knob({
         onPointerUp={handlePointerUp}
         onPointerCancel={handlePointerUp}
         onDoubleClick={handleDoubleClick}
+        onKeyDown={handleKeyDown}
       >
         <svg viewBox={`0 0 ${view} ${view}`} className="knob-svg">
           {ticks}

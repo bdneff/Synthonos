@@ -265,8 +265,9 @@ input {
    panel gap all round, a machined hairline along the top edge. */
 .top-rail,
 .glass,
-.app-main,
-.preset-browser,
+.console-row,
+.advanced-section,
+.patch-bank,
 .match-panel,
 .keyboard-strip {
   background: var(--deck-1);
@@ -409,8 +410,8 @@ input {
   min-width: 0;
   background: none;
   border: none;
-  color: var(--text);
-  font-size: 14.5px;
+  color: #f4f2ea;
+  font-size: 15px;
   font-weight: 400;
   padding: 0;
 }
@@ -479,15 +480,8 @@ input {
   color: var(--text);
 }
 
-/* Loaded sound readout: a red LED window. What the machine is holding,
-   said in light. */
-
-.sound-block {
-  flex: none;
-  display: flex;
-  align-items: center;
-  gap: 9px;
-}
+/* Loaded sound readout: a red LED window under the console glass.
+   What the machine is holding, said in light. */
 
 .silk-label {
   font-family: var(--font-cond);
@@ -500,11 +494,11 @@ input {
 
 .current-preset {
   position: relative;
-  min-width: 168px;
-  max-width: 220px;
+  flex: 1;
+  min-width: 0;
   overflow: hidden;
   white-space: nowrap;
-  padding: 8px 10px 6px;
+  padding: 8px 12px 6px;
   background: var(--screen);
   border: 1px solid var(--seam);
   border-radius: var(--radius-sm);
@@ -520,9 +514,9 @@ input {
 
 /* Unlit segments behind the message: the display is a real device. */
 .current-preset::before {
-  content: "~~~~~~~~~~~~~~";
+  content: "~~~~~~~~~~~~~~~~~~~~~~~~~~~~";
   position: absolute;
-  inset: 8px 10px 6px;
+  inset: 8px 12px 6px;
   overflow: hidden;
   color: var(--led-ghost);
   text-shadow: none;
@@ -531,6 +525,23 @@ input {
 
 .current-preset > span {
   position: relative;
+  display: inline-block;
+}
+
+/* Names longer than the glass scroll like a real 1982 display. */
+.current-preset > span.marquee {
+  animation: led-marquee 6s linear 1.2s infinite;
+}
+
+@keyframes led-marquee {
+  0%,
+  18% {
+    transform: translateX(0);
+  }
+  82%,
+  100% {
+    transform: translateX(calc(-100% + 240px));
+  }
 }
 
 .header-right {
@@ -642,10 +653,6 @@ input {
 
 /* ---------- The display: one glass window, two instruments. ---------- */
 
-.glass-deck {
-  flex: none;
-}
-
 .glass {
   position: relative;
   display: flex;
@@ -672,19 +679,13 @@ input {
   flex: none;
   width: 1px;
   background: var(--frame-faint);
+  z-index: 2;
 }
 
 .scope {
   position: relative;
   min-width: 0;
-}
-
-.scope:first-child {
-  flex: 1.7;
-}
-
-.scope:last-child {
-  flex: 1;
+  min-height: 0;
 }
 
 .scope-label {
@@ -709,35 +710,51 @@ input {
   display: block;
 }
 
-/* ---------- Body: crate left, performance center. ---------- */
+/* ---------- The symmetric console. ---------- */
 
-.app-body {
+.console-row {
   flex: 1;
   min-height: 0;
   display: flex;
-  gap: 7px;
+  align-items: stretch;
+  gap: 12px;
+  padding: 14px 12px 10px;
 }
 
-.body-divider {
-  display: none;
-}
-
-.left-column {
+.console-center {
   flex: none;
-  width: 238px;
-  min-height: 0;
+  width: 470px;
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 7px;
 }
 
-.app-main {
+.console-glass {
   flex: 1;
-  min-width: 0;
   min-height: 0;
-  display: flex;
   flex-direction: column;
-  padding: 10px 14px 12px;
+  height: auto;
+}
+
+.console-glass .glass-divider {
+  width: auto;
+  height: 1px;
+}
+
+.console-glass .scope:first-child {
+  flex: 1.45;
+}
+
+.console-glass .scope:last-child {
+  flex: 1;
+}
+
+.console-readout {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 9px;
 }
 
 /* ---------- Silkscreen rules and frames. ---------- */
@@ -778,192 +795,251 @@ input {
   white-space: nowrap;
 }
 
-/* ---------- Library: the crate. ---------- */
+/* ---------- The patch bank: presets as named switch caps. ---------- */
 
-.preset-browser {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  padding: 10px 12px 12px;
+.patch-bank {
+  position: relative;
+  flex: none;
+  padding: 8px 12px 10px;
 }
 
-.preset-list {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  background: var(--well);
-  border: 1px solid var(--seam);
-  border-radius: var(--radius-sm);
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.5);
-  padding: 5px;
-}
-
-.preset-group {
-  margin-top: 2px;
-}
-
-.preset-group-header {
+.bank-head {
   display: flex;
   align-items: center;
-  gap: 7px;
-  padding: 8px 7px 4px;
+  gap: 10px;
+  padding-bottom: 8px;
+}
+
+.bank-cats {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.bank-cat {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  background: linear-gradient(180deg, #242428, #1d1d20);
+  border: 1px solid var(--seam);
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 1px 0 rgba(0, 0, 0, 0.7);
   font-family: var(--font-cond);
   font-weight: 600;
   font-size: 10px;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
   color: var(--text-dim);
+  cursor: pointer;
+  white-space: nowrap;
 }
 
-/* Category mark: a square of the category's ink, silkscreen-framed. */
-.preset-group-header::before {
-  content: "";
+.bank-cat:hover {
+  color: var(--text);
+}
+
+/* The chosen category is backlit, like every selector on the panel. */
+.bank-cat.selected {
+  background: var(--amber);
+  color: var(--amber-ink);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 0 8px var(--amber-glow);
+}
+
+.cat-ink {
   flex: none;
   width: 7px;
   height: 7px;
   background: var(--cat, var(--neutral-chip));
 }
 
-/* The six vibes, each wearing one of the eight inks. */
-.preset-group[data-cat="Pads"] {
+/* Each category wears one of the eight inks. */
+.bank-cat[data-cat="Pads"],
+.bank-row[data-cat="Pads"] {
   --cat: var(--m-width);
 }
 
-.preset-group[data-cat="Basses"] {
+.bank-cat[data-cat="Basses"],
+.bank-row[data-cat="Basses"] {
   --cat: var(--m-thickness);
 }
 
-.preset-group[data-cat="Leads"] {
+.bank-cat[data-cat="Leads"],
+.bank-row[data-cat="Leads"] {
   --cat: var(--m-space);
 }
 
-.preset-group[data-cat="Plucks"] {
+.bank-cat[data-cat="Plucks"],
+.bank-row[data-cat="Plucks"] {
   --cat: var(--m-attack);
 }
 
-.preset-group[data-cat="Keys and Bells"] {
+.bank-cat[data-cat="Keys and Bells"],
+.bank-row[data-cat="Keys and Bells"] {
   --cat: var(--m-movement);
 }
 
-.preset-group[data-cat="Motion and FX"] {
+.bank-cat[data-cat="Motion and FX"],
+.bank-row[data-cat="Motion and FX"] {
   --cat: var(--m-character);
 }
 
-.preset-group[data-cat="Your sounds"] {
+.bank-cat[data-cat="Your sounds"],
+.bank-row[data-cat="Your sounds"] {
   --cat: var(--m-brightness);
 }
 
-.preset-row {
-  display: flex;
-  align-items: center;
-  border-radius: 2px;
-}
-
-.preset-row:hover {
-  background: var(--deck-2);
-}
-
-.preset-row.current {
-  background: var(--deck-3);
-}
-
-.preset-row.current .preset-name {
-  color: var(--text);
-  font-weight: 600;
-}
-
-.preset-row.current .preset-name::after {
-  content: "";
+.bank-match-toggle {
   flex: none;
-  width: 6px;
-  height: 6px;
-  margin-left: auto;
-  background: var(--cat, var(--neutral-chip));
+  font-size: 11px;
 }
 
-.preset-name {
+.bank-match-toggle.open {
+  background: var(--deck-4);
+  color: var(--text);
+}
+
+.bank-row {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  min-height: 36px;
+}
+
+/* The caps scroll in their own lane; the save station stays mounted. */
+.bank-caps {
   flex: 1;
   min-width: 0;
   display: flex;
+  align-items: stretch;
+  gap: 5px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.patch-cap-seat {
+  position: relative;
+  display: inline-flex;
+}
+
+.patch-cap {
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  overflow: hidden;
-  text-align: left;
-  background: none;
-  border: none;
-  padding: 4px 7px;
+  gap: 7px;
+  padding: 6px 12px;
+  background: linear-gradient(180deg, #242428, #1d1d20);
+  border: 1px solid var(--seam);
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 1px 0 rgba(0, 0, 0, 0.7);
   color: var(--text-dim);
-  font-family: var(--font-ui);
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 500;
   white-space: nowrap;
-  text-overflow: ellipsis;
   cursor: pointer;
 }
 
-.preset-name:hover {
+.patch-cap:hover {
   color: var(--text);
+  background: linear-gradient(180deg, #2b2b30, #232327);
 }
 
-.preset-actions {
-  flex: none;
-  display: none;
-  gap: 2px;
-  padding-right: 4px;
+.patch-cap:active {
+  transform: translateY(1px);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
-.preset-row:hover .preset-actions,
-.preset-row:focus-within .preset-actions {
-  display: flex;
-}
-
-.preset-action {
-  background: none;
-  border: none;
-  padding: 2px 5px;
-  font-size: 10.5px;
-  font-weight: 500;
-  color: var(--text-faint);
-  cursor: pointer;
-  border-radius: 2px;
-}
-
-.preset-action:hover {
-  color: var(--text);
+/* The loaded cap sits pressed with its LED lit. */
+.patch-cap.current {
   background: var(--deck-4);
+  color: var(--text);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
-.preset-action.danger:hover {
-  color: var(--danger);
+.cap-led {
+  flex: none;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--led-ghost);
 }
 
-.preset-empty {
-  padding: 8px 7px;
+.patch-cap.current .cap-led {
+  background: var(--led);
+  box-shadow: 0 0 4px var(--led-glow);
+}
+
+/* Deleting a sound is a two-step press, in danger ink, on the cap. */
+.cap-delete {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  z-index: 2;
+  display: none;
+  width: 15px;
+  height: 15px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: var(--deck-4);
+  border: 1px solid var(--seam);
+  border-radius: 50%;
+  color: var(--text-dim);
+  font-size: 11px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.patch-cap-seat:hover .cap-delete,
+.patch-cap-seat:focus-within .cap-delete {
+  display: inline-flex;
+}
+
+.cap-delete:hover,
+.cap-delete.armed {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: #1c0605;
+}
+
+.cap-delete.armed {
+  width: auto;
+  border-radius: 8px;
+  padding: 0 6px;
+  font-family: var(--font-cond);
+  font-weight: 600;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.bank-empty {
+  align-self: center;
   font-size: 11.5px;
   color: var(--text-faint);
 }
 
-.preset-rename-input {
-  flex: 1;
-  min-width: 0;
-  margin: 2px 4px;
-  padding: 2px 4px;
-  background: var(--screen);
-  border: 1px solid var(--seam-strong);
-  border-radius: 2px;
-  color: var(--text);
-  font-size: 12.5px;
-}
-
-.preset-save {
+.bank-save {
   display: flex;
   gap: 6px;
-  margin-top: 8px;
+  margin-left: auto;
+  align-items: center;
+}
+
+.preset-rename-input {
+  flex: none;
+  width: 150px;
+  padding: 6px 9px;
+  background: var(--screen);
+  border: 1px solid var(--seam-strong);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 12px;
 }
 
 .preset-save-input {
-  flex: 1;
+  width: 170px;
   min-width: 0;
   padding: 6px 9px;
   background: var(--well);
@@ -984,7 +1060,7 @@ input {
 
 /* Until a name is typed, Save sits unlit; the backlight is earned by
    having something to commit. */
-.preset-save:has(.preset-save-input:placeholder-shown) .button.primary {
+.bank-save:has(.preset-save-input:placeholder-shown) .button.primary {
   background: linear-gradient(180deg, #242428, #1d1d20);
   border-color: var(--seam);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07),
@@ -993,16 +1069,19 @@ input {
 }
 
 .preset-notice {
-  margin-top: 7px;
+  margin-top: 6px;
   font-size: 11.5px;
   color: var(--text-dim);
 }
 
-.preset-affordance {
-  margin-top: 7px;
-  font-size: 11px;
-  line-height: 1.4;
-  color: var(--text-faint);
+/* Match rides above the bank as a drawer when its switch is open. */
+.match-drawer {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: 10px;
+  z-index: 55;
+  width: 360px;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.65);
 }
 
 /* ---------- Match: a recording in, a starting point out. ---------- */
@@ -1012,22 +1091,23 @@ input {
   padding: 9px 12px 10px;
 }
 
-/* ---------- Performance: eight macro stations on one frame. ---------- */
+/* ---------- Performance: two mirrored macro banks. ---------- */
 
-.macro-zone {
+.macro-block {
   flex: 1;
+  min-width: 0;
   min-height: 0;
   position: relative;
   display: flex;
   flex-direction: column;
-  margin-top: 8px;
+  margin-top: 6px;
   border: 1px solid var(--frame);
   border-radius: var(--radius-sm);
-  padding: 12px 4px 4px;
+  padding: 10px 2px 2px;
 }
 
 /* The section title breaks the frame, hardware style. */
-.macro-zone > .silk-rule {
+.macro-block > .silk-rule {
   position: absolute;
   top: -8px;
   left: 12px;
@@ -1037,41 +1117,31 @@ input {
   gap: 8px;
 }
 
-.macro-zone > .silk-rule .silk-line {
-  display: none;
-}
-
-.macro-row {
+.macro-grid {
   flex: 1;
   min-height: 0;
-  display: flex;
-  align-items: stretch;
-}
-
-.macro-group {
-  flex: 1;
-  display: flex;
-  align-items: center;
-}
-
-.macro-divider {
-  flex: none;
-  width: 1px;
-  align-self: stretch;
-  margin: 6px 0;
-  background: var(--frame-faint);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  overflow: hidden;
 }
 
 .macro-station {
-  flex: 1;
+  min-height: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2px 0 6px;
+  padding: 6px 4px;
+  overflow: hidden;
 }
 
-.macro-station + .macro-station {
+.macro-station:nth-child(even) {
   border-left: 1px solid var(--frame-faint);
+}
+
+.macro-station:nth-child(n + 3) {
+  border-top: 1px solid var(--frame-faint);
 }
 
 .macro-station .knob-value {
@@ -1081,7 +1151,8 @@ input {
 
 .panel-spec {
   flex: none;
-  padding: 7px 0 6px;
+  margin-top: 8px;
+  padding: 6px 0 2px;
   border-top: 1px solid var(--frame-faint);
   font-family: var(--font-cond);
   font-weight: 500;
@@ -1231,6 +1302,43 @@ input {
   color: var(--text);
 }
 
+/* With the rack open the console compresses: macro caps drop one
+   mounting size and the spec print lifts off the panel. */
+.rack-open .macro-block .knob-large .knob-svg {
+  width: 74px;
+  height: 74px;
+}
+
+.rack-open .macro-block .knob-dial-num {
+  display: none;
+}
+
+.rack-open .macro-station .knob-value {
+  display: none;
+}
+
+.rack-open .macro-station {
+  padding: 3px 4px;
+}
+
+.rack-open .macro-station .knob-label {
+  margin-top: 2px;
+  padding: 1px 7px 0;
+  font-size: 9.5px;
+}
+
+.rack-open .console-readout {
+  margin-top: 6px;
+}
+
+.rack-open .panel-spec {
+  display: none;
+}
+
+.rack-open .console-glass .scope:last-child {
+  flex: 0.85;
+}
+
 /* Rack knobs: quieter print, ink inherited from the group. */
 .param-group .knob-label {
   font-size: 10.5px;
@@ -1249,10 +1357,11 @@ input {
   display: flex;
   flex-direction: column;
   min-height: 0;
+  padding: 7px 9px 8px;
 }
 
 .advanced-section.open {
-  flex: 1.35;
+  flex: 0.9;
 }
 
 .advanced-toggle {
@@ -1261,7 +1370,6 @@ input {
   align-items: center;
   gap: 10px;
   width: 100%;
-  margin-top: 8px;
   padding: 7px 10px;
   background: linear-gradient(180deg, #202024, #1a1a1d);
   border: 1px solid var(--seam);
@@ -1493,6 +1601,41 @@ input {
   );
 }
 
+.rainbow-band {
+  position: relative;
+  overflow: hidden;
+}
+
+.rainbow-band::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.55) 50%,
+    transparent 100%
+  );
+  background-size: 30% 100%;
+  background-repeat: no-repeat;
+  background-position: -30% 0;
+  opacity: 0;
+}
+
+:root[data-shaping="true"] .rainbow-band::after {
+  opacity: 1;
+  animation: band-chase 1.1s linear infinite;
+}
+
+@keyframes band-chase {
+  from {
+    background-position: -30% 0;
+  }
+  to {
+    background-position: 130% 0;
+  }
+}
+
 .deck-rail {
   display: flex;
   gap: 14px;
@@ -1683,7 +1826,7 @@ input {
   transform: translateX(-50%);
   font-family: var(--font-data);
   font-size: 9px;
-  color: #8b887d;
+  color: #66635a;
   pointer-events: none;
 }
 
@@ -1816,7 +1959,7 @@ input {
   transform: translateX(-50%);
 }
 
-.macro-secondary .macro-station:last-child .knob.has-tooltip::after {
+.bank-b .macro-station:nth-child(even) .knob.has-tooltip::after {
   left: auto;
   right: 0;
   transform: none;
@@ -1852,16 +1995,20 @@ input {
   animation: panel-seat 0.45s cubic-bezier(0.16, 0.84, 0.28, 1) backwards;
 }
 
-.glass-deck {
+.console-row {
   animation: panel-seat 0.45s 0.07s cubic-bezier(0.16, 0.84, 0.28, 1) backwards;
 }
 
-.app-body {
+.advanced-section {
   animation: panel-seat 0.45s 0.14s cubic-bezier(0.16, 0.84, 0.28, 1) backwards;
 }
 
+.patch-bank {
+  animation: panel-seat 0.45s 0.2s cubic-bezier(0.16, 0.84, 0.28, 1) backwards;
+}
+
 .keyboard-strip {
-  animation: panel-seat 0.45s 0.21s cubic-bezier(0.16, 0.84, 0.28, 1) backwards;
+  animation: panel-seat 0.45s 0.26s cubic-bezier(0.16, 0.84, 0.28, 1) backwards;
 }
 
 @keyframes band-wipe {

@@ -200,9 +200,10 @@ export function MatchPanel() {
             sound this engine can make out.
           </p>
           <p className="match-hint match-hint-secondary">
-            Runs when the local analysis service is up:
+            Match needs its listening service, which is not running right
+            now. Starting it takes one command, shown in the setup guide
+            (README, &ldquo;Audio match&rdquo;).
           </p>
-          <code className="match-cmd">cd python && uvicorn synthmatch.service:app</code>
         </div>
       ) : phase === "searching" ? (
         <div className="match-body">

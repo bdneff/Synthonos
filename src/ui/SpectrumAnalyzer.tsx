@@ -132,15 +132,32 @@ export function SpectrumAnalyzer({ source }: SpectrumAnalyzerProps) {
         ctx.stroke();
       }
 
+      // The meter honors its own silkscreen: linear bins are mapped
+      // onto the printed log-Hz axis (20 Hz .. 20 kHz), peak-held per
+      // pixel column, and magnitudes go through 20*log10 against the
+      // printed 48 dB window. A flagship's meter never lies about its
+      // own scale. Bins span 0..24 kHz (half the 48 kHz engine rate).
+      const binHz = 24000 / (n - 1);
+      const step = 2;
+      const points: Array<[number, number]> = [];
+      for (let px = 0; px <= w; px += step) {
+        const f0 = 20 * Math.pow(10, (3 * px) / w);
+        const f1 = 20 * Math.pow(10, (3 * Math.min(px + step, w)) / w);
+        const lo = Math.max(0, Math.floor(f0 / binHz));
+        const hi = Math.min(n - 1, Math.max(lo, Math.ceil(f1 / binHz)));
+        let mag = 0;
+        for (let b = lo; b <= hi; b += 1) {
+          if (data[b] > mag) mag = data[b];
+        }
+        const db = mag > 0 ? 20 * Math.log10(mag) : -DB_RANGE;
+        const frac = Math.max(0, Math.min(1, -db / DB_RANGE));
+        points.push([px, plotTop + frac * plotH]);
+      }
+
       // Filled curve, fading downward under the tri-band trace.
       ctx.beginPath();
       ctx.moveTo(0, floor);
-      for (let i = 0; i < n; i += 1) {
-        const x = (i / (n - 1)) * w;
-        const magnitude = data[i];
-        const y = floor - Math.max(0, Math.min(1, magnitude)) * plotH;
-        ctx.lineTo(x, y);
-      }
+      for (const [x, y] of points) ctx.lineTo(x, y);
       ctx.lineTo(w, floor);
       ctx.closePath();
       ctx.fillStyle = triBandGradient(ctx, w, 0.12);
@@ -149,10 +166,8 @@ export function SpectrumAnalyzer({ source }: SpectrumAnalyzerProps) {
       // Trace: a wide soft halo pass, then the crisp tri-band line.
       const trace = (width: number, alpha: number, blur: number) => {
         ctx.beginPath();
-        for (let i = 0; i < n; i += 1) {
-          const x = (i / (n - 1)) * w;
-          const magnitude = data[i];
-          const y = floor - Math.max(0, Math.min(1, magnitude)) * plotH;
+        for (let i = 0; i < points.length; i += 1) {
+          const [x, y] = points[i];
           if (i === 0) ctx.moveTo(x, y);
           else ctx.lineTo(x, y);
         }
