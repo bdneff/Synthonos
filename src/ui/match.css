@@ -1,66 +1,57 @@
-/* Match a sound: the lower stretch of the library rail. Same
-   construction as everything else on the panel: an engraved rule with a
-   silkscreen title, controls mounted directly on the surface. The only
-   recesses are the command line, inputs, and the sparkline, which is a
-   sliver of the same dark instrument glass as the main display.
-   Owns its own classes plus the .left-column wrapper from App.tsx. */
-
-.left-column {
-  width: 236px;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  min-height: 0;
-}
-
-.match-panel {
-  flex-shrink: 0;
-}
+/* Match panel body states, in deck grammar. The section rail and panel
+   chrome live in styles.css; this file styles the four bodies: offline
+   hint, searching (sparkline scope), done, and error. */
 
 .match-body {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 8px 0 0;
+  gap: 6px;
 }
 
 .match-hint {
   margin: 0;
-  color: var(--ink-dim);
   font-size: 11px;
-  line-height: 1.45;
+  line-height: 1.4;
+  color: var(--text-dim);
+}
+
+.match-hint-secondary {
+  color: var(--text-faint);
 }
 
 .match-error {
   color: var(--danger);
 }
 
+/* The service command: wraps, never clips mid-word. */
 .match-cmd {
   display: block;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--ink-dim);
-  background: linear-gradient(180deg, #c9c5bb, #d3cfc6);
-  border: 1px solid rgba(90, 85, 74, 0.38);
-  border-radius: 4px;
   padding: 6px 8px;
-  box-shadow:
-    inset 0 1px 3px rgba(62, 57, 47, 0.2),
-    0 1px 0 rgba(255, 255, 255, 0.5);
-  overflow-x: auto;
-  white-space: nowrap;
+  background: var(--well);
+  border: 1px solid var(--seam);
+  border-radius: 4px;
+  font-family: var(--font-data);
+  font-size: 10px;
+  line-height: 1.5;
+  color: var(--text-dim);
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  user-select: all;
 }
 
-.match-file-input {
-  display: none;
-}
-
-.match-file-button {
+.match-scope {
   width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  height: 44px;
+  background: var(--screen);
+  border: 1px solid var(--seam);
+  border-radius: 4px;
+}
+
+.match-readout {
+  font-family: var(--font-data);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
 }
 
 .match-row {
@@ -69,56 +60,46 @@
   gap: 8px;
 }
 
-.match-note-label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex: 1;
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-}
-
-.match-note-select {
-  background: #eae6de;
-  border: 1px solid var(--edge);
-  border-radius: 4px;
-  color: var(--ink);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  padding: 4px 6px;
-  outline: none;
-  box-shadow: inset 0 1px 3px rgba(62, 57, 47, 0.16);
-  transition: border-color 140ms ease;
-}
-
-.match-note-select:focus {
-  border-color: var(--signal);
+.match-row .button {
+  flex: none;
 }
 
 .match-go {
-  flex-shrink: 0;
+  margin-left: auto;
 }
 
-/* The loss sparkline: a sliver of instrument glass, phosphor trace. */
-.match-scope {
+.match-file-input {
+  display: none;
+}
+
+.match-file-button {
+  justify-content: flex-start;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   display: block;
-  width: 100%;
-  height: 40px;
-  background: var(--glass);
-  border: 1px solid #56534b;
-  border-top-color: #45423b;
-  border-radius: 4px;
-  box-shadow:
-    inset 0 2px 6px rgba(0, 0, 0, 0.55),
-    0 1px 0 rgba(255, 255, 255, 0.5);
+  text-align: left;
 }
 
-.match-readout {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.02em;
-  color: var(--signal-ink);
+.match-note-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-cond);
+  font-weight: 600;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.match-note-select {
+  padding: 4px 6px;
+  background: var(--deck-3);
+  border: 1px solid var(--seam-strong);
+  border-radius: 4px;
+  color: var(--text);
+  font-family: var(--font-data);
+  font-size: 11px;
 }

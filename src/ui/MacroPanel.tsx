@@ -6,6 +6,7 @@
  */
 
 import { useRef } from "react";
+import type { CSSProperties } from "react";
 import { MACROS, MACRO_DEFAULT, computeMacroEdit } from "./macros";
 import type { MacroDef, MacroId } from "./macros";
 import { Knob } from "./Knob";
@@ -56,19 +57,26 @@ export function MacroPanel() {
     store.commitGesture();
   };
 
+  // Presentation only: each macro station carries its hot-cue hue as a
+  // CSS custom property; the knob arc, glow, and name strip read it.
   const renderKnob = (def: MacroDef, size: "medium" | "large") => (
-    <Knob
+    <div
       key={def.id}
-      size={size}
-      label={def.name}
-      tooltip={def.description}
-      spec={MACRO_SPEC}
-      value={store.macros[def.id]}
-      format={(v) => `${Math.round(v * 100)} %`}
-      onGestureStart={() => beginGesture(def)}
-      onChange={(v) => moveMacro(def, v)}
-      onGestureEnd={endGesture}
-    />
+      className="macro-station"
+      style={{ "--knob-hue": MACRO_HUES[def.id] } as CSSProperties}
+    >
+      <Knob
+        size={size}
+        label={def.name}
+        tooltip={def.description}
+        spec={MACRO_SPEC}
+        value={store.macros[def.id]}
+        format={(v) => `${Math.round(v * 100)} %`}
+        onGestureStart={() => beginGesture(def)}
+        onChange={(v) => moveMacro(def, v)}
+        onGestureEnd={endGesture}
+      />
+    </div>
   );
 
   // Presentation staging only: the four macros a beginner reaches for
@@ -100,3 +108,15 @@ export function MacroPanel() {
 }
 
 const PRIMARY_IDS: readonly MacroId[] = ["brightness", "space", "grit", "width"];
+
+/** Law 2 of the visual world: every macro owns a hot-cue hue. */
+const MACRO_HUES: Record<MacroId, string> = {
+  brightness: "var(--m-brightness)",
+  thickness: "var(--m-thickness)",
+  movement: "var(--m-movement)",
+  attack: "var(--m-attack)",
+  space: "var(--m-space)",
+  grit: "var(--m-grit)",
+  width: "var(--m-width)",
+  character: "var(--m-character)",
+};

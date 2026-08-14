@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-14T00:45:00Z",
+  "title": "Design System: Synthonos",
+  "extensions": {
+    "colorMeta": {
+      "band-low": { "role": "primary", "displayName": "Band Low Red", "canonical": "#ff5c6e", "tonalRamp": ["#3d1218", "#611c26", "#8a2836", "#b23747", "#d94757", "#ff5c6e", "#ff8b97", "#ffc2c9"] },
+      "band-mid": { "role": "primary", "displayName": "Band Mid Green", "canonical": "#57d074", "tonalRamp": ["#0f2f18", "#174a26", "#216836", "#2d8a48", "#3dad5c", "#57d074", "#84df9a", "#c0f0cc"] },
+      "band-high": { "role": "primary", "displayName": "Band High Blue", "canonical": "#4fa8ff", "tonalRamp": ["#0f2540", "#173a63", "#205088", "#2b6cb3", "#3a89da", "#4fa8ff", "#82c1ff", "#c0e0ff"] },
+      "deck-page": { "role": "neutral", "displayName": "Deck Page", "canonical": "#101215", "tonalRamp": ["#08090b", "#101215", "#16181d", "#1c1f25", "#23272e", "#2b3038", "#343a44", "#46505e"] },
+      "text": { "role": "neutral", "displayName": "Deck Ink", "canonical": "#e9ecef", "tonalRamp": ["#4f5a66", "#5f6a76", "#707c88", "#838d99", "#a3abb5", "#c4cad2", "#e9ecef", "#f7f9fa"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Wordmark", "purpose": "The SYNTHONOS wordmark only." },
+      "headline": { "displayName": "Rail Title", "purpose": "Section rails, uppercase condensed with function chip." },
+      "data": { "displayName": "Data Mono", "purpose": "Every numeral, scale, readout, and command." }
+    },
+    "shadows": [
+      { "name": "overlay", "value": "0 10px 28px rgba(0,0,0,0.55)", "purpose": "True overlays only: describe response, settings popover." },
+      { "name": "tooltip", "value": "0 8px 20px rgba(0,0,0,0.5)", "purpose": "Hover tooltips." },
+      { "name": "machine-glow", "value": "drop-shadow(0 0 3.5px var(--knob-hue))", "purpose": "State signal: the AI is turning this knob." }
+    ],
+    "motion": [
+      { "name": "rail-ease", "value": "cubic-bezier(0.2, 0.8, 0.2, 1)", "purpose": "Describe hairline growth, chevron rotation." },
+      { "name": "state-fade", "value": "0.12s ease-out", "purpose": "Hover and color state changes." },
+      { "name": "knob-tween", "value": "300ms cubic ease-out + 400ms glow linger", "purpose": "Programmatic knob sweeps (in Knob.tsx, not CSS)." },
+      { "name": "tri-sweep", "value": "1.1s linear infinite background-position", "purpose": "Describe hairline while the machine thinks." }
+    ],
+    "breakpoints": [
+      { "name": "min-app", "value": "1140px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Default deck button for history, settings, dismissals.",
+      "html": "<button class=\"ds-btn\">Undo</button>",
+      "css": ".ds-btn { background: #23272e; color: #a3abb5; border: 1px solid #343a44; border-radius: 5px; padding: 5px 12px; font-family: 'Barlow', system-ui, sans-serif; font-size: 12.5px; font-weight: 500; transition: background 0.12s ease-out, color 0.12s ease-out; } .ds-btn:hover { background: #2b3038; color: #e9ecef; } .ds-btn:focus-visible { outline: 2px solid #7ab8ff; outline-offset: 2px; }"
+    },
+    {
+      "name": "Commit Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Action green for commits: Save, Match.",
+      "html": "<button class=\"ds-btn-commit\">Save</button>",
+      "css": ".ds-btn-commit { background: #57d074; color: #0c1710; border: 1px solid #57d074; border-radius: 5px; padding: 5px 12px; font-family: 'Barlow', system-ui, sans-serif; font-size: 12.5px; font-weight: 600; transition: background 0.12s ease-out; } .ds-btn-commit:hover { background: #6ee08a; border-color: #6ee08a; } .ds-btn-commit:focus-visible { outline: 2px solid #7ab8ff; outline-offset: 2px; }"
+    },
+    {
+      "name": "Shape Button",
+      "kind": "button",
+      "description": "The describe action; the only element besides the brand mark and hairline allowed the full spectrum.",
+      "html": "<button class=\"ds-btn-shape\">Shape</button>",
+      "css": ".ds-btn-shape { background: linear-gradient(90deg, #ff5c6e 0%, #ff8b47 20%, #ffd24d 38%, #57d074 56%, #3fd0d8 72%, #4fa8ff 100%); color: #101215; border: none; border-radius: 5px; padding: 7px 16px; font-family: 'Barlow', system-ui, sans-serif; font-size: 12.5px; font-weight: 700; letter-spacing: 0.02em; } .ds-btn-shape:hover { filter: brightness(1.12); }"
+    },
+    {
+      "name": "Inset Input",
+      "kind": "input",
+      "refersTo": "input-inset",
+      "description": "Recessed well field for names and keys.",
+      "html": "<input class=\"ds-input\" placeholder=\"Name this sound\" />",
+      "css": ".ds-input { background: #0d0f13; color: #e9ecef; caret-color: #4fa8ff; border: 1px solid #272b32; border-radius: 5px; padding: 6px 9px; font-family: 'Barlow', system-ui, sans-serif; font-size: 12.5px; } .ds-input::placeholder { color: #838d99; } .ds-input:focus { outline: none; border-color: #343a44; }"
+    },
+    {
+      "name": "Rail Title",
+      "kind": "nav",
+      "description": "Section rail: function chip, condensed title, seam line.",
+      "html": "<div class=\"ds-rail\"><span class=\"ds-rail-title\"><i class=\"ds-chip\"></i>Library</span><i class=\"ds-rail-line\"></i><span class=\"ds-rail-fine\">41 sounds</span></div>",
+      "css": ".ds-rail { display: flex; align-items: center; gap: 10px; } .ds-rail-title { display: inline-flex; align-items: center; gap: 8px; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #e9ecef; } .ds-chip { width: 8px; height: 8px; border-radius: 2px; background: #8b94a0; } .ds-rail-line { flex: 1; height: 1px; background: #272b32; } .ds-rail-fine { font-family: 'Spline Sans Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: #838d99; }"
+    },
+    {
+      "name": "Function Chip",
+      "kind": "chip",
+      "description": "Hot-cue shaped color identity for sections and categories.",
+      "html": "<span class=\"ds-fn-chip\" style=\"--hue:#ffd24d\"></span>",
+      "css": ".ds-fn-chip { display: inline-block; width: 8px; height: 8px; border-radius: 2px; background: var(--hue, #8b94a0); }"
+    },
+    {
+      "name": "Crate Row",
+      "kind": "custom",
+      "description": "Library preset row; current row raises one step and shows its category chip.",
+      "html": "<div class=\"ds-row ds-row-current\" style=\"--cat:#8f8aff\"><button class=\"ds-row-name\">Warm Pad<i class=\"ds-row-chip\"></i></button></div>",
+      "css": ".ds-row { display: flex; border-radius: 4px; background: transparent; } .ds-row:hover { background: #1c1f25; } .ds-row-current { background: #23272e; } .ds-row-name { flex: 1; display: flex; align-items: center; gap: 8px; background: none; border: none; padding: 4px 7px; text-align: left; color: #a3abb5; font-family: 'Barlow', sans-serif; font-size: 12.5px; font-weight: 500; } .ds-row-current .ds-row-name { color: #e9ecef; font-weight: 600; } .ds-row-chip { width: 6px; height: 6px; border-radius: 2px; margin-left: auto; background: var(--cat, #8b94a0); }"
+    },
+    {
+      "name": "Tooltip",
+      "kind": "custom",
+      "description": "Plain-words hover explanation on any control.",
+      "html": "<span class=\"ds-tip\">How quickly a note reaches full volume.</span>",
+      "css": ".ds-tip { display: inline-block; max-width: 230px; padding: 6px 10px; background: #2b3038; border: 1px solid #46505e; border-radius: 5px; box-shadow: 0 8px 20px rgba(0,0,0,0.5); color: #e9ecef; font-family: 'Barlow', sans-serif; font-size: 11.5px; line-height: 1.4; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Performance Deck",
+    "overview": "Synthonos wears the visual grammar of DJ performance software: layered slate decks separated by 1px seams, tonal depth instead of shadows, recessed screens darker than their chassis, and real instrumentation printed on working canvas displays. The governing idea is that color is information, never decoration: frequency is color on the spectrum, every macro owns a hot-cue hue, and engine sections carry function color at group level.",
+    "keyCharacteristics": [
+      "Layered slate decks, seamed, flat; tonal depth, not shadow depth",
+      "Every hue on screen carries a meaning (band, macro, section, action)",
+      "Real instrumentation: dB/Hz/ms-DIV scales on working displays",
+      "Condensed uppercase rails, mono data, Barlow speech",
+      "The machine's own actions glow: an AI-turned knob burns its hue"
+    ],
+    "rules": [
+      { "name": "The Meaning Rule", "body": "No hue appears without a meaning. Before using a color, name what it encodes; if there is no answer, use a slate neutral.", "section": "colors" },
+      { "name": "The Spectrum Signature Rule", "body": "The full tri-band gradient appears only where the whole spectrum is at stake: the brand bars, the describe hairline, and the Shape button.", "section": "colors" },
+      { "name": "The Speech/Measurement Rule", "body": "Words the product says are set in Barlow; values the machine measures are set in Spline Sans Mono. Never mix within one string.", "section": "typography" },
+      { "name": "The Overlay-Only Shadow Rule", "body": "If it doesn't float over the deck, it doesn't cast a shadow.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do give every new color a stated meaning before using it, and reuse an existing hue when the meaning already exists.",
+      "Do build boundaries from 1px seams and tonal steps; recess anything that displays or receives content one step darker than its chassis.",
+      "Do set every numeral, scale, and readout in Spline Sans Mono, and every rail title in condensed tracked uppercase with its function chip.",
+      "Do keep the machine-glow: any programmatic parameter change must light its control's hue while it moves.",
+      "Do write copy in plain musician words, never engineering abbreviations."
+    ],
+    "donts": [
+      "Don't introduce a single global accent color; this system's identity is many hues, each owned by a function.",
+      "Don't use cream grounds, serifs, or warm-enamel hardware skeuomorphism — all rejected prior worlds.",
+      "Don't use the tri-band gradient outside the brand mark, describe hairline, and Shape button.",
+      "Don't add shadows to resting surfaces, colored side-stripes, glyph icons, or imitation materials.",
+      "Don't color the waveform display by frequency: time is not frequency; it stays white phosphor."
+    ]
+  }
+}

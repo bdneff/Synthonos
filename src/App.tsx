@@ -1,12 +1,13 @@
 /**
- * Synthonos shell: one continuous panel, zoned by engraved rules rather
- * than nested cards.
- * 1. Top rail: brand nameplate, the describe slot (say it), the loaded
- *    sound readout, history keys, and the model plate fine print.
- * 2. The instrument glass: spectrum and waveform in one dark display.
- * 3. Body: library well on the left, staged macro controls center, the
- *    advanced rack (manifest-generated) behind a rail toggle.
- * 4. The keyboard deck across the bottom.
+ * Synthonos shell, in deck grammar: layered slate panels seamed by 1px
+ * lines, color as information throughout (see src/ui/styles.css).
+ * 1. Top rail: brand mark (the tri-band bars), the describe lane with
+ *    its spectrum hairline, the loaded sound readout, history keys.
+ * 2. The display strip: tri-band spectrum and white-phosphor waveform.
+ * 3. Body: the crate (library + match) on the left, the eight hot-cue
+ *    macros center, the advanced rack (manifest-generated) behind a
+ *    toggle rail that also prints the signal path.
+ * 4. The keys deck across the bottom.
  * Bound to the stub engine bridge until the real engine lands.
  */
 
@@ -82,9 +83,12 @@ function Shell() {
     <div className="app">
       <header className="top-rail">
         <div className="brand">
-          <svg className="brand-mark" viewBox="0 0 30 30" aria-hidden="true">
-            <rect x="0.5" y="0.5" width="29" height="29" rx="6.5" />
-            <path d="M5 15 C7.4 8.4 9.8 8.4 12.2 15 C14.6 21.6 17 21.6 19.4 15 L23.5 9.5 L23.5 15 L26 15" />
+          {/* The mark quotes law 1: frequency is color, low to high. */}
+          <svg className="brand-mark" viewBox="0 0 28 28" aria-hidden="true">
+            <rect x="2" y="11" width="3.5" height="6" rx="1.2" fill="var(--low)" />
+            <rect x="8" y="7.5" width="3.5" height="13" rx="1.2" fill="var(--m-thickness)" />
+            <rect x="14" y="4" width="3.5" height="20" rx="1.2" fill="var(--mid)" />
+            <rect x="20" y="9" width="3.5" height="10" rx="1.2" fill="var(--high)" />
           </svg>
           <div className="brand-text">
             <div className="brand-name">Synthonos</div>
@@ -145,20 +149,31 @@ function Shell() {
         <i className="body-divider" aria-hidden="true" />
         <main className="app-main">
           <MacroPanel />
-          <div className="flow-legend" aria-hidden="true">
-            OSC A/B&ensp;&#9656;&ensp;MIXER&ensp;&#9656;&ensp;FILTER&ensp;&#9656;&ensp;AMP&ensp;&#9656;&ensp;FX&ensp;&#9656;&ensp;OUT
-          </div>
-          <section className="advanced-section">
+          <section className={`advanced-section${advancedOpen ? " open" : ""}`}>
             <button
               type="button"
               className={`advanced-toggle${advancedOpen ? " open" : ""}`}
               onClick={() => setAdvancedOpen((open) => !open)}
               aria-expanded={advancedOpen}
             >
-              <span className="advanced-chevron" aria-hidden="true">
-                {advancedOpen ? "▾" : "▸"}
-              </span>
+              <svg
+                className="advanced-chevron"
+                viewBox="0 0 10 10"
+                aria-hidden="true"
+              >
+                <path
+                  d="M3 1.5 L7.5 5 L3 8.5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
               <span className="advanced-word">Advanced</span>
+              <span className="flow-legend" aria-hidden="true">
+                OSC A/B&ensp;&#9656;&ensp;MIXER&ensp;&#9656;&ensp;FILTER&ensp;&#9656;&ensp;AMP&ensp;&#9656;&ensp;FX&ensp;&#9656;&ensp;OUT
+              </span>
               <i className="silk-line" aria-hidden="true" />
               <span className="advanced-hint">
                 {advancedOpen

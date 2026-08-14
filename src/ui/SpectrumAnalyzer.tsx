@@ -1,10 +1,12 @@
 /**
- * Live magnitude spectrum drawn on the left side of the shared
- * instrument glass. The canvas paints no background of its own: the
- * glass surface belongs to the display deck, and this component draws
- * the grid, the silkscreened scale (dB down the left edge, Hz decades
- * along the bottom), the calibration fine print, and the amber phosphor
- * trace. The data source is a callback returning bin magnitudes in
+ * Live magnitude spectrum drawn on the left side of the shared display
+ * strip. The canvas paints no background of its own: the screen surface
+ * belongs to the display deck, and this component draws the grid, the
+ * printed scale (dB down the left edge, Hz decades along the bottom),
+ * the calibration fine print, and the trace. The trace carries law 1 of
+ * the visual world: frequency is color, low red through mid green to
+ * high blue, because here the x axis IS frequency, so the gradient is
+ * information, not decoration. Data source returns bin magnitudes in
  * 0..1; with the stub bridge it renders a calm idle floor.
  */
 
@@ -29,10 +31,32 @@ const HZ_MARKS: ReadonlyArray<{ label: string; frac: number }> = [
   { label: "10K", frac: Math.log10(10000 / 20) / 3 },
 ];
 
-const SILK = "rgba(214, 206, 188, 0.48)";
-const SILK_DIM = "rgba(214, 206, 188, 0.3)";
-const GRID = "rgba(226, 220, 205, 0.055)";
-const GRID_FAINT = "rgba(226, 220, 205, 0.03)";
+const SILK = "rgba(214, 222, 232, 0.5)";
+const SILK_DIM = "rgba(214, 222, 232, 0.32)";
+const GRID = "rgba(214, 222, 232, 0.06)";
+const GRID_FAINT = "rgba(214, 222, 232, 0.03)";
+
+/**
+ * The tri-band gradient across the log frequency axis. Band edges sit
+ * at 250 Hz and 4 kHz (the mix engineer's low / mid / high), blended
+ * so the trace reads as one voice, not three segments.
+ */
+function triBandGradient(
+  ctx: CanvasRenderingContext2D,
+  w: number,
+  alpha: number,
+): CanvasGradient {
+  const lowEdge = Math.log10(250 / 20) / 3;
+  const highEdge = Math.log10(4000 / 20) / 3;
+  const g = ctx.createLinearGradient(0, 0, w, 0);
+  g.addColorStop(0, `rgba(255, 92, 110, ${alpha})`);
+  g.addColorStop(Math.max(0, lowEdge - 0.09), `rgba(255, 92, 110, ${alpha})`);
+  g.addColorStop(lowEdge + 0.09, `rgba(87, 208, 116, ${alpha})`);
+  g.addColorStop(Math.max(0, highEdge - 0.09), `rgba(87, 208, 116, ${alpha})`);
+  g.addColorStop(Math.min(1, highEdge + 0.09), `rgba(79, 168, 255, ${alpha})`);
+  g.addColorStop(1, `rgba(79, 168, 255, ${alpha})`);
+  return g;
+}
 
 export function SpectrumAnalyzer({ source }: SpectrumAnalyzerProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -59,9 +83,9 @@ export function SpectrumAnalyzer({ source }: SpectrumAnalyzerProps) {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, w, h);
 
-      // Plot area: the 0 dB line clears the SPECTRUM silkscreen at the
-      // top; room for the Hz scale under the floor.
-      const plotTop = 19;
+      // Plot area: the 0 dB line clears the SPECTRUM label at the top;
+      // room for the Hz scale under the floor.
+      const plotTop = 27;
       const floor = h - 15;
       const plotH = floor - plotTop;
 
@@ -100,7 +124,7 @@ export function SpectrumAnalyzer({ source }: SpectrumAnalyzerProps) {
       }
       if (peak < 0.01) {
         const breath = 0.5 + 0.5 * Math.sin(performance.now() / 1400);
-        ctx.strokeStyle = `rgba(255, 179, 92, ${0.04 + 0.06 * breath})`;
+        ctx.strokeStyle = triBandGradient(ctx, w, 0.05 + 0.07 * breath);
         ctx.lineWidth = 6;
         ctx.beginPath();
         ctx.moveTo(0, floor - 1);
@@ -108,7 +132,7 @@ export function SpectrumAnalyzer({ source }: SpectrumAnalyzerProps) {
         ctx.stroke();
       }
 
-      // Filled curve.
+      // Filled curve, fading downward under the tri-band trace.
       ctx.beginPath();
       ctx.moveTo(0, floor);
       for (let i = 0; i < n; i += 1) {
@@ -119,15 +143,11 @@ export function SpectrumAnalyzer({ source }: SpectrumAnalyzerProps) {
       }
       ctx.lineTo(w, floor);
       ctx.closePath();
-      const fill = ctx.createLinearGradient(0, 0, 0, h);
-      fill.addColorStop(0, "rgba(255, 179, 92, 0.2)");
-      fill.addColorStop(0.7, "rgba(255, 179, 92, 0.05)");
-      fill.addColorStop(1, "rgba(255, 179, 92, 0.012)");
-      ctx.fillStyle = fill;
+      ctx.fillStyle = triBandGradient(ctx, w, 0.12);
       ctx.fill();
 
-      // Trace: a wide soft halo pass, then the crisp line.
-      const trace = (width: number, style: string, blur: number) => {
+      // Trace: a wide soft halo pass, then the crisp tri-band line.
+      const trace = (width: number, alpha: number, blur: number) => {
         ctx.beginPath();
         for (let i = 0; i < n; i += 1) {
           const x = (i / (n - 1)) * w;
@@ -136,18 +156,18 @@ export function SpectrumAnalyzer({ source }: SpectrumAnalyzerProps) {
           if (i === 0) ctx.moveTo(x, y);
           else ctx.lineTo(x, y);
         }
-        ctx.strokeStyle = style;
+        ctx.strokeStyle = triBandGradient(ctx, w, alpha);
         ctx.lineWidth = width;
-        ctx.shadowColor = "rgba(255, 179, 92, 0.5)";
+        ctx.shadowColor = "rgba(214, 222, 232, 0.35)";
         ctx.shadowBlur = blur;
         ctx.stroke();
         ctx.shadowBlur = 0;
       };
-      trace(4, "rgba(255, 179, 92, 0.08)", 0);
-      trace(1.5, "rgba(255, 179, 92, 0.92)", 7);
+      trace(4, 0.1, 0);
+      trace(1.5, 0.95, 5);
 
       // Silkscreened scales on the glass. dB down the left edge.
-      ctx.font = "500 8.5px 'IBM Plex Mono', monospace";
+      ctx.font = "500 8.5px 'Spline Sans Mono', monospace";
       ctx.fillStyle = SILK;
       ctx.strokeStyle = SILK_DIM;
       ctx.lineWidth = 1;
@@ -173,7 +193,7 @@ export function SpectrumAnalyzer({ source }: SpectrumAnalyzerProps) {
       ctx.stroke();
       ctx.textAlign = "left";
       ctx.fillStyle = SILK_DIM;
-      ctx.font = "500 7.5px 'IBM Plex Mono', monospace";
+      ctx.font = "500 7.5px 'Spline Sans Mono', monospace";
       ctx.fillText("Hz", 6, h - 3);
 
       // Calibration fine print, top right corner of the glass.

@@ -10,13 +10,15 @@
  *
  * One knob family across the whole instrument, mounted in three staged
  * sizes: "large" primary macros, "medium" secondary macros, "small"
- * rack knobs. Ivory cap in a machined recess, a single signal-orange
- * index line from center to cap edge (the knob's signature), and
- * silkscreen around it: an engraved tick ring, min and max dots at the
- * ends of the throw, and on the large caps the 0 and 10 dial numerals.
+ * rack knobs. Deck construction: a flat slate cap, a bright index
+ * pointer, and the value arc carrying the control's function hue
+ * (--knob-hue, set by the macro station or the rack group). While the
+ * machine turns the knob the arc burns at full hue with a glow: the
+ * describe interaction made visible. Tick ring, min and max dots, and
+ * 0..10 dial numerals on the large caps.
  */
 
-import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
 import type { ParamCurve } from "../generated/params";
 import { clamp01, denormalizeValue, normalizeValue } from "./param-utils";
@@ -211,15 +213,8 @@ export function Knob({
   const arcRadius = 40;
   // The index line: one crisp stroke from just off center to the cap
   // edge. This full-radius pointer is the knob's signature.
-  const [px0, py0] = polar(c, c, 8, angle);
-  const [px1, py1] = polar(c, c, 24.6, angle);
-
-  // Unique, url()-safe gradient ids per knob instance.
-  const uid = useId().replace(/[^a-zA-Z0-9_-]/g, "");
-  const capId = `knob-cap-${uid}`;
-  const rimId = `knob-rim-${uid}`;
-  const wellId = `knob-well-${uid}`;
-  const dimpleId = `knob-dimple-${uid}`;
+  const [px0, py0] = polar(c, c, 7, angle);
+  const [px1, py1] = polar(c, c, 24, angle);
 
   const tickCount = size === "small" ? 7 : 11;
   const ticks = [];
@@ -268,27 +263,6 @@ export function Knob({
         onDoubleClick={handleDoubleClick}
       >
         <svg viewBox={`0 0 ${view} ${view}`} className="knob-svg">
-          <defs>
-            <radialGradient id={capId} cx="0.36" cy="0.28" r="0.85">
-              <stop offset="0%" stopColor="#fbf8f1" />
-              <stop offset="55%" stopColor="#eae6dc" />
-              <stop offset="100%" stopColor="#d3cfc4" />
-            </radialGradient>
-            <linearGradient id={rimId} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="rgba(255,255,255,0.9)" />
-              <stop offset="55%" stopColor="rgba(255,255,255,0.15)" />
-              <stop offset="100%" stopColor="rgba(62,57,47,0.5)" />
-            </linearGradient>
-            <linearGradient id={wellId} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#a5a196" />
-              <stop offset="70%" stopColor="#c0bcb1" />
-              <stop offset="100%" stopColor="#d7d3c9" />
-            </linearGradient>
-            <radialGradient id={dimpleId} cx="0.4" cy="0.35" r="1">
-              <stop offset="0%" stopColor="#4f4b42" />
-              <stop offset="100%" stopColor="#26241e" />
-            </radialGradient>
-          </defs>
           {ticks}
           <circle className="knob-dot" cx={dotMinX} cy={dotMinY} r={1.6} />
           <circle className="knob-dot" cx={dotMaxX} cy={dotMaxY} r={1.6} />
@@ -312,15 +286,8 @@ export function Knob({
               d={arcPath(c, c, arcRadius, anchorAngle, angle)}
             />
           ) : null}
-          <circle className="knob-well" cx={c} cy={c} r={33} fill={`url(#${wellId})`} />
-          <circle cx={c} cy={c} r={26} fill={`url(#${capId})`} />
-          <circle
-            className="knob-cap-rim"
-            cx={c}
-            cy={c}
-            r={25.5}
-            stroke={`url(#${rimId})`}
-          />
+          <circle className="knob-cap" cx={c} cy={c} r={26} />
+          <circle className="knob-cap-face" cx={c} cy={c} r={19} />
           <line
             className="knob-pointer"
             x1={px0}
@@ -328,7 +295,6 @@ export function Knob({
             x2={px1}
             y2={py1}
           />
-          <circle cx={c} cy={c} r={3.2} fill={`url(#${dimpleId})`} />
         </svg>
       </div>
       <div className="knob-label">{label}</div>

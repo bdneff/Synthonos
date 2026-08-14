@@ -154,7 +154,7 @@ export function Keyboard() {
             <span className="octave-silk">X</span>
           </div>
         </div>
-        <div className="keyboard-hint">Play with your computer keyboard. Z and X change octave.</div>
+        <div className="keyboard-hint">Play with your computer keyboard.</div>
       </div>
       <div className="piano-bed">
       <div className="piano" role="group" aria-label="On-screen piano">

@@ -65,11 +65,11 @@ function drawSparkline(canvas: HTMLCanvasElement, losses: readonly number[]) {
   const yOf = (v: number) =>
     span <= 0 ? height / 2 : pad + ((v - min) / span) * innerH;
 
-  ctx.strokeStyle = "#ffb35c";
+  ctx.strokeStyle = "#ff8b47";
   ctx.lineWidth = 1.5;
   ctx.lineJoin = "round";
   ctx.lineCap = "round";
-  ctx.shadowColor = "rgba(255, 179, 92, 0.4)";
+  ctx.shadowColor = "rgba(255, 139, 71, 0.4)";
   ctx.shadowBlur = 4;
   ctx.beginPath();
   losses.forEach((v, i) => {
@@ -80,7 +80,7 @@ function drawSparkline(canvas: HTMLCanvasElement, losses: readonly number[]) {
   // A small marker on the latest point.
   const last = losses.length - 1;
   ctx.shadowBlur = 6;
-  ctx.fillStyle = "#ffc888";
+  ctx.fillStyle = "#ffb182";
   ctx.beginPath();
   ctx.arc(x(last), yOf(losses[last]), 2, 0, Math.PI * 2);
   ctx.fill();
@@ -196,7 +196,11 @@ export function MatchPanel() {
       {offline ? (
         <div className="match-body">
           <p className="match-hint">
-            Start the analysis service to match sounds from audio
+            Match a sound from a recording: a short clip in, the closest
+            sound this engine can make out.
+          </p>
+          <p className="match-hint match-hint-secondary">
+            Runs when the local analysis service is up:
           </p>
           <code className="match-cmd">cd python && uvicorn synthmatch.service:app</code>
         </div>

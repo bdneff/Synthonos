@@ -1,8 +1,8 @@
 /**
- * Time-domain oscilloscope on the right side of the shared instrument
- * glass. Paints no background of its own; draws the graticule, the
- * silkscreened +1 / 0 / -1 amplitude scale, sweep-rate fine print, and
- * the amber phosphor trace. Data source returns samples in -1..1; with
+ * Time-domain oscilloscope on the right side of the shared display
+ * strip. Paints no background of its own; draws the graticule, the
+ * printed +1 / 0 / -1 amplitude scale, sweep-rate fine print, and the
+ * white phosphor trace. Data source returns samples in -1..1; with
  * the stub bridge that is a flat line resting calmly on the center
  * axis, which is exactly what silence should look like.
  */
@@ -14,10 +14,10 @@ export interface OscilloscopeProps {
   source(): Float32Array;
 }
 
-const SILK = "rgba(214, 206, 188, 0.48)";
-const SILK_DIM = "rgba(214, 206, 188, 0.3)";
-const GRID = "rgba(226, 220, 205, 0.055)";
-const GRID_FAINT = "rgba(226, 220, 205, 0.03)";
+const SILK = "rgba(214, 222, 232, 0.5)";
+const SILK_DIM = "rgba(214, 222, 232, 0.32)";
+const GRID = "rgba(214, 222, 232, 0.06)";
+const GRID_FAINT = "rgba(214, 222, 232, 0.03)";
 
 export function Oscilloscope({ source }: OscilloscopeProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -93,7 +93,7 @@ export function Oscilloscope({ source }: OscilloscopeProps) {
       }
       if (peak < 0.004) {
         const breath = 0.5 + 0.5 * Math.sin(performance.now() / 1400);
-        ctx.strokeStyle = `rgba(255, 179, 92, ${0.05 + 0.07 * breath})`;
+        ctx.strokeStyle = `rgba(230, 238, 246, ${0.04 + 0.06 * breath})`;
         ctx.lineWidth = 6;
         ctx.beginPath();
         ctx.moveTo(0, mid + 0.5);
@@ -101,7 +101,9 @@ export function Oscilloscope({ source }: OscilloscopeProps) {
         ctx.stroke();
       }
 
-      // Phosphor trace: soft wide halo pass, then the crisp line.
+      // White phosphor trace: soft wide halo pass, then the crisp line.
+      // The waveform stays neutral on purpose: time is not frequency,
+      // so it earns no band color.
       const trace = (width: number, style: string, blur: number) => {
         ctx.beginPath();
         for (let i = 0; i < n; i += 1) {
@@ -113,16 +115,16 @@ export function Oscilloscope({ source }: OscilloscopeProps) {
         }
         ctx.strokeStyle = style;
         ctx.lineWidth = width;
-        ctx.shadowColor = "rgba(255, 179, 92, 0.5)";
+        ctx.shadowColor = "rgba(230, 238, 246, 0.45)";
         ctx.shadowBlur = blur;
         ctx.stroke();
         ctx.shadowBlur = 0;
       };
-      trace(5, "rgba(255, 179, 92, 0.08)", 0);
-      trace(1.5, "rgba(255, 179, 92, 0.92)", 7);
+      trace(5, "rgba(230, 238, 246, 0.07)", 0);
+      trace(1.5, "rgba(238, 243, 248, 0.92)", 6);
 
       // Silkscreened amplitude scale on the right edge of the glass.
-      ctx.font = "500 8.5px 'IBM Plex Mono', monospace";
+      ctx.font = "500 8.5px 'Spline Sans Mono', monospace";
       ctx.fillStyle = SILK;
       ctx.strokeStyle = SILK_DIM;
       ctx.lineWidth = 1;
@@ -136,14 +138,16 @@ export function Oscilloscope({ source }: OscilloscopeProps) {
         const y = plotTop + (plotBottom - plotTop) * f;
         ctx.moveTo(w - 4, Math.round(y) + 0.5);
         ctx.lineTo(w, Math.round(y) + 0.5);
-        ctx.fillText(label, w - 7, y + 3);
+        // The center label sits above its tick so the trace resting on
+        // the axis never runs through the numeral.
+        ctx.fillText(label, w - 7, f === 0.5 ? y - 4 : y + 3);
       }
       ctx.stroke();
 
       // Calibration fine print, bottom left corner.
       ctx.textAlign = "left";
       ctx.fillStyle = SILK_DIM;
-      ctx.font = "500 7.5px 'IBM Plex Mono', monospace";
+      ctx.font = "500 7.5px 'Spline Sans Mono', monospace";
       ctx.fillText("5 ms/DIV · AC", 6, h - 3);
 
       raf = requestAnimationFrame(draw);

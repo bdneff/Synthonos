@@ -83,16 +83,36 @@ function ManifestControlView({ control }: { control: ManifestControl }) {
   );
 }
 
+/**
+ * Group-level presentation only (law 3 of the visual world): each
+ * engine section carries a function color, so the rack reads as a
+ * color-coded map of the signal path. Unknown future groups fall back
+ * to the neutral chip. Controls stay manifest-generated.
+ */
+const GROUP_CATEGORY: Readonly<Record<string, string>> = {
+  "Oscillator A": "osc-a",
+  "Oscillator B": "osc-b",
+  Mixer: "mix",
+  Pitch: "pitch",
+  Filter: "filter",
+  "Amp Envelope": "env",
+  "Filter Envelope": "env",
+  LFO: "lfo",
+  Distortion: "fx",
+  Chorus: "fx",
+  Delay: "fx",
+  Reverb: "fx",
+  Master: "master",
+};
+
 export function AdvancedPanel() {
   return (
     <div className="advanced-panel">
       {MANIFEST.groups.map((group) => (
-        // Group-level presentation only: small effects groups pack
-        // tighter, the way an effects strip sits denser than the voice
-        // section on a panel. Controls stay manifest-generated.
         <section
           key={group.name}
           className={`param-group${group.controls.length <= 3 ? " tight" : ""}`}
+          data-cat={GROUP_CATEGORY[group.name]}
         >
           <div className="silk-rule group-title">
             <span className="silk-title">{group.name}</span>

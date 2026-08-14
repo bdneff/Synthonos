@@ -110,7 +110,7 @@ export function PresetBrowser() {
         </div>
 
         {FACTORY_CATEGORIES.map((category) => (
-          <div key={category} className="preset-group">
+          <div key={category} className="preset-group" data-cat={category}>
             <div className="preset-group-header">{category}</div>
             {FACTORY_PRESETS.filter((p) => p.category === category).map(
               (preset) => (
@@ -133,6 +133,7 @@ export function PresetBrowser() {
           </div>
         ))}
 
+        <div className="preset-group" data-cat="Your sounds">
         <div className="preset-group-header">Your sounds</div>
 
         {userPresets.map((preset) => (
@@ -193,6 +194,7 @@ export function PresetBrowser() {
         {userPresets.length === 0 ? (
           <div className="preset-empty">Nothing saved yet. Shape a sound, name it below, and it lives here.</div>
         ) : null}
+        </div>
       </div>
 
       <div className="preset-save">
@@ -213,8 +215,8 @@ export function PresetBrowser() {
       {notice !== null ? <div className="preset-notice">{notice}</div> : null}
 
       <div className="preset-affordance">
-        Every preset is a starting point. Load one, then use the box at the
-        top to describe what to change.
+        Every preset is a starting point: load one, then describe what to
+        change.
       </div>
     </aside>
   );
