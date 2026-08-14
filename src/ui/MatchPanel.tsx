@@ -18,7 +18,13 @@ import {
 import type { MatchProgress } from "./match";
 import "./match.css";
 
-const HEALTH_POLL_MS = 3000;
+/**
+ * Health probe cadence. Every failed probe against a not-running service
+ * prints a connection error in the browser console, so while the service
+ * is down we ask rarely; while it is up we watch more closely for a drop.
+ */
+const HEALTH_POLL_UP_MS = 5000;
+const HEALTH_POLL_DOWN_MS = 15000;
 
 /** C1..C6 in the C3=48 convention the matcher uses. */
 const NOTE_OPTIONS: ReadonlyArray<{ label: string; midi: number }> = [
@@ -99,7 +105,9 @@ export function MatchPanel() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  // Health probe on an interval, paused while a search runs.
+  // Health probe on an interval, paused while a search runs. This panel
+  // only mounts while the Match drawer is open, so nothing probes (and
+  // nothing can print a connection error) when the drawer is closed.
   useEffect(() => {
     if (phase === "searching") return;
     let cancelled = false;
@@ -109,12 +117,15 @@ export function MatchPanel() {
       });
     };
     probe();
-    const id = window.setInterval(probe, HEALTH_POLL_MS);
+    const id = window.setInterval(
+      probe,
+      serviceUp ? HEALTH_POLL_UP_MS : HEALTH_POLL_DOWN_MS,
+    );
     return () => {
       cancelled = true;
       window.clearInterval(id);
     };
-  }, [phase]);
+  }, [phase, serviceUp]);
 
   // Abort a running search if the panel unmounts.
   useEffect(() => {

@@ -41,8 +41,14 @@ export function DescribeBar() {
         }
       }
       setResponse(result.explanation);
-    } catch {
-      setResponse("Something went wrong understanding that. Try again.");
+    } catch (err) {
+      // The handler maps API failures to plain sentences (bad key, rate
+      // limit, no connection); anything else gets the generic line.
+      setResponse(
+        err instanceof Error && err.message !== ""
+          ? err.message
+          : "Something went wrong understanding that. Try again.",
+      );
     } finally {
       setBusy(false);
     }

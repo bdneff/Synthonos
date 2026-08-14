@@ -57,6 +57,37 @@ interface ParsedResponse {
   params: Record<string, unknown>;
 }
 
+/**
+ * Turn an API failure into the sentence the describe lane should show.
+ * The browser console will still log the failed requests themselves
+ * (browsers always do); this makes the panel's own message honest.
+ */
+export function friendlyApiError(err: unknown): Error {
+  if (err instanceof Anthropic.APIError) {
+    if (err.status === 401) {
+      return new Error(
+        "That API key was refused. Open Settings and check it.",
+      );
+    }
+    if (err.status === 429) {
+      return new Error(
+        "The API says slow down. Give it a few seconds and try again.",
+      );
+    }
+    if (err.status === 404) {
+      return new Error(
+        "That model name was not recognized. Clear the model field in Settings to use the default.",
+      );
+    }
+  }
+  if (err instanceof Anthropic.APIConnectionError) {
+    return new Error(
+      "Could not reach the Anthropic API. Check your internet connection and try again.",
+    );
+  }
+  return err instanceof Error ? err : new Error(String(err));
+}
+
 function extractJson(content: Anthropic.ContentBlock[]): ParsedResponse {
   const textBlock = content.find(
     (block): block is Anthropic.TextBlock => block.type === "text",
@@ -133,13 +164,22 @@ export function createNlHandler(settings: NlSettings): NlHandler {
   return async (text, currentParams): Promise<NlResult> => {
     const userMessage = buildUserMessage(text, currentParams);
 
-    let parsed = await requestPatchEdit(client, model, userMessage);
+    let parsed;
+    try {
+      parsed = await requestPatchEdit(client, model, userMessage);
+    } catch (err) {
+      throw friendlyApiError(err);
+    }
     let issues = validatePatchParams(parsed.params, "partial");
     if (issues.length > 0) {
       const feedback = issues
         .map((issue) => `${issue.param}: ${issue.message}`)
         .join("; ");
-      parsed = await requestPatchEdit(client, model, userMessage, feedback);
+      try {
+        parsed = await requestPatchEdit(client, model, userMessage, feedback);
+      } catch (err) {
+        throw friendlyApiError(err);
+      }
       issues = validatePatchParams(parsed.params, "partial");
       if (issues.length > 0) {
         // Reject, never clamp: the patch stays untouched.
