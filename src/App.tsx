@@ -75,6 +75,10 @@ function Shell() {
     () => store.bridge.getSpectrumData(),
     [store.bridge],
   );
+  const spectrumRate = useCallback(
+    () => store.bridge.getSampleRate?.() ?? 48000,
+    [store.bridge],
+  );
   const scopeSource = useCallback(
     () => store.bridge.getScopeData(),
     [store.bridge],
@@ -127,7 +131,7 @@ function Shell() {
         <MacroBank bank="a" />
         <div className="console-center">
           <div className="glass console-glass">
-            <SpectrumAnalyzer source={spectrumSource} />
+            <SpectrumAnalyzer source={spectrumSource} sampleRate={spectrumRate} />
             <i className="glass-divider" aria-hidden="true" />
             <Oscilloscope source={scopeSource} />
           </div>

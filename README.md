@@ -72,6 +72,20 @@ npm run render        # render the default preset to test/output/*.wav
 python3 -m pytest python/tests   # audio matcher (needs pip install -r python/requirements.txt)
 ```
 
+## Audio match
+
+The Match drawer in the patch bank turns a short recording into the
+closest sound this engine can make (Match, not Clone). It needs its
+listening service running on your machine:
+
+```
+pip install -r python/requirements.txt   # first time only
+cd python && uvicorn synthmatch.service:app
+```
+
+Leave that running, open Match a sound in the patch bank, and drop in
+a WAV.
+
 ## Layout
 
 ```

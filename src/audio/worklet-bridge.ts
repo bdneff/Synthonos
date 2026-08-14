@@ -118,6 +118,13 @@ export class WorkletEngineBridge implements EngineBridge {
     }
     return this.spectrum;
   }
+
+  getSampleRate(): number {
+    // Read, never assumed: the context decides (44.1k on many devices).
+    // Before the first gesture there is no context yet; 48000 is only
+    // the pre-start placeholder and is replaced the moment audio runs.
+    return this.context?.sampleRate ?? 48000;
+  }
 }
 
 /**

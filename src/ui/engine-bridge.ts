@@ -31,6 +31,12 @@ export interface EngineBridge {
   getScopeData(): Float32Array;
   /** Latest magnitude spectrum for the analyzer, bins in 0..1. */
   getSpectrumData(): Float32Array;
+  /**
+   * The real render rate in Hz, read from the audio context — never
+   * assumed. Displays use it to place spectrum bins on their printed
+   * frequency axis. Bridges without real audio omit it.
+   */
+  getSampleRate?(): number;
 }
 
 /**

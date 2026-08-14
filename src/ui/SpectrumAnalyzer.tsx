@@ -15,6 +15,8 @@ import { useEffect, useRef } from "react";
 export interface SpectrumAnalyzerProps {
   /** Returns the latest magnitude spectrum, values 0..1 per bin. */
   source(): Float32Array;
+  /** Returns the engine's real sample rate in Hz (from the context). */
+  sampleRate(): number;
 }
 
 /** dB lines silkscreened on the glass: 0 at the top of the plot. */
@@ -58,7 +60,7 @@ function triBandGradient(
   return g;
 }
 
-export function SpectrumAnalyzer({ source }: SpectrumAnalyzerProps) {
+export function SpectrumAnalyzer({ source, sampleRate }: SpectrumAnalyzerProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -136,8 +138,9 @@ export function SpectrumAnalyzer({ source }: SpectrumAnalyzerProps) {
       // onto the printed log-Hz axis (20 Hz .. 20 kHz), peak-held per
       // pixel column, and magnitudes go through 20*log10 against the
       // printed 48 dB window. A flagship's meter never lies about its
-      // own scale. Bins span 0..24 kHz (half the 48 kHz engine rate).
-      const binHz = 24000 / (n - 1);
+      // own scale, and the bin width comes from the context's real
+      // rate, never an assumed one.
+      const binHz = sampleRate() / 2 / (n - 1);
       const step = 2;
       const points: Array<[number, number]> = [];
       for (let px = 0; px <= w; px += step) {
