@@ -65,7 +65,7 @@ function drawSparkline(canvas: HTMLCanvasElement, losses: readonly number[]) {
   const yOf = (v: number) =>
     span <= 0 ? height / 2 : pad + ((v - min) / span) * innerH;
 
-  ctx.strokeStyle = "#ff8b47";
+  ctx.strokeStyle = "#f58a30";
   ctx.lineWidth = 1.5;
   ctx.lineJoin = "round";
   ctx.lineCap = "round";
@@ -80,7 +80,7 @@ function drawSparkline(canvas: HTMLCanvasElement, losses: readonly number[]) {
   // A small marker on the latest point.
   const last = losses.length - 1;
   ctx.shadowBlur = 6;
-  ctx.fillStyle = "#ffb182";
+  ctx.fillStyle = "#f7a55e";
   ctx.beginPath();
   ctx.arc(x(last), yOf(losses[last]), 2, 0, Math.PI * 2);
   ctx.fill();

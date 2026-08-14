@@ -2,7 +2,7 @@
  * Time-domain oscilloscope on the right side of the shared display
  * strip. Paints no background of its own; draws the graticule, the
  * printed +1 / 0 / -1 amplitude scale, sweep-rate fine print, and the
- * white phosphor trace. Data source returns samples in -1..1; with
+ * green phosphor trace. Data source returns samples in -1..1; with
  * the stub bridge that is a flat line resting calmly on the center
  * axis, which is exactly what silence should look like.
  */

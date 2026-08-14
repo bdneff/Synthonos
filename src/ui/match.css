@@ -29,7 +29,7 @@
   padding: 6px 8px;
   background: var(--well);
   border: 1px solid var(--seam);
-  border-radius: 4px;
+  border-radius: 3px;
   font-family: var(--font-data);
   font-size: 10px;
   line-height: 1.5;
@@ -44,7 +44,7 @@
   height: 44px;
   background: var(--screen);
   border: 1px solid var(--seam);
-  border-radius: 4px;
+  border-radius: 3px;
 }
 
 .match-readout {
@@ -98,7 +98,7 @@
   padding: 4px 6px;
   background: var(--deck-3);
   border: 1px solid var(--seam-strong);
-  border-radius: 4px;
+  border-radius: 3px;
   color: var(--text);
   font-family: var(--font-data);
   font-size: 11px;
