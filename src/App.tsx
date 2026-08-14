@@ -1,10 +1,13 @@
 /**
- * Synthonos shell: three layers on one screen.
- * 1. The text box ("Describe a sound"), always visible at the top.
- * 2. Eight macro knobs in plain words.
- * 3. The full advanced panel, generated from the schema, behind a toggle.
- * Plus scopes, preset browser, and a playable keyboard. Bound to the stub
- * engine bridge until the real engine lands at integration.
+ * Synthonos shell: one continuous panel, zoned by engraved rules rather
+ * than nested cards.
+ * 1. Top rail: brand nameplate, the describe slot (say it), the loaded
+ *    sound readout, history keys, and the model plate fine print.
+ * 2. The instrument glass: spectrum and waveform in one dark display.
+ * 3. Body: library well on the left, staged macro controls center, the
+ *    advanced rack (manifest-generated) behind a rail toggle.
+ * 4. The keyboard deck across the bottom.
+ * Bound to the stub engine bridge until the real engine lands.
  */
 
 import { useCallback, useEffect, useState } from "react";
@@ -77,10 +80,10 @@ function Shell() {
 
   return (
     <div className="app">
-      <header className="app-header">
+      <header className="top-rail">
         <div className="brand">
           <svg className="brand-mark" viewBox="0 0 30 30" aria-hidden="true">
-            <rect x="0.5" y="0.5" width="29" height="29" rx="7.5" />
+            <rect x="0.5" y="0.5" width="29" height="29" rx="6.5" />
             <path d="M5 15 C7.4 8.4 9.8 8.4 12.2 15 C14.6 21.6 17 21.6 19.4 15 L23.5 9.5 L23.5 15 L26 15" />
           </svg>
           <div className="brand-text">
@@ -88,8 +91,11 @@ function Shell() {
             <div className="brand-sub">say it, hear it</div>
           </div>
         </div>
-        <div className="header-track">
-          <span className="header-track-tag">sound</span>
+        <i className="rail-divider" aria-hidden="true" />
+        <DescribeBar />
+        <i className="rail-divider" aria-hidden="true" />
+        <div className="sound-block">
+          <span className="silk-label">Sound</span>
           <div
             className="current-preset has-tooltip"
             data-tooltip="The sound you are editing right now."
@@ -98,7 +104,7 @@ function Shell() {
           </div>
         </div>
         <div className="header-right">
-          <div className="history-buttons">
+          <div className="header-right-row">
             <button
               type="button"
               className="button"
@@ -117,18 +123,18 @@ function Shell() {
             >
               Redo
             </button>
+            <Settings />
           </div>
-          <Settings />
+          <div className="model-plate">SYNTHONOS · SYN-01</div>
         </div>
       </header>
 
-      <div className="describe-strip">
-        <DescribeBar />
-      </div>
-
-      <div className="scope-lane">
-        <SpectrumAnalyzer source={spectrumSource} />
-        <Oscilloscope source={scopeSource} />
+      <div className="glass-deck">
+        <div className="glass">
+          <SpectrumAnalyzer source={spectrumSource} />
+          <i className="glass-divider" aria-hidden="true" />
+          <Oscilloscope source={scopeSource} />
+        </div>
       </div>
 
       <div className="app-body">
@@ -136,8 +142,12 @@ function Shell() {
           <PresetBrowser />
           <MatchPanel />
         </div>
+        <i className="body-divider" aria-hidden="true" />
         <main className="app-main">
           <MacroPanel />
+          <div className="flow-legend" aria-hidden="true">
+            OSC A/B&ensp;&#9656;&ensp;MIXER&ensp;&#9656;&ensp;FILTER&ensp;&#9656;&ensp;AMP&ensp;&#9656;&ensp;FX&ensp;&#9656;&ensp;OUT
+          </div>
           <section className="advanced-section">
             <button
               type="button"
@@ -145,8 +155,11 @@ function Shell() {
               onClick={() => setAdvancedOpen((open) => !open)}
               aria-expanded={advancedOpen}
             >
-              <span className="advanced-chevron">{advancedOpen ? "▾" : "▸"}</span>
-              Advanced
+              <span className="advanced-chevron" aria-hidden="true">
+                {advancedOpen ? "▾" : "▸"}
+              </span>
+              <span className="advanced-word">Advanced</span>
+              <i className="silk-line" aria-hidden="true" />
               <span className="advanced-hint">
                 {advancedOpen
                   ? "hover any control for a plain explanation"

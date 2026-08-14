@@ -56,26 +56,47 @@ export function MacroPanel() {
     store.commitGesture();
   };
 
+  const renderKnob = (def: MacroDef, size: "medium" | "large") => (
+    <Knob
+      key={def.id}
+      size={size}
+      label={def.name}
+      tooltip={def.description}
+      spec={MACRO_SPEC}
+      value={store.macros[def.id]}
+      format={(v) => `${Math.round(v * 100)} %`}
+      onGestureStart={() => beginGesture(def)}
+      onChange={(v) => moveMacro(def, v)}
+      onGestureEnd={endGesture}
+    />
+  );
+
+  // Presentation staging only: the four macros a beginner reaches for
+  // first are mounted large, the shading macros one size down. Macro
+  // behavior is defined in macros.ts and unchanged by this ordering.
+  const primary = PRIMARY_IDS.map(
+    (id) => MACROS.find((def) => def.id === id) as MacroDef,
+  );
+  const secondary = MACROS.filter((def) => !PRIMARY_IDS.includes(def.id));
+
   return (
-    <section className="macro-panel panel">
-      <div className="panel-title macro-title">Performance</div>
+    <section className="macro-zone" aria-label="Performance controls">
+      <div className="silk-rule">
+        <span className="silk-title">Performance</span>
+        <i className="silk-line" aria-hidden="true" />
+        <span className="silk-fine">MACRO CONTROL</span>
+      </div>
       <div className="macro-row">
-        {MACROS.map((def) => (
-          <div key={def.id} className="macro-channel">
-            <Knob
-              size="large"
-              label={def.name}
-              tooltip={def.description}
-              spec={MACRO_SPEC}
-              value={store.macros[def.id]}
-              format={(v) => `${Math.round(v * 100)}%`}
-              onGestureStart={() => beginGesture(def)}
-              onChange={(v) => moveMacro(def, v)}
-              onGestureEnd={endGesture}
-            />
-          </div>
-        ))}
+        <div className="macro-group macro-primary">
+          {primary.map((def) => renderKnob(def, "large"))}
+        </div>
+        <i className="macro-divider" aria-hidden="true" />
+        <div className="macro-group macro-secondary">
+          {secondary.map((def) => renderKnob(def, "medium"))}
+        </div>
       </div>
     </section>
   );
 }
+
+const PRIMARY_IDS: readonly MacroId[] = ["brightness", "space", "grit", "width"];

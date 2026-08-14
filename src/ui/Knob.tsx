@@ -4,14 +4,16 @@
  * log parameters (cutoff, envelope times) feel right under the finger.
  *
  * Programmatic changes ANIMATE: when a macro, a preset load, undo, or
- * (later) the natural language layer moves this knob, the pointer sweeps
- * to the new position over ~300 ms. That animation is a core product
- * feature: beginners learn the synth by watching it operate itself.
+ * the natural language layer moves this knob, the pointer sweeps to the
+ * new position over ~300 ms. That animation is a core product feature:
+ * beginners learn the synth by watching it operate itself.
  *
- * The rendering aims for machined hardware: a recessed well, a cap with
- * a radial highlight and a beveled rim, tick marks around the throw, and
- * a value arc that glows softly when the parameter is away from its
- * default or has just been moved by the machine.
+ * One knob family across the whole instrument, mounted in three staged
+ * sizes: "large" primary macros, "medium" secondary macros, "small"
+ * rack knobs. Ivory cap in a machined recess, a single signal-orange
+ * index line from center to cap edge (the knob's signature), and
+ * silkscreen around it: an engraved tick ring, min and max dots at the
+ * ends of the throw, and on the large caps the 0 and 10 dial numerals.
  */
 
 import { useCallback, useEffect, useId, useRef, useState } from "react";
@@ -41,14 +43,13 @@ export interface KnobProps {
   /** Formats the readout under the knob. Defaults to two decimals. */
   format?(value: number): string;
   tooltip?: string;
-  size?: "small" | "large";
+  size?: "small" | "medium" | "large";
 }
 
 const ANGLE_MIN = -135;
 const ANGLE_MAX = 135;
 const ANIMATION_MS = 300;
 const GLOW_LINGER_MS = 400;
-const TICK_COUNT = 11;
 
 /** Angle in degrees, 0 at 12 o'clock, clockwise positive. */
 function polar(cx: number, cy: number, r: number, angleDeg: number): [number, number] {
@@ -82,7 +83,7 @@ export function Knob({
   displayRef.current = displayNorm;
 
   // True while a programmatic tween is running (plus a short linger), so
-  // the arc can glow while the machine is turning the knob.
+  // the arc can turn signal orange while the machine turns the knob.
   const [machineGlow, setMachineGlow] = useState(false);
   const glowTimerRef = useRef<number | null>(null);
 
@@ -208,8 +209,10 @@ export function Knob({
   const view = 100;
   const c = view / 2;
   const arcRadius = 40;
-  const [px0, py0] = polar(c, c, 11, angle);
-  const [px1, py1] = polar(c, c, 22.5, angle);
+  // The index line: one crisp stroke from just off center to the cap
+  // edge. This full-radius pointer is the knob's signature.
+  const [px0, py0] = polar(c, c, 8, angle);
+  const [px1, py1] = polar(c, c, 24.6, angle);
 
   // Unique, url()-safe gradient ids per knob instance.
   const uid = useId().replace(/[^a-zA-Z0-9_-]/g, "");
@@ -218,12 +221,13 @@ export function Knob({
   const wellId = `knob-well-${uid}`;
   const dimpleId = `knob-dimple-${uid}`;
 
+  const tickCount = size === "small" ? 7 : 11;
   const ticks = [];
-  for (let i = 0; i < TICK_COUNT; i += 1) {
-    const tickAngle = ANGLE_MIN + (i / (TICK_COUNT - 1)) * (ANGLE_MAX - ANGLE_MIN);
+  for (let i = 0; i < tickCount; i += 1) {
+    const tickAngle = ANGLE_MIN + (i / (tickCount - 1)) * (ANGLE_MAX - ANGLE_MIN);
     const [tx0, ty0] = polar(c, c, 45, tickAngle);
     const [tx1, ty1] = polar(c, c, 48.5, tickAngle);
-    const major = i === 0 || i === TICK_COUNT - 1 || i * 2 === TICK_COUNT - 1;
+    const major = i === 0 || i === tickCount - 1 || i * 2 === tickCount - 1;
     ticks.push(
       <line
         key={i}
@@ -235,6 +239,10 @@ export function Knob({
       />,
     );
   }
+
+  // Silkscreen min and max dots just past the ends of the throw.
+  const [dotMinX, dotMinY] = polar(c, c, 46.5, ANGLE_MIN - 13);
+  const [dotMaxX, dotMaxY] = polar(c, c, 46.5, ANGLE_MAX + 13);
 
   const hotClass = offDefault ? " knob-hot" : "";
   const glowClass = machineGlow ? " knob-glowing" : "";
@@ -262,26 +270,38 @@ export function Knob({
         <svg viewBox={`0 0 ${view} ${view}`} className="knob-svg">
           <defs>
             <radialGradient id={capId} cx="0.36" cy="0.28" r="0.85">
-              <stop offset="0%" stopColor="#4a4136" />
-              <stop offset="45%" stopColor="#2f2921" />
-              <stop offset="100%" stopColor="#1c1712" />
+              <stop offset="0%" stopColor="#fbf8f1" />
+              <stop offset="55%" stopColor="#eae6dc" />
+              <stop offset="100%" stopColor="#d3cfc4" />
             </radialGradient>
             <linearGradient id={rimId} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="rgba(255,248,236,0.26)" />
-              <stop offset="55%" stopColor="rgba(255,248,236,0.04)" />
-              <stop offset="100%" stopColor="rgba(0,0,0,0.55)" />
+              <stop offset="0%" stopColor="rgba(255,255,255,0.9)" />
+              <stop offset="55%" stopColor="rgba(255,255,255,0.15)" />
+              <stop offset="100%" stopColor="rgba(62,57,47,0.5)" />
             </linearGradient>
             <linearGradient id={wellId} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#070504" />
-              <stop offset="80%" stopColor="#0f0c0a" />
-              <stop offset="100%" stopColor="#1e1913" />
+              <stop offset="0%" stopColor="#a5a196" />
+              <stop offset="70%" stopColor="#c0bcb1" />
+              <stop offset="100%" stopColor="#d7d3c9" />
             </linearGradient>
             <radialGradient id={dimpleId} cx="0.4" cy="0.35" r="1">
-              <stop offset="0%" stopColor="#171210" />
-              <stop offset="100%" stopColor="#373025" />
+              <stop offset="0%" stopColor="#4f4b42" />
+              <stop offset="100%" stopColor="#26241e" />
             </radialGradient>
           </defs>
           {ticks}
+          <circle className="knob-dot" cx={dotMinX} cy={dotMinY} r={1.6} />
+          <circle className="knob-dot" cx={dotMaxX} cy={dotMaxY} r={1.6} />
+          {size === "large" ? (
+            <>
+              <text className="knob-dial-num" x={dotMinX - 8} y={97}>
+                0
+              </text>
+              <text className="knob-dial-num" x={dotMaxX + 8} y={97}>
+                10
+              </text>
+            </>
+          ) : null}
           <path
             className="knob-track"
             d={arcPath(c, c, arcRadius, ANGLE_MIN, ANGLE_MAX)}
@@ -300,13 +320,6 @@ export function Knob({
             cy={c}
             r={25.5}
             stroke={`url(#${rimId})`}
-          />
-          <circle
-            className="knob-grip"
-            cx={c}
-            cy={c}
-            r={23.6}
-            strokeDasharray="1.7 2.9"
           />
           <line
             className="knob-pointer"

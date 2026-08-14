@@ -118,31 +118,41 @@ export function Keyboard() {
 
   return (
     <div className="keyboard-strip">
-      <div className="deck-frame">
+      <div className="deck-rail">
       <div className="keyboard-side">
+        <div className="silk-rule deck-rule">
+          <span className="silk-title">Keys</span>
+          <i className="silk-line" aria-hidden="true" />
+        </div>
         <div className="octave-controls">
-          <button
-            type="button"
-            className="octave-button"
-            onClick={() => setBaseOctave((o) => clampOctave(o - 1))}
-            disabled={baseOctave <= OCTAVE_MIN}
-            title="Octave down (Z)"
-          >
-            Z
-          </button>
+          <div className="octave-unit">
+            <button
+              type="button"
+              className="octave-cap"
+              onClick={() => setBaseOctave((o) => clampOctave(o - 1))}
+              disabled={baseOctave <= OCTAVE_MIN}
+              title="Octave down (Z)"
+            >
+              &minus;
+            </button>
+            <span className="octave-silk">Z</span>
+          </div>
           <div className="octave-readout">
-            <span className="octave-label">Octave</span>
+            <span className="octave-label">Oct</span>
             <span className="octave-value">{midiToName(start)}</span>
           </div>
-          <button
-            type="button"
-            className="octave-button"
-            onClick={() => setBaseOctave((o) => clampOctave(o + 1))}
-            disabled={baseOctave >= OCTAVE_MAX}
-            title="Octave up (X)"
-          >
-            X
-          </button>
+          <div className="octave-unit">
+            <button
+              type="button"
+              className="octave-cap"
+              onClick={() => setBaseOctave((o) => clampOctave(o + 1))}
+              disabled={baseOctave >= OCTAVE_MAX}
+              title="Octave up (X)"
+            >
+              +
+            </button>
+            <span className="octave-silk">X</span>
+          </div>
         </div>
         <div className="keyboard-hint">Play with your computer keyboard. Z and X change octave.</div>
       </div>

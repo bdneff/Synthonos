@@ -41,14 +41,14 @@ export function DescribeBar() {
 
   return (
     <div className="describe-bar">
-      <div className={`describe-input-row${busy ? " busy" : ""}`}>
+      <div className={`describe-slot${busy ? " busy" : ""}`}>
         <span className="describe-prompt" aria-hidden="true">
           ✦
         </span>
         <input
           className="describe-input"
           type="text"
-          placeholder={'Say what you hear in your head: "a warm wide pad", "more bite", "same but plucky"'}
+          placeholder={'Describe a sound: "a warm wide pad", "more bite", "same but plucky"'}
           value={text}
           disabled={busy}
           onChange={(e) => setText(e.target.value)}

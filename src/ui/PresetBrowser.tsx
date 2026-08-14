@@ -86,13 +86,16 @@ export function PresetBrowser() {
   );
 
   return (
-    <aside className="preset-browser panel">
-      <div className="panel-title library-title">
-        Library
-        <span className="library-count">{FACTORY_PRESETS.length + 1 + userPresets.length}</span>
+    <aside className="preset-browser">
+      <div className="silk-rule">
+        <span className="silk-title">Library</span>
+        <i className="silk-line" aria-hidden="true" />
+        <span className="silk-fine">
+          {FACTORY_PRESETS.length + 1 + userPresets.length} SOUNDS
+        </span>
       </div>
 
-      <div className="preset-list">
+      <div className="preset-list well">
         <div
           className={`preset-row${presetName === INIT_NAME ? " current" : ""}`}
         >

@@ -50,18 +50,16 @@ behind them.
 ## Design discipline (anti AI slop)
 
 Any session touching src/ui must follow this. The rubric of record is
-Anthropic's frontend-design skill:
-https://github.com/anthropics/skills/blob/main/skills/frontend-design/SKILL.md
-(read it before designing; a local snapshot may exist in the session
-scratchpad but the repo link is canonical). Impeccable
-(https://impeccable.style) is a reported collection of design skills for
-AI harnesses; it was unreachable from the build environment and is noted
-here unverified. Key process from the skill: work in two passes (token
-plan first: 4-6 named colors, type roles, layout concept, one signature
-element; self-critique it against the skill's three "calibration default"
-looks before writing code), spend all boldness in ONE signature element,
-apply the Chanel rule before finishing, and critique from screenshots,
-never from memory of what you wrote.
+Impeccable (https://impeccable.style, github.com/pbakaus/impeccable),
+INSTALLED in this repo at .claude/skills/impeccable (v4.x, Apache 2.0),
+chosen by the project owner. Follow its own process, do not paraphrase
+it: run its Setup (context.mjs), respect PRODUCT.md and DESIGN.md as
+the committed product and visual world, treat the instrument UI as its
+Operate mode, load reference/craft-floor.md before editing any UI, and
+verify in bounded passes. Anthropic's frontend-design skill
+(github.com/anthropics/skills, skills/frontend-design) remains a
+secondary reference: two-pass token planning, one signature element,
+the Chanel rule, screenshot critique over memory.
 
 Lessons this project paid for, do not relearn them:
 

@@ -1,10 +1,15 @@
 /* Synthonos interface.
-   Warm hardware: an umber-black chassis under one light, the amber of a
-   VU meter. Panels separate by value (lighter and darker warm surfaces),
-   not by outlines. Two voices share the surface: language speaks in
-   Instrument Serif italic (the describe lane, the reply, the wordmark
-   line), signal speaks in IBM Plex Mono (readouts, scales, values).
-   Barlow does the quiet work in between. One stylesheet, no deps. */
+   One machined panel. A Braun-era instrument face: warm anodized
+   aluminum with a faint vertical brushing, lit from above. There are no
+   cards and no floating boxes: regions are drawn on the surface with
+   engraved rules (a dark score line with its light catch underneath)
+   and silkscreened section titles that interrupt the line, the way a
+   Minimoog engraves its group borders and a Juno silkscreens its rails.
+   Recesses exist only where hardware recesses: the instrument glass,
+   the preset list well, text inputs, and the keyboard bed. One
+   functional color, signal orange: it means the machine is live or
+   acting. The language lane speaks in Instrument Serif italic; signal
+   and scale speak in IBM Plex Mono. */
 
 /* ---------- Bundled fonts (OFL). ---------- */
 
@@ -89,35 +94,46 @@
 }
 
 :root {
-  /* Chassis: warm umber-black, never neutral. */
-  --bg0: #131010;
-  --bg1: #1a1614;
-  --panel-hi: #221c17;
-  --panel-lo: #1b1613;
-  --edge: rgba(255, 255, 255, 0.05);
-  --well: #0e0b09;
-  --well-edge: #262019;
+  /* Chassis and enamel */
+  --chassis: #c6c2b8;
+  --panel: #dcd8cf;
+  --panel-hi: #e3dfd7;
+  --recess: #b9b5ab;
+  --edge: #a49f94;
+  --edge-soft: #b3aea3;
 
-  /* Ink: ivory, not white. */
-  --ink: #ece5d8;
-  --ink-dim: #9a917f;
-  --ink-faint: #675f52;
+  /* Engraved ink */
+  --ink: #26241e;
+  --ink-dim: #4f4b42;
+  --ink-faint: #625d52;
 
-  /* The one light: VU amber. Red is reserved for clipping and danger. */
-  --amber: #e8a13f;
-  --amber-bright: #f5bc6b;
-  --amber-soft: rgba(232, 161, 63, 0.13);
-  --amber-glow: rgba(232, 161, 63, 0.4);
-  --danger: #c96f5f;
+  /* The one functional color: signal orange, the power dot */
+  --signal: #c24914;
+  --signal-ink: #9c380b;
+  --signal-soft: rgba(194, 73, 20, 0.14);
 
-  /* Voices */
+  /* Dark instrument glass: scope display, match sparkline, key bed */
+  --glass: #15171b;
+  --glass-edge: #34373d;
+  --phosphor: #ffb35c;
+
+  --danger: #a03024;
+
+  /* Engraved groove: dark score line, light catch below or right */
+  --groove-d: rgba(58, 54, 45, 0.34);
+  --groove-l: rgba(255, 255, 255, 0.58);
+  --groove-h: linear-gradient(180deg, var(--groove-d) 0, var(--groove-d) 1px, var(--groove-l) 1px, var(--groove-l) 2px);
+  --groove-v: linear-gradient(90deg, var(--groove-d) 0, var(--groove-d) 1px, var(--groove-l) 1px, var(--groove-l) 2px);
+
+  /* Type roles */
   --font-ui: "Barlow", "Segoe UI", system-ui, -apple-system, sans-serif;
-  --font-cond: "Barlow Condensed", "Barlow", "Segoe UI", sans-serif;
+  --font-engrave: "Barlow Condensed", "Barlow", "Segoe UI", sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", monospace;
-  --font-display: "Instrument Serif", "Barlow", Georgia, serif;
+  --font-voice: "Instrument Serif", Georgia, serif;
 
-  --radius: 7px;
-  --shadow: 0 3px 12px rgba(0, 0, 0, 0.35);
+  --radius: 5px;
+  --shadow: 0 1px 2px rgba(62, 57, 47, 0.2), 0 2px 6px rgba(62, 57, 47, 0.1);
+  --bevel: inset 0 1px 0 rgba(255, 255, 255, 0.55);
 }
 
 * {
@@ -131,7 +147,7 @@ body {
 }
 
 body {
-  background: var(--bg0);
+  background: var(--chassis);
   color: var(--ink);
   font-family: var(--font-ui);
   font-size: 13px;
@@ -149,87 +165,157 @@ button {
 }
 
 :focus-visible {
-  outline: none;
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
 }
 
 button:focus-visible,
-input:focus-visible,
-select:focus-visible {
-  box-shadow: 0 0 0 2px var(--amber-glow);
+input:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+  box-shadow: none;
 }
 
+/* The single panel surface: enamel with a faint vertical brushing and
+   top-down lighting. Every zone sits directly on this; none of them
+   paints its own opaque card. */
 .app {
   display: flex;
   flex-direction: column;
   height: 100vh;
   min-width: 1080px;
-  background: linear-gradient(180deg, var(--bg1) 0%, var(--bg0) 60%);
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.04) 0,
+      rgba(255, 255, 255, 0.04) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    linear-gradient(180deg, #e0dcd3 0%, #dcd8cf 45%, #d2cec5 100%);
 }
 
-/* ---------- Header: brand, loaded-sound display, history ---------- */
+/* ---------- Engraved rules and silkscreen ----------
+   .silk-rule draws a section title sitting ON the engraved line,
+   interrupting it: [stub] TITLE ────────────── [fine print]. */
 
-.app-header {
+.silk-rule {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 8px 14px;
-  background: linear-gradient(180deg, #231d18, #191512);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+  gap: 9px;
+  min-height: 14px;
+}
+
+.silk-rule::before {
+  content: "";
+  width: 12px;
+  flex-shrink: 0;
+  height: 2px;
+  background: var(--groove-h);
+}
+
+.silk-line {
+  display: block;
+  flex: 1;
+  min-width: 10px;
+  height: 2px;
+  background: var(--groove-h);
+}
+
+.silk-title {
+  font-family: var(--font-engrave);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  white-space: nowrap;
+}
+
+.silk-fine {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+
+.silk-label {
+  font-family: var(--font-engrave);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* Recessed wells: the only sunken surfaces besides the glass. */
+.well {
+  background: linear-gradient(180deg, #c9c5bb, #d3cfc6);
+  border: 1px solid rgba(90, 85, 74, 0.38);
+  border-bottom-color: rgba(148, 143, 132, 0.5);
+  border-radius: 4px;
+  box-shadow:
+    inset 0 2px 4px rgba(62, 57, 47, 0.22),
+    0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+/* ---------- Top rail: nameplate, describe slot, sound readout,
+   history keys, model plate. One row of the panel, scored off from the
+   glass below by an engraved rule. ---------- */
+
+.top-rail {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 14px 7px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(62, 57, 47, 0.03));
+  border-bottom: 1px solid var(--groove-d);
+  box-shadow: 0 1px 0 var(--groove-l);
   z-index: 5;
 }
 
-/* The loaded-sound display sits center header like the track title lane
-   in DJ software: a wide inset readout with a quiet name tag. */
-.header-track {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-width: 0;
-}
-
-.header-track-tag {
-  font-family: var(--font-cond);
-  font-size: 9.5px;
-  font-weight: 600;
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
+.rail-divider {
+  width: 2px;
+  height: 30px;
+  flex-shrink: 0;
+  background: var(--groove-v);
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 9px;
   flex-shrink: 0;
 }
 
 .brand-mark {
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   display: block;
 }
 
 .brand-mark rect {
-  fill: #0f0c0a;
-  stroke: #3a322a;
-  stroke-width: 1;
+  fill: var(--panel-hi);
+  stroke: var(--ink);
+  stroke-width: 1.4;
 }
 
 .brand-mark path {
   fill: none;
-  stroke: var(--amber);
+  stroke: var(--ink);
   stroke-width: 2.2;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
 .brand-name {
-  font-family: var(--font-cond);
-  font-size: 16px;
+  font-family: var(--font-engrave);
+  font-size: 15px;
   font-weight: 600;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--ink);
   line-height: 1.1;
@@ -237,51 +323,121 @@ select:focus-visible {
 
 /* The wordmark line speaks in the language voice. */
 .brand-sub {
-  font-family: var(--font-display);
+  font-family: var(--font-voice);
   font-style: italic;
-  font-size: 12px;
-  color: var(--ink-dim);
+  font-size: 11.5px;
+  color: var(--ink-faint);
   letter-spacing: 0.04em;
 }
 
-/* ---------- Describe lane: where language becomes sound. The one bold
-   thing on the surface; everything else stays quiet around it. ---------- */
-
-.describe-strip {
-  padding: 9px 12px;
-  background: linear-gradient(180deg, #171310, #141110);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.45);
-  z-index: 4;
+.sound-block {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  min-width: 0;
 }
+
+/* The loaded-sound readout: a recessed window with engraved mono text,
+   a printed dial rather than an LED. */
+.current-preset {
+  width: 200px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 5px 12px;
+  background: linear-gradient(180deg, #ccc8be, #d5d1c8);
+  border: 1px solid var(--edge);
+  border-bottom-color: var(--edge-soft);
+  border-radius: 4px;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 11.5px;
+  letter-spacing: 0.02em;
+  box-shadow:
+    inset 0 1px 3px rgba(62, 57, 47, 0.28),
+    0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.header-right-row {
+  display: flex;
+  gap: 6px;
+}
+
+/* The model plate: silkscreen fine print on the panel edge. */
+.model-plate {
+  font-family: var(--font-mono);
+  font-size: 7px;
+  font-weight: 500;
+  letter-spacing: 0.13em;
+  color: rgba(79, 75, 66, 0.72);
+  white-space: nowrap;
+}
+
+/* ---------- The describe slot: an engraved ruled line in the panel,
+   no box. What you say prints in serif italic on the rule; the rule
+   turns signal orange while the machine works. ---------- */
 
 .describe-bar {
   flex: 1;
-  min-width: 320px;
+  min-width: 260px;
   position: relative;
+  align-self: center;
 }
 
-.describe-input-row {
+.describe-slot {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 0;
-  background: linear-gradient(180deg, #0f0c0a, #131009);
-  border: 1px solid var(--well-edge);
-  border-left: 3px solid rgba(232, 161, 63, 0.7);
-  border-radius: 3px;
-  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.4);
-  transition: border-color 160ms ease, box-shadow 160ms ease;
+  gap: 10px;
+  padding: 0 2px;
+  border-bottom: 1px solid rgba(58, 54, 45, 0.5);
+  box-shadow: 0 1px 0 var(--groove-l);
+  transition: border-color 160ms ease;
 }
 
-.describe-input-row:focus-within {
-  border-color: rgba(232, 161, 63, 0.45);
-  border-left-color: var(--amber);
-  box-shadow:
-    inset 0 2px 5px rgba(0, 0, 0, 0.4),
-    0 0 0 3px var(--amber-soft);
+.describe-slot:focus-within {
+  border-bottom-color: var(--signal);
 }
 
-.describe-input-row.busy .describe-prompt {
+.describe-slot.busy {
+  border-bottom-color: var(--signal);
+}
+
+.describe-slot.busy::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 179, 92, 0.95), transparent);
+  background-size: 200% 100%;
+  animation: ruleSweep 1.2s linear infinite;
+}
+
+@keyframes ruleSweep {
+  0% { background-position: 120% 0; }
+  100% { background-position: -120% 0; }
+}
+
+.describe-prompt {
+  color: var(--signal);
+  font-size: 12px;
+  pointer-events: none;
+}
+
+.describe-slot.busy .describe-prompt {
   animation: promptPulse 1.1s ease-in-out infinite;
 }
 
@@ -290,58 +446,58 @@ select:focus-visible {
   50% { opacity: 0.35; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .describe-input-row.busy .describe-prompt {
-    animation: none;
-    opacity: 0.6;
-  }
-}
-
-.describe-prompt {
-  color: var(--amber);
-  font-size: 13px;
-  padding-left: 14px;
-  pointer-events: none;
-  text-shadow: 0 0 8px var(--amber-glow);
-}
-
 .describe-input {
   flex: 1;
+  min-width: 0;
   background: none;
   border: none;
   color: var(--ink);
-  padding: 12px 14px 13px 11px;
-  font-family: var(--font-display);
+  padding: 3px 2px 6px;
+  font-family: var(--font-voice);
   font-style: italic;
-  font-size: 18px;
+  font-size: 17.5px;
   line-height: 1.25;
   outline: none;
-  caret-color: var(--amber);
+  caret-color: var(--signal);
+}
+
+.describe-input:focus-visible {
+  outline: none;
 }
 
 .describe-input::placeholder {
   color: var(--ink-faint);
-  font-family: var(--font-display);
+  font-family: var(--font-voice);
   font-style: italic;
-  font-size: 18px;
+  font-size: 17.5px;
   opacity: 1;
 }
 
-/* The reply: Claude speaking, set as an editorial line over an amber
-   rule, printed with a brief settle. */
+.describe-submit {
+  flex-shrink: 0;
+  margin-bottom: 4px;
+}
+
+/* The reply prints on the panel below the rule, in the same hand,
+   underlined in signal orange: the machine speaking. */
 .describe-response {
   display: flex;
   align-items: flex-start;
   gap: 12px;
   position: absolute;
-  top: calc(100% + 6px);
+  top: calc(100% + 10px);
   left: 0;
   right: 0;
-  background: linear-gradient(180deg, #241d17, #1c1712);
+  background: var(--panel-hi);
   border: 1px solid var(--edge);
   border-radius: var(--radius);
-  padding: 11px 16px 13px;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
+  padding: 10px 14px;
+  color: var(--ink);
+  font-family: var(--font-voice);
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.45;
+  box-shadow: var(--shadow), 0 10px 26px rgba(62, 57, 47, 0.3);
   z-index: 20;
   animation: responseSettle 360ms cubic-bezier(0.2, 0.7, 0.3, 1);
 }
@@ -357,27 +513,20 @@ select:focus-visible {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .describe-response {
-    animation: none;
-  }
-}
-
 .describe-response span {
   flex: 1;
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: 16.5px;
-  line-height: 1.4;
-  color: var(--ink);
-  padding-bottom: 7px;
-  background: linear-gradient(90deg, rgba(232, 161, 63, 0.65), rgba(232, 161, 63, 0.08)) left bottom / 100% 1px no-repeat;
+  text-decoration: underline;
+  text-decoration-color: var(--signal);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 4px;
+  text-decoration-skip-ink: none;
 }
 
 .describe-dismiss {
   background: none;
   border: none;
-  color: var(--ink-dim);
+  color: var(--ink-faint);
+  font-family: var(--font-ui);
   font-size: 10.5px;
   letter-spacing: 0.04em;
   cursor: pointer;
@@ -390,115 +539,69 @@ select:focus-visible {
   color: var(--ink);
 }
 
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.history-buttons {
-  display: flex;
-  gap: 6px;
-}
-
-/* The current preset readout, a small hardware display. */
-.current-preset {
-  flex: 1;
-  max-width: 380px;
-  min-width: 160px;
-  text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  padding: 6px 12px;
-  background: #0e0b09;
-  border: 1px solid var(--well-edge);
-  border-radius: 5px;
-  color: var(--amber);
-  font-family: var(--font-mono);
-  font-weight: 500;
-  font-size: 11.5px;
-  letter-spacing: 0.02em;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
-  text-shadow: 0 0 6px rgba(232, 161, 63, 0.35);
-}
-
-/* ---------- Generic bits ---------- */
+/* ---------- Generic hardware buttons: matte enamel key caps. ---------- */
 
 .button {
-  background: linear-gradient(180deg, #2b241d, #211b16);
-  border: 1px solid #362d24;
-  border-radius: 6px;
-  color: #cfc7b8;
-  padding: 6px 13px;
+  background: linear-gradient(180deg, #eae6de, #d9d5cc);
+  border: 1px solid var(--edge);
+  border-bottom-color: #948f84;
+  border-radius: 5px;
+  color: var(--ink);
+  padding: 5px 12px;
   cursor: pointer;
   font-family: var(--font-ui);
   font-weight: 500;
-  font-size: 12px;
+  font-size: 11.5px;
   letter-spacing: 0.02em;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
-  transition: border-color 140ms ease, background 140ms ease, color 140ms ease;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 1px 2px rgba(62, 57, 47, 0.22);
+  transition: background 140ms ease, border-color 140ms ease;
 }
 
 .button:hover:not(:disabled) {
-  border-color: #483b2e;
-  background: linear-gradient(180deg, #332a22, #27201a);
-  color: var(--ink);
+  background: linear-gradient(180deg, #f1ede5, #dfdbd2);
+  border-color: #8f8a7f;
 }
 
 .button:active:not(:disabled) {
-  background: linear-gradient(180deg, #211b16, #251e18);
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
+  background: linear-gradient(180deg, #d3cfc6, #dad6cd);
+  box-shadow: inset 0 1px 3px rgba(62, 57, 47, 0.3);
 }
 
 .button:disabled {
-  opacity: 0.38;
+  opacity: 0.45;
   cursor: default;
 }
 
+/* The primary key carries the signal color: the one control that makes
+   the machine act. */
 .button.primary {
-  background: linear-gradient(180deg, #52381a, #3d2a13);
-  border-color: #7a5626;
-  color: var(--amber-bright);
+  background: linear-gradient(180deg, #b0430f, var(--signal-ink));
+  border-color: #7c2c08;
+  border-bottom-color: #642306;
+  color: #f6f1e8;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 1px 2px rgba(62, 57, 47, 0.3);
 }
 
 .button.primary:hover:not(:disabled) {
-  background: linear-gradient(180deg, #634421, #4a3318);
-  border-color: #96702f;
-  color: #ffd794;
+  background: linear-gradient(180deg, #bd4a13, #a83d0d);
+  border-color: #7c2c08;
 }
 
-.panel {
-  background: linear-gradient(180deg, var(--panel-hi), var(--panel-lo));
-  border: 1px solid rgba(0, 0, 0, 0.35);
-  border-top-color: var(--edge);
-  border-radius: 9px;
-  box-shadow: var(--shadow);
-}
-
-.panel-title {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  font-family: var(--font-cond);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+/* A primary key that cannot act gives up the signal color: orange
+   always means the machine is ready to move. */
+.button.primary:disabled {
+  background: linear-gradient(180deg, #eae6de, #d9d5cc);
+  border-color: var(--edge);
+  border-bottom-color: #948f84;
   color: var(--ink-dim);
-  padding: 10px 14px 0;
+  opacity: 0.6;
 }
 
-.panel-subtitle {
-  font-family: var(--font-ui);
-  font-weight: 400;
-  text-transform: none;
-  letter-spacing: 0.01em;
-  color: var(--ink-faint);
-  font-size: 11px;
-}
-
-/* ---------- Tooltips ---------- */
+/* ---------- Tooltips: paper labels. ---------- */
 
 .has-tooltip {
   position: relative;
@@ -512,9 +615,9 @@ select:focus-visible {
   transform: translateX(-50%);
   width: max-content;
   max-width: 230px;
-  background: #2b241d;
-  border: 1px solid #453a2e;
-  border-radius: 6px;
+  background: #f3f0e8;
+  border: 1px solid var(--edge);
+  border-radius: 5px;
   color: var(--ink);
   font-family: var(--font-ui);
   font-weight: 400;
@@ -523,7 +626,7 @@ select:focus-visible {
   text-transform: none;
   line-height: 1.4;
   padding: 7px 10px;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 6px 18px rgba(62, 57, 47, 0.3);
   pointer-events: none;
   z-index: 50;
   white-space: normal;
@@ -539,57 +642,132 @@ select:focus-visible {
   transition: opacity 140ms ease 350ms, visibility 0ms linear 350ms;
 }
 
-/* ---------- Layout ---------- */
+/* ---------- The instrument glass: one dark display set into the
+   panel, spectrum and waveform behind the same pane, split by an
+   internal rule. The visual anchor of the whole product. ---------- */
+
+.glass-deck {
+  flex-shrink: 0;
+  padding: 10px 14px 12px;
+}
+
+.glass {
+  position: relative;
+  display: flex;
+  height: 188px;
+  background: linear-gradient(180deg, #101216, #16181d 30%, var(--glass));
+  border: 1px solid #56534b;
+  border-top-color: #45423b;
+  border-radius: 5px;
+  padding: 4px 6px;
+  box-shadow:
+    inset 0 3px 14px rgba(0, 0, 0, 0.55),
+    0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+/* A whisper of reflection at the top of the pane. */
+.glass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 5px;
+  background: linear-gradient(
+    178deg,
+    rgba(255, 255, 255, 0.055),
+    rgba(255, 255, 255, 0.015) 12%,
+    transparent 24%
+  );
+  pointer-events: none;
+}
+
+.glass-divider {
+  width: 1px;
+  flex-shrink: 0;
+  margin: 8px 3px;
+  background: var(--glass-edge);
+}
+
+.scope {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  display: flex;
+}
+
+/* Spectrum takes the wide side of the pane. */
+.glass .scope:first-of-type {
+  flex: 1.63;
+}
+
+.scope-label {
+  position: absolute;
+  top: 5px;
+  left: 9px;
+  z-index: 2;
+  font-family: var(--font-engrave);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(214, 206, 188, 0.52);
+  pointer-events: none;
+}
+
+.scope.has-tooltip::after {
+  bottom: auto;
+  top: calc(100% + 10px);
+  z-index: 30;
+}
+
+.scope-canvas {
+  flex: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 64px;
+}
+
+/* ---------- Layout: library left, performance center. ---------- */
 
 .app-body {
   flex: 1;
   display: flex;
-  gap: 10px;
-  padding: 10px;
+  gap: 12px;
+  padding: 6px 14px 12px;
   min-height: 0;
+}
+
+.body-divider {
+  width: 2px;
+  flex-shrink: 0;
+  background: var(--groove-v);
+  margin: 2px 0;
 }
 
 .app-main {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 10px;
   min-width: 0;
   min-height: 0;
   overflow-y: auto;
   padding-bottom: 2px;
 }
 
-/* ---------- Library: the track list. ---------- */
+/* ---------- Library: engraved title rail, recessed list well. ---------- */
 
 .preset-browser {
-  width: 232px;
-  flex-shrink: 0;
+  flex: 1;
   display: flex;
   flex-direction: column;
   min-height: 0;
 }
 
-.library-title {
-  align-items: center;
-  justify-content: space-between;
-  padding-bottom: 6px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-}
-
-.library-count {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  color: var(--ink-faint);
-  padding: 1px 2px;
-}
-
 .preset-list {
   flex: 1;
   overflow-y: auto;
-  margin: 4px 8px 0;
+  margin-top: 7px;
+  padding: 3px;
   min-height: 60px;
 }
 
@@ -598,23 +776,25 @@ select:focus-visible {
   align-items: center;
   gap: 6px;
   border-radius: 3px;
-  padding: 0 7px;
+  padding: 0 6px;
   transition: background 140ms ease;
 }
 
 .preset-row:hover {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(62, 57, 47, 0.06);
 }
 
 .preset-row.current {
-  background: var(--amber-soft);
-  box-shadow: inset 2px 0 0 var(--amber);
+  background: var(--signal-soft);
+  box-shadow: inset 2px 0 0 var(--signal);
 }
 
 .preset-row.current .preset-name {
-  color: var(--amber-bright);
+  color: var(--signal-ink);
+  font-weight: 500;
 }
 
+/* Track rows read in the signal voice: mono, like a tape log. */
 .preset-name {
   flex: 1;
   text-align: left;
@@ -623,7 +803,9 @@ select:focus-visible {
   padding: 4px 2px;
   cursor: pointer;
   color: var(--ink);
-  font-size: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.01em;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -631,7 +813,7 @@ select:focus-visible {
 }
 
 .preset-name:hover {
-  color: var(--amber-bright);
+  color: var(--signal-ink);
 }
 
 .preset-group {
@@ -639,13 +821,14 @@ select:focus-visible {
 }
 
 .preset-group-header {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.14em;
+  font-family: var(--font-engrave);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--ink-faint);
-  padding: 8px 7px 3px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  padding: 8px 6px 3px;
+  border-bottom: 1px solid rgba(62, 57, 47, 0.14);
   margin-bottom: 3px;
   user-select: none;
 }
@@ -662,7 +845,8 @@ select:focus-visible {
 .preset-action {
   background: none;
   border: none;
-  color: var(--ink-faint);
+  color: var(--ink-dim);
+  font-family: var(--font-ui);
   font-size: 10.5px;
   cursor: pointer;
   padding: 2px 4px;
@@ -681,27 +865,27 @@ select:focus-visible {
 .preset-save-input {
   flex: 1;
   min-width: 0;
-  background: var(--well);
-  border: 1px solid var(--well-edge);
-  border-radius: 6px;
+  background: #eae6de;
+  border: 1px solid var(--edge);
+  border-radius: 4px;
   color: var(--ink);
   padding: 6px 8px;
   font-family: var(--font-ui);
   font-size: 12px;
   outline: none;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.35);
+  box-shadow: inset 0 1px 3px rgba(62, 57, 47, 0.16);
   transition: border-color 140ms ease;
 }
 
 .preset-rename-input:focus,
 .preset-save-input:focus {
-  border-color: rgba(232, 161, 63, 0.5);
+  border-color: var(--signal);
 }
 
 /* An empty shelf is an invitation, spoken in the language voice. */
 .preset-empty {
   color: var(--ink-dim);
-  font-family: var(--font-display);
+  font-family: var(--font-voice);
   font-style: italic;
   font-size: 13px;
   padding: 8px 4px;
@@ -711,43 +895,47 @@ select:focus-visible {
 .preset-save {
   display: flex;
   gap: 6px;
-  padding: 8px;
-  border-top: 1px solid rgba(0, 0, 0, 0.3);
-  margin-top: 8px;
+  padding: 8px 0 0;
 }
 
 .preset-notice {
-  padding: 0 10px 6px;
-  color: var(--amber);
+  padding: 4px 2px 0;
+  color: var(--signal-ink);
   font-size: 11px;
 }
 
+/* Silkscreen guidance under the well. */
 .preset-affordance {
-  padding: 8px 12px 12px;
+  padding: 7px 2px 0;
   color: var(--ink-faint);
-  font-size: 11px;
+  font-size: 10.5px;
   line-height: 1.45;
-  border-top: 1px solid rgba(0, 0, 0, 0.3);
 }
 
-/* ---------- Knobs ---------- */
+/* ---------- Knobs: one family, mounted straight on the panel in
+   three staged sizes. Ivory cap in a machined recess, one orange index
+   line from center to edge. The tick ring, min and max dots, and dial
+   numerals are silkscreen. ---------- */
 
 .knob {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 68px;
+  width: 64px;
   user-select: none;
 }
 
-.knob-large,
-.knob.knob-large {
+.knob-medium {
+  width: 82px;
+}
+
+.knob-large {
   width: 108px;
 }
 
 .knob-hit {
-  width: 52px;
-  height: 52px;
+  width: 48px;
+  height: 48px;
   cursor: ns-resize;
   touch-action: none;
   outline: none;
@@ -755,58 +943,76 @@ select:focus-visible {
 }
 
 .knob-hit:focus-visible {
-  box-shadow: 0 0 0 2px var(--amber-glow);
+  outline: 2px solid var(--signal);
+  outline-offset: 1px;
+}
+
+.knob-medium .knob-hit {
+  width: 62px;
+  height: 62px;
 }
 
 .knob-large .knob-hit {
-  width: 84px;
-  height: 84px;
+  width: 92px;
+  height: 92px;
 }
 
 .knob-svg {
   width: 100%;
   height: 100%;
   display: block;
+  overflow: visible;
 }
 
 .knob-tick {
-  stroke: #3b332a;
-  stroke-width: 1.5;
+  stroke: #6d6960;
+  stroke-width: 1.4;
   stroke-linecap: round;
 }
 
 .knob-tick.major {
-  stroke: #4e443a;
+  stroke: #45423a;
   stroke-width: 1.8;
+}
+
+.knob-dot {
+  fill: #55524a;
+}
+
+.knob-dial-num {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  font-weight: 500;
+  fill: #55524a;
+  text-anchor: middle;
 }
 
 .knob-track {
   fill: none;
-  stroke: #282219;
-  stroke-width: 4.5;
+  stroke: rgba(62, 57, 47, 0.13);
+  stroke-width: 4;
   stroke-linecap: round;
 }
 
-/* The arc is amber, quiet at rest. It glows only when the value is off
-   its default or the machine is turning the knob. */
+/* The value arc is engraved ink at rest; it turns signal orange only
+   while the machine itself is turning the knob. */
 .knob-fill {
   fill: none;
-  stroke: var(--amber);
-  stroke-width: 4.5;
+  stroke: #45423a;
+  stroke-width: 4;
   stroke-linecap: round;
-  opacity: 0.5;
-  transition: filter 200ms ease, opacity 140ms ease;
+  opacity: 0.9;
+  transition: stroke 200ms ease, opacity 140ms ease;
 }
 
 .knob-hot .knob-fill {
+  stroke: var(--ink);
   opacity: 1;
-  filter: drop-shadow(0 0 2.5px var(--amber-glow));
 }
 
 .knob-glowing .knob-fill {
+  stroke: var(--signal);
   opacity: 1;
-  stroke: var(--amber-bright);
-  filter: drop-shadow(0 0 6px var(--amber-glow));
 }
 
 .knob-hit:hover .knob-fill {
@@ -814,7 +1020,7 @@ select:focus-visible {
 }
 
 .knob-well {
-  stroke: rgba(0, 0, 0, 0.5);
+  stroke: rgba(62, 57, 47, 0.35);
   stroke-width: 1;
 }
 
@@ -823,27 +1029,22 @@ select:focus-visible {
   stroke-width: 1.1;
 }
 
-.knob-grip {
-  fill: none;
-  stroke: rgba(0, 0, 0, 0.4);
-  stroke-width: 2;
-}
-
+/* The signature index line: signal orange on every cap, the power dot
+   lineage. Sizes stage, the family does not change. */
 .knob-pointer {
-  stroke: var(--ink);
-  stroke-width: 3.4;
+  stroke: var(--signal);
+  stroke-width: 3.2;
   stroke-linecap: round;
-  transition: stroke 140ms ease;
 }
 
-.knob-hit:hover .knob-pointer,
-.knob-glowing .knob-pointer {
-  stroke: #fff8ec;
+.knob-medium .knob-pointer,
+.knob-large .knob-pointer {
+  stroke-width: 3.6;
 }
 
 .knob-label {
   margin-top: 3px;
-  font-size: 10.5px;
+  font-size: 9.5px;
   font-weight: 500;
   letter-spacing: 0.02em;
   color: var(--ink-dim);
@@ -852,6 +1053,12 @@ select:focus-visible {
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
+}
+
+.knob-medium .knob-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-dim);
 }
 
 .knob-large .knob-label {
@@ -863,150 +1070,104 @@ select:focus-visible {
 
 .knob-value {
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 8.5px;
   color: var(--ink-faint);
   white-space: nowrap;
 }
 
-/* The readout lights up only when the value is away from home or the
-   machine is turning the knob; at rest it stays quiet. */
+.knob-medium .knob-value {
+  font-size: 9.5px;
+  color: var(--ink-faint);
+}
+
 .knob-large .knob-value {
   font-size: 10.5px;
+  color: var(--ink-dim);
 }
 
-.knob-large.knob-hot .knob-value,
-.knob-large.knob-glowing .knob-value {
-  color: var(--amber);
+/* ---------- Performance zone: one hardware row, staged sizes,
+   engraved rule with the section title on it. Exactly as tall as its
+   controls need. ---------- */
+
+.macro-zone {
+  flex-shrink: 0;
+  padding-top: 4px;
 }
 
-/* ---------- Performance module: eight channels across the center.
-   Channels separate by hairline shadow only; the knobs are the content
-   and need no numbering. ---------- */
-
-.macro-panel {
-  flex: 1 0 auto;
-  min-height: 176px;
+.macro-row {
   display: flex;
-  flex-direction: column;
-  padding-bottom: 10px;
+  align-items: flex-end;
+  padding: 26px 4px 2px;
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
 }
 
-.macro-panel .macro-row {
+.macro-group {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-evenly;
+  min-width: 0;
+}
+
+.macro-primary {
+  flex: 1.35;
+}
+
+.macro-secondary {
   flex: 1;
 }
 
-.macro-title {
-  align-items: center;
+/* Engraved score between the primary and secondary stages. */
+.macro-divider {
+  width: 2px;
+  align-self: stretch;
+  flex-shrink: 0;
+  margin: 4px 10px 12px;
+  background: var(--groove-v);
 }
 
-/* Macro tooltips open downward so the scroll container never clips
-   them, and the end channels pin to their own edge. */
+/* Macro tooltips open downward so nothing clips at the top; the end
+   knobs pin to their own edge. */
 .macro-row .knob.has-tooltip::after {
   bottom: auto;
   top: calc(100% + 6px);
 }
 
-.macro-channel:first-child .knob.has-tooltip::after {
+.macro-primary .knob:first-child.has-tooltip::after {
   left: 0;
   transform: none;
 }
 
-.macro-channel:last-child .knob.has-tooltip::after {
+.macro-secondary .knob:last-child.has-tooltip::after {
   left: auto;
   right: 0;
   transform: none;
 }
 
-.macro-row {
-  display: flex;
-  align-items: stretch;
-  padding: 6px 12px 0;
-  width: 100%;
-}
+/* ---------- The silkscreened signal path: fine print on the quiet
+   stretch of panel between performance and the advanced rail. ---------- */
 
-.macro-channel {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 6px 4px 12px;
-}
-
-.macro-channel + .macro-channel {
-  border-left: 1px solid rgba(0, 0, 0, 0.35);
-}
-
-.macro-channel .knob {
+.flow-legend {
   margin: auto 0;
-}
-
-/* ---------- Scope lane: slim full-width displays under the describe
-   lane. Spectrum takes two thirds, waveform one third. ---------- */
-
-.scope-lane {
-  display: flex;
-  gap: 8px;
-  height: 104px;
-  flex-shrink: 0;
-  padding: 8px 10px;
-  background: linear-gradient(180deg, #16120f, #131010);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.45);
-}
-
-.scope {
-  flex: 1;
-  min-width: 0;
-  position: relative;
-  display: flex;
-  background: #0e0b09;
-  border: 1px solid rgba(0, 0, 0, 0.4);
-  border-radius: 6px;
-  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
-  padding: 4px;
-}
-
-.scope-lane .scope:first-child {
-  flex: 2;
-}
-
-.scope-label {
-  position: absolute;
-  top: 7px;
-  left: 11px;
-  z-index: 2;
+  align-self: center;
   font-family: var(--font-mono);
-  font-size: 8.5px;
+  font-size: 8px;
   font-weight: 500;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: rgba(154, 145, 127, 0.5);
-  pointer-events: none;
+  letter-spacing: 0.2em;
+  color: rgba(98, 93, 82, 0.66);
+  white-space: nowrap;
+  user-select: none;
+  padding: 10px 0;
 }
 
-/* Scope tooltips open downward: the lane sits near the top of the
-   window and an upward tooltip would clip. */
-.scope.has-tooltip::after {
-  bottom: auto;
-  top: calc(100% + 6px);
-  z-index: 30;
-}
-
-.scope-canvas {
-  flex: 1;
-  display: block;
-  width: 100%;
-  height: 100%;
-  min-height: 64px;
-  border-radius: 4px;
-}
-
-/* ---------- Advanced rack ---------- */
+/* ---------- Advanced rack: a rail on the panel edge; the rack itself
+   is engraved groups, controls mounted directly. ---------- */
 
 .advanced-section {
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
 }
 
 .advanced-toggle {
@@ -1014,76 +1175,79 @@ select:focus-visible {
   align-items: center;
   gap: 10px;
   width: 100%;
-  background: linear-gradient(180deg, var(--panel-hi), var(--panel-lo));
-  border: 1px solid rgba(0, 0, 0, 0.35);
-  border-top-color: var(--edge);
-  border-radius: 9px;
-  padding: 9px 14px;
+  background: none;
+  border: none;
+  padding: 4px 0 6px;
   cursor: pointer;
-  font-family: var(--font-cond);
-  font-size: 12px;
+  text-align: left;
+}
+
+.advanced-chevron {
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  font-size: 9px;
+  color: var(--ink-dim);
+  background: linear-gradient(180deg, #eae6de, #d9d5cc);
+  border: 1px solid var(--edge);
+  border-bottom-color: #948f84;
+  border-radius: 3px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 1px 1px rgba(62, 57, 47, 0.25);
+  transition: color 140ms ease;
+}
+
+.advanced-word {
+  font-family: var(--font-engrave);
+  font-size: 11.5px;
   font-weight: 600;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--ink-dim);
-  text-align: left;
-  box-shadow: var(--shadow);
   transition: color 140ms ease;
 }
 
-.advanced-toggle:hover {
+.advanced-toggle:hover .advanced-word {
   color: var(--ink);
 }
 
-.advanced-toggle.open,
+.advanced-toggle.open .advanced-word,
 .advanced-toggle.open .advanced-chevron {
-  color: var(--amber);
-}
-
-.advanced-chevron {
-  font-size: 11px;
-  color: var(--ink-faint);
-  transition: color 140ms ease;
+  color: var(--signal-ink);
 }
 
 .advanced-hint {
   font-family: var(--font-ui);
   font-weight: 400;
-  text-transform: none;
   letter-spacing: 0.01em;
   color: var(--ink-faint);
-  font-size: 11px;
+  font-size: 10.5px;
+  white-space: nowrap;
 }
 
-/* The rack: generated groups rendered as modules in a responsive grid.
-   Group-level styling only; controls stay manifest-generated. */
+/* The rack: manifest-generated groups, each an engraved rule with its
+   silkscreen title, controls mounted straight on the panel. Small
+   effects groups pack tighter than the voice sections. */
 .advanced-panel {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(236px, 1fr));
-  align-items: stretch;
-  gap: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 26px;
+  padding: 4px 2px 14px;
 }
 
 .param-group {
+  flex: 1 1 320px;
+  min-width: 280px;
   display: flex;
   flex-direction: column;
-  padding-bottom: 8px;
-  border-radius: 7px;
-  overflow: hidden;
 }
 
-.group-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--font-cond);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--ink-dim);
-  padding: 7px 10px 5px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.35);
+.param-group.tight {
+  flex: 0 1 auto;
+  min-width: 168px;
 }
 
 .group-controls {
@@ -1092,11 +1256,16 @@ select:focus-visible {
   flex-wrap: wrap;
   align-content: flex-start;
   align-items: flex-start;
-  gap: 8px 2px;
-  padding: 8px 8px 0;
+  gap: 8px 0;
+  padding: 8px 0 0;
 }
 
-/* ---------- Enum selector ---------- */
+.param-group.tight .group-controls {
+  gap: 6px 0;
+  padding-top: 6px;
+}
+
+/* ---------- Enum selector: a row of latching keys. ---------- */
 
 .enum-selector {
   display: flex;
@@ -1115,23 +1284,23 @@ select:focus-visible {
 
 .enum-options {
   display: inline-flex;
-  border: 1px solid var(--well-edge);
-  border-radius: 6px;
+  border: 1px solid var(--edge);
+  border-radius: 4px;
   overflow: hidden;
-  background: var(--well);
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.35);
+  background: #eae6de;
+  box-shadow: inset 0 1px 3px rgba(62, 57, 47, 0.14);
 }
 
 .enum-option {
   background: none;
   border: none;
-  border-right: 1px solid rgba(255, 255, 255, 0.04);
-  color: var(--ink-faint);
+  border-right: 1px solid var(--edge-soft);
+  color: var(--ink-dim);
   font-family: var(--font-ui);
   font-weight: 500;
   font-size: 10.5px;
   letter-spacing: 0.02em;
-  padding: 5px 9px;
+  padding: 4px 8px;
   cursor: pointer;
   white-space: nowrap;
   transition: color 140ms ease, background 140ms ease;
@@ -1143,91 +1312,116 @@ select:focus-visible {
 
 .enum-option:hover {
   color: var(--ink);
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(62, 57, 47, 0.05);
 }
 
 .enum-option.selected {
-  background: linear-gradient(180deg, rgba(232, 161, 63, 0.22), rgba(232, 161, 63, 0.08));
-  color: var(--amber-bright);
+  background: var(--ink);
+  color: #ede9e0;
 }
 
-/* ---------- Keys deck. Ivory naturals in the ink tone, warm shadows,
-   amber underlight when a key sounds. ---------- */
+/* ---------- Keyboard deck: an engraved rail across the panel foot,
+   keys sunk in a dark bed, octave caps with silkscreened Z / X, the
+   serial fine print at the rail's end. ---------- */
 
 .keyboard-strip {
-  padding: 8px 10px 10px;
-  background: linear-gradient(180deg, #171310, #131010);
-  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  position: relative;
+  flex-shrink: 0;
+  padding: 6px 14px 12px;
+  background: linear-gradient(180deg, rgba(62, 57, 47, 0.05), rgba(62, 57, 47, 0.08));
+  border-top: 1px solid var(--groove-d);
+  box-shadow: inset 0 1px 0 var(--groove-l);
 }
 
-.deck-frame {
+.deck-rail {
   display: flex;
   align-items: stretch;
-  gap: 10px;
-  padding: 8px 10px;
-  background: linear-gradient(180deg, #1e1915, #171310);
-  border: 1px solid rgba(0, 0, 0, 0.4);
-  border-top-color: var(--edge);
-  border-radius: 9px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+  gap: 14px;
 }
 
 .keyboard-side {
-  width: 190px;
+  width: 178px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 6px;
+  gap: 5px;
+}
+
+.deck-rule {
+  margin-bottom: 1px;
 }
 
 .octave-controls {
   display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.octave-unit {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 1px;
 }
 
-.octave-button {
-  width: 34px;
-  height: 28px;
+/* Physical square caps; the + and - are engraved into the enamel. */
+.octave-cap {
+  width: 30px;
+  height: 26px;
   border-radius: 4px;
-  border: 1px solid #362d24;
-  background: linear-gradient(180deg, #2a231c, #1e1914);
-  color: #cfc7b8;
+  border: 1px solid var(--edge);
+  border-bottom-color: #948f84;
+  background: linear-gradient(180deg, #eae6de, #d9d5cc);
+  color: var(--ink-dim);
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
+  line-height: 1;
   cursor: pointer;
-  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.4);
-  transition: border-color 140ms ease, color 140ms ease, box-shadow 140ms ease;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 1px 2px rgba(62, 57, 47, 0.25);
+  transition: background 140ms ease, box-shadow 140ms ease;
 }
 
-.octave-button:hover:not(:disabled) {
-  border-color: #483b2e;
-  color: var(--ink);
+.octave-cap:hover:not(:disabled) {
+  background: linear-gradient(180deg, #f1ede5, #dfdbd2);
 }
 
-.octave-button:active:not(:disabled) {
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+.octave-cap:active:not(:disabled) {
+  box-shadow: inset 0 1px 3px rgba(62, 57, 47, 0.35);
 }
 
-.octave-button:disabled {
-  opacity: 0.35;
+.octave-cap:disabled {
+  opacity: 0.4;
   cursor: default;
+}
+
+/* The Z / X silkscreen under each cap. */
+.octave-silk {
+  font-family: var(--font-mono);
+  font-size: 7.5px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--ink-faint);
+  user-select: none;
 }
 
 .octave-readout {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 52px;
+  min-width: 40px;
+  padding-top: 1px;
 }
 
 .octave-label {
-  font-family: var(--font-cond);
-  font-size: 9px;
+  font-family: var(--font-engrave);
+  font-size: 8.5px;
   font-weight: 600;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--ink-faint);
 }
@@ -1236,30 +1430,33 @@ select:focus-visible {
   font-family: var(--font-mono);
   font-size: 13px;
   font-weight: 500;
-  color: var(--amber);
+  color: var(--ink);
 }
 
 .keyboard-hint {
-  font-size: 10px;
+  font-size: 9.5px;
   color: var(--ink-faint);
   line-height: 1.35;
 }
 
+/* The bed: keys sink into dark glass, the third luminance event. */
 .piano-bed {
   flex: 1;
   display: flex;
-  background: #0a0807;
-  border: 1px solid rgba(0, 0, 0, 0.5);
-  border-radius: 8px;
+  background: #17181c;
+  border: 1px solid #3f3c35;
+  border-radius: 5px;
   padding: 5px 5px 6px;
-  box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.6);
+  box-shadow:
+    inset 0 3px 9px rgba(0, 0, 0, 0.5),
+    0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 .piano {
   position: relative;
   display: flex;
   flex: 1;
-  height: 80px;
+  height: 140px;
   user-select: none;
   touch-action: none;
 }
@@ -1278,27 +1475,27 @@ select:focus-visible {
   height: 100%;
   background: linear-gradient(
     180deg,
-    #f4eee2 0%,
-    #ece5d8 62%,
-    #d8d0bf 90%,
-    #bdb4a0 100%
+    #f4f1ea 0%,
+    #ece9e1 62%,
+    #ddd9cf 90%,
+    #c4c0b5 100%
   );
-  border: 1px solid #5c5344;
-  border-top-color: #423a2e;
+  border: 1px solid #55524a;
+  border-top-color: #3b3831;
   border-radius: 0 0 4px 4px;
   padding-bottom: 4px;
   box-shadow:
-    inset 0 1px 0 rgba(255, 252, 244, 0.8),
-    inset 0 -3px 5px rgba(46, 38, 24, 0.16);
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    inset 0 -3px 5px rgba(45, 42, 35, 0.16),
+    inset -1px 0 0 rgba(255, 255, 255, 0.35);
   transition: background 80ms ease, box-shadow 80ms ease;
 }
 
 .piano-key.white.active {
-  background: linear-gradient(180deg, #d6cdba 0%, #c2b8a2 70%, #a89d86 100%);
+  background: linear-gradient(180deg, #d9d5cb 0%, #c8c4b9 70%, #b2aea3 100%);
   box-shadow:
-    inset 0 3px 8px rgba(30, 22, 10, 0.35),
-    inset 0 -3px 0 var(--amber),
-    inset 0 -7px 11px rgba(232, 161, 63, 0.45);
+    inset 0 3px 8px rgba(45, 42, 35, 0.35),
+    inset 0 -3px 0 var(--signal);
 }
 
 .piano-key.black {
@@ -1311,50 +1508,49 @@ select:focus-visible {
   align-items: center;
   background: linear-gradient(
     180deg,
-    #453c33 0%,
-    #29231d 14%,
-    #191512 70%,
-    #0d0b09 100%
+    #4c4942 0%,
+    #322f29 14%,
+    #211f1a 70%,
+    #131210 100%
   );
-  border: 1px solid #060504;
+  border: 1px solid #0b0a08;
   border-radius: 0 0 4px 4px;
   z-index: 2;
   padding-bottom: 3px;
   box-shadow:
     0 4px 7px rgba(0, 0, 0, 0.55),
-    inset 0 1px 1px rgba(255, 250, 240, 0.14),
+    inset 0 1px 1px rgba(255, 255, 255, 0.14),
     inset 0 -4px 6px rgba(0, 0, 0, 0.5);
   transition: background 80ms ease, box-shadow 80ms ease, transform 80ms ease;
 }
 
 .piano-key.black.active {
   transform: translateY(1px);
-  background: linear-gradient(180deg, #211c16 0%, #151210 60%, #0e0c0a 100%);
+  background: linear-gradient(180deg, #2a2823 0%, #1b1916 60%, #131210 100%);
   box-shadow:
     0 2px 4px rgba(0, 0, 0, 0.55),
     inset 0 2px 5px rgba(0, 0, 0, 0.55),
-    inset 0 -3px 0 var(--amber),
-    inset 0 -7px 10px rgba(232, 161, 63, 0.4);
+    inset 0 -3px 0 var(--signal);
 }
 
 .piano-letter {
   font-family: var(--font-mono);
   font-size: 9px;
   font-weight: 500;
-  color: rgba(74, 66, 50, 0.55);
+  color: rgba(75, 71, 62, 0.55);
   pointer-events: none;
 }
 
 .piano-key.black .piano-letter {
-  color: rgba(236, 229, 216, 0.32);
+  color: rgba(228, 222, 208, 0.4);
 }
 
 .piano-key.active .piano-letter {
-  color: rgba(66, 44, 10, 0.8);
+  color: var(--signal-ink);
 }
 
 .piano-key.black.active .piano-letter {
-  color: rgba(245, 188, 107, 0.85);
+  color: var(--phosphor);
 }
 
 .piano-c-label {
@@ -1362,20 +1558,37 @@ select:focus-visible {
   top: 4px;
   font-family: var(--font-mono);
   font-size: 8px;
-  color: rgba(103, 95, 82, 0.6);
+  color: rgba(95, 90, 80, 0.6);
   pointer-events: none;
 }
 
-/* ---------- Tall windows: extra height goes into the instrument, not
-   empty chassis. ---------- */
+/* The serial plate: silkscreen at the rail's end. */
+.deck-serial {
+  position: absolute;
+  right: 16px;
+  bottom: 1px;
+  font-family: var(--font-mono);
+  font-size: 7px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  color: rgba(79, 75, 66, 0.6);
+  user-select: none;
+}
+
+/* ---------- Tall windows: the free height lands in the instrument,
+   not in empty panel. ---------- */
 
 @media (min-height: 900px) {
-  .scope-lane {
-    height: 132px;
+  .glass {
+    height: 240px;
   }
 
   .piano {
-    height: 108px;
+    height: 176px;
+  }
+
+  .knob-large {
+    width: 120px;
   }
 
   .knob-large .knob-hit {
@@ -1383,9 +1596,13 @@ select:focus-visible {
     height: 104px;
   }
 
-  .knob-large,
-  .knob.knob-large {
-    width: 124px;
+  .knob-medium .knob-hit {
+    width: 72px;
+    height: 72px;
+  }
+
+  .macro-row {
+    padding-top: 34px;
   }
 }
 
@@ -1401,13 +1618,13 @@ select:focus-visible {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #322a22;
+  background: #a8a499;
   border-radius: 5px;
-  border: 2px solid var(--bg0);
+  border: 2px solid var(--panel);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #41372c;
+  background: #94907f;
 }
 
 /* ---- Settings popover ---- */
@@ -1423,10 +1640,10 @@ select:focus-visible {
   z-index: 40;
   width: 320px;
   padding: 14px;
-  background: linear-gradient(180deg, #241d17, #1b1613);
+  background: var(--panel-hi);
   border: 1px solid var(--edge);
-  border-radius: 9px;
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.55);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow), 0 14px 34px rgba(62, 57, 47, 0.3);
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -1442,30 +1659,42 @@ select:focus-visible {
 
 .settings-field input {
   padding: 7px 9px;
-  background: var(--well);
-  border: 1px solid var(--well-edge);
-  border-radius: 6px;
+  background: #eae6de;
+  border: 1px solid var(--edge);
+  border-radius: 4px;
   color: var(--ink);
   font-family: var(--font-ui);
   font-size: 13px;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.35);
+  box-shadow: inset 0 1px 3px rgba(62, 57, 47, 0.16);
   transition: border-color 140ms ease;
 }
 
 .settings-field input:focus {
   outline: none;
-  border-color: rgba(232, 161, 63, 0.5);
+  border-color: var(--signal);
 }
 
 .settings-note {
   margin: 0;
   font-size: 11px;
   line-height: 1.5;
-  color: var(--ink-faint);
+  color: var(--ink-dim);
 }
 
 .settings-actions {
   display: flex;
   gap: 8px;
   justify-content: flex-end;
+}
+
+/* ---------- Reduced motion: no sweeps, no settles. ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

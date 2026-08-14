@@ -65,11 +65,11 @@ function drawSparkline(canvas: HTMLCanvasElement, losses: readonly number[]) {
   const yOf = (v: number) =>
     span <= 0 ? height / 2 : pad + ((v - min) / span) * innerH;
 
-  ctx.strokeStyle = "#e8a13f";
+  ctx.strokeStyle = "#ffb35c";
   ctx.lineWidth = 1.5;
   ctx.lineJoin = "round";
   ctx.lineCap = "round";
-  ctx.shadowColor = "rgba(232, 161, 63, 0.4)";
+  ctx.shadowColor = "rgba(255, 179, 92, 0.4)";
   ctx.shadowBlur = 4;
   ctx.beginPath();
   losses.forEach((v, i) => {
@@ -80,7 +80,7 @@ function drawSparkline(canvas: HTMLCanvasElement, losses: readonly number[]) {
   // A small marker on the latest point.
   const last = losses.length - 1;
   ctx.shadowBlur = 6;
-  ctx.fillStyle = "#f5bc6b";
+  ctx.fillStyle = "#ffc888";
   ctx.beginPath();
   ctx.arc(x(last), yOf(losses[last]), 2, 0, Math.PI * 2);
   ctx.fill();
@@ -187,8 +187,11 @@ export function MatchPanel() {
   const offline = !serviceUp && phase === "idle";
 
   return (
-    <section className="match-panel panel" aria-label="Match a sound">
-      <div className="panel-title match-title">Match a sound</div>
+    <section className="match-panel" aria-label="Match a sound">
+      <div className="silk-rule">
+        <span className="silk-title">Match a sound</span>
+        <i className="silk-line" aria-hidden="true" />
+      </div>
 
       {offline ? (
         <div className="match-body">

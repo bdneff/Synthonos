@@ -87,8 +87,17 @@ export function AdvancedPanel() {
   return (
     <div className="advanced-panel">
       {MANIFEST.groups.map((group) => (
-        <section key={group.name} className="param-group panel">
-          <div className="group-title">{group.name}</div>
+        // Group-level presentation only: small effects groups pack
+        // tighter, the way an effects strip sits denser than the voice
+        // section on a panel. Controls stay manifest-generated.
+        <section
+          key={group.name}
+          className={`param-group${group.controls.length <= 3 ? " tight" : ""}`}
+        >
+          <div className="silk-rule group-title">
+            <span className="silk-title">{group.name}</span>
+            <i className="silk-line" aria-hidden="true" />
+          </div>
           <div className="group-controls">
             {group.controls.map((control) => (
               <ManifestControlView key={control.id} control={control} />
