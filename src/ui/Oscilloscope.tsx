@@ -14,10 +14,10 @@ export interface OscilloscopeProps {
   source(): Float32Array;
 }
 
-const SILK = "rgba(214, 222, 232, 0.5)";
-const SILK_DIM = "rgba(214, 222, 232, 0.32)";
-const GRID = "rgba(214, 222, 232, 0.06)";
-const GRID_FAINT = "rgba(214, 222, 232, 0.03)";
+const SILK = "rgba(234, 232, 225, 0.5)";
+const SILK_DIM = "rgba(234, 232, 225, 0.32)";
+const GRID = "rgba(234, 232, 225, 0.06)";
+const GRID_FAINT = "rgba(234, 232, 225, 0.03)";
 
 export function Oscilloscope({ source }: OscilloscopeProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -74,7 +74,7 @@ export function Oscilloscope({ source }: OscilloscopeProps) {
       ctx.stroke();
 
       // Center axis, slightly brighter.
-      ctx.strokeStyle = "rgba(226, 220, 205, 0.12)";
+      ctx.strokeStyle = "rgba(140, 235, 160, 0.14)";
       ctx.beginPath();
       ctx.moveTo(0, Math.round(mid) + 0.5);
       ctx.lineTo(w, Math.round(mid) + 0.5);
@@ -93,7 +93,7 @@ export function Oscilloscope({ source }: OscilloscopeProps) {
       }
       if (peak < 0.004) {
         const breath = 0.5 + 0.5 * Math.sin(performance.now() / 1400);
-        ctx.strokeStyle = `rgba(230, 238, 246, ${0.04 + 0.06 * breath})`;
+        ctx.strokeStyle = `rgba(140, 235, 160, ${0.04 + 0.06 * breath})`;
         ctx.lineWidth = 6;
         ctx.beginPath();
         ctx.moveTo(0, mid + 0.5);
@@ -115,13 +115,13 @@ export function Oscilloscope({ source }: OscilloscopeProps) {
         }
         ctx.strokeStyle = style;
         ctx.lineWidth = width;
-        ctx.shadowColor = "rgba(230, 238, 246, 0.45)";
+        ctx.shadowColor = "rgba(120, 240, 150, 0.5)";
         ctx.shadowBlur = blur;
         ctx.stroke();
         ctx.shadowBlur = 0;
       };
-      trace(5, "rgba(230, 238, 246, 0.07)", 0);
-      trace(1.5, "rgba(238, 243, 248, 0.92)", 6);
+      trace(5, "rgba(120, 240, 150, 0.08)", 0);
+      trace(1.5, "rgba(160, 245, 175, 0.93)", 6);
 
       // Silkscreened amplitude scale on the right edge of the glass.
       ctx.font = "500 8.5px 'Spline Sans Mono', monospace";

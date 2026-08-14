@@ -118,6 +118,9 @@ export function Keyboard() {
 
   return (
     <div className="keyboard-strip">
+      {/* The flagship's rainbow: eight pinstripes over the keybed, one
+          per macro ink, red to magenta. */}
+      <div className="rainbow-band" aria-hidden="true" />
       <div className="deck-rail">
       <div className="keyboard-side">
         <div className="silk-rule deck-rule">

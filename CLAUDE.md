@@ -56,10 +56,10 @@ chosen by the project owner. Follow its own process, do not paraphrase
 it: run its Setup (context.mjs), respect PRODUCT.md and DESIGN.md as
 the committed product and visual world, treat the instrument UI as its
 Operate mode, load reference/craft-floor.md before editing any UI, and
-verify in bounded passes. Anthropic's frontend-design skill
-(github.com/anthropics/skills, skills/frontend-design) remains a
-secondary reference: two-pass token planning, one signature element,
-the Chanel rule, screenshot critique over memory.
+verify in bounded passes. Impeccable is the ONLY design vocabulary in
+this repo — do not mix in other design skills (including Anthropic's
+frontend-design skill); per Impeccable's docs, two skills with
+different design vocabularies collide and cancel each other out.
 
 Lessons this project paid for, do not relearn them:
 

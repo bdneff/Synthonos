@@ -83,15 +83,11 @@ function Shell() {
     <div className="app">
       <header className="top-rail">
         <div className="brand">
-          {/* The mark quotes law 1: frequency is color, low to high. */}
-          <svg className="brand-mark" viewBox="0 0 28 28" aria-hidden="true">
-            <rect x="2" y="11" width="3.5" height="6" rx="1.2" fill="var(--low)" />
-            <rect x="8" y="7.5" width="3.5" height="13" rx="1.2" fill="var(--m-thickness)" />
-            <rect x="14" y="4" width="3.5" height="20" rx="1.2" fill="var(--mid)" />
-            <rect x="20" y="9" width="3.5" height="10" rx="1.2" fill="var(--high)" />
-          </svg>
           <div className="brand-text">
             <div className="brand-name">Synthonos</div>
+            {/* The rainbow signature, quoted small: the eight macro
+                inks as pinstripes, exactly like the band over the keys. */}
+            <div className="brand-stripes" aria-hidden="true" />
             <div className="brand-sub">say it, hear it</div>
           </div>
         </div>
@@ -104,7 +100,7 @@ function Shell() {
             className="current-preset has-tooltip"
             data-tooltip="The sound you are editing right now."
           >
-            {store.presetName}
+            <span>{store.presetName}</span>
           </div>
         </div>
         <div className="header-right">
@@ -129,7 +125,7 @@ function Shell() {
             </button>
             <Settings />
           </div>
-          <div className="model-plate">SYNTHONOS · SYN-01</div>
+          <div className="model-plate">Polyphonic Synthesizer · SYN-01</div>
         </div>
       </header>
 

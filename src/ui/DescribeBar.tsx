@@ -63,6 +63,8 @@ export function DescribeBar() {
         <input
           className="describe-input"
           type="text"
+          autoComplete="off"
+          spellCheck={false}
           placeholder={'Describe a sound: "a warm wide pad", "more bite", "same but plucky"'}
           value={text}
           disabled={busy}
@@ -73,10 +75,13 @@ export function DescribeBar() {
         />
         <button
           type="button"
-          className="button primary describe-submit"
+          className={`button primary shape-switch describe-submit${busy ? " lit" : ""}`}
           disabled={busy || text.trim() === ""}
           onClick={() => void submit()}
         >
+          {/* The one red LED on the front door: on when armed, blinking
+              while the machine thinks. */}
+          <i className="switch-led" aria-hidden="true" />
           {busy ? "Shaping..." : "Shape"}
         </button>
       </div>

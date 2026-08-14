@@ -1,17 +1,26 @@
 /* Synthonos interface.
-   Deck grammar: the visual language of DJ performance software
-   (Serato, Traktor, Rekordbox), where color is information and never
-   decoration. Layered slate decks separated by 1px seams on a darker
-   ground; no cards, no skeuomorphism, no engraving. Three color laws:
-   1. Frequency is color: low red, mid green, high blue. The spectrum
-      display carries it; the brand mark and the describe signature
-      quote it.
-   2. Every macro owns a hot-cue hue. The knob arc burns in that hue
-      while the machine turns it: the product's soul made visible.
-   3. Engine sections in the rack carry function color at group level,
-      so "the green knobs moved" is a sentence a beginner can say.
-   Type: Barlow for UI, Barlow Condensed for rail titles and big
-   numerics, Spline Sans Mono for data, scales, and readouts. */
+   Jupiter panel grammar: the front panel of a 1982 polyphonic flagship.
+   Matte black painted steel, white silkscreen legends and 1px frame
+   rules, tactile switches with LED indicators, red LED segment
+   displays, and one rainbow signature: eight pinstripes above the
+   keybed, one per macro ink, in spectral order.
+   Three material laws:
+   1. Everything is mounted on painted steel. Depth is machined, not
+      floated: a 1px black panel gap and a hairline top highlight,
+      never a drop shadow at rest.
+   2. The machine speaks in light. LED displays carry what the machine
+      is saying (the loaded patch, the octave); a switch that is armed
+      is backlit; a knob the machine turns burns its ink while it
+      moves. Light always means "the machine is working here".
+   3. Ink is indexed. The eight macro inks are the whole palette, laid
+      out once in the rainbow band; every colored block, arc, chip, and
+      category mark on the panel is one of those eight inks doing a job.
+   Type: Michroma for the wordmark plate, Barlow Condensed for
+   silkscreen legends, Barlow for speech, Spline Sans Mono for printed
+   data, DSEG7/DSEG14 for LED displays.
+   (Historical note: custom-property names below predate this world:
+   --deck-1..4 are the steel ramp, --screen/--well the display glass,
+   --seam the panel gap. Values are the source of truth.) */
 
 /* ---------- Bundled fonts (OFL). ---------- */
 
@@ -71,64 +80,107 @@
   font-display: block;
 }
 
+@font-face {
+  font-family: "Michroma";
+  src: url("./fonts/Michroma-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "DSEG14 Classic";
+  src: url("./fonts/DSEG14Classic-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "DSEG7 Classic";
+  src: url("./fonts/DSEG7Classic-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+
 /* ---------- Tokens. ---------- */
 
 :root {
-  /* The deck: layered slate, seamed */
-  --deck-page: #101215;
-  --deck-1: #16181d;
-  --deck-2: #1c1f25;
-  --deck-3: #23272e;
-  --deck-4: #2b3038;
-  --screen: #0a0c0f;
-  --well: #0d0f13;
-  --seam: #272b32;
-  --seam-strong: #343a44;
+  /* Painted steel ramp (names historical, see header) */
+  --deck-page: #09090a;
+  --deck-1: #131315;
+  --deck-2: #19191c;
+  --deck-3: #202023;
+  --deck-4: #2a2a2e;
+  --screen: #050506;
+  --well: #0b0b0d;
+  --seam: #000000;
+  --seam-strong: #2e2e33;
 
-  /* Ink */
-  --text: #e9ecef;
-  --text-dim: #a3abb5;
-  --text-faint: #838d99;
+  /* Silkscreen inks (warm white, printed on steel) */
+  --text: #eae8e1;
+  --text-dim: #a9a79f;
+  --text-faint: #83817a;
+  --frame: rgba(234, 232, 225, 0.26);
+  --frame-faint: rgba(234, 232, 225, 0.13);
+  --edge-light: rgba(255, 255, 255, 0.05);
 
-  /* Law 1: frequency is color */
-  --low: #ff5c6e;
-  --mid: #57d074;
-  --high: #4fa8ff;
+  /* The eight macro inks, in rainbow-band order */
+  --m-grit: #ef4a3e;
+  --m-thickness: #f58a30;
+  --m-brightness: #f5c343;
+  --m-movement: #55c26a;
+  --m-attack: #3dbdbf;
+  --m-space: #4f95e8;
+  --m-width: #8d7ef0;
+  --m-character: #d963b4;
 
-  /* Law 2: the eight hot-cue hues */
-  --m-brightness: #ffd24d;
-  --m-thickness: #ff8b47;
-  --m-movement: #57d074;
-  --m-attack: #3fd0d8;
-  --m-space: #5ba8ff;
-  --m-grit: #ff5566;
-  --m-width: #8f8aff;
-  --m-character: #e668b8;
+  /* Frequency trio for the spectrum display and categories */
+  --low: #ef4a3e;
+  --mid: #55c26a;
+  --high: #4f95e8;
+
+  /* Light: what the machine says */
+  --led: #ff3b2e;
+  --led-glow: rgba(255, 59, 46, 0.5);
+  --led-ghost: rgba(255, 59, 46, 0.14);
+  --amber: #ffb03a;
+  --amber-ink: #241703;
+  --amber-glow: rgba(255, 176, 58, 0.32);
 
   /* Interface roles */
-  --act: #57d074;
-  --act-ink: #0c1710;
-  --focus: #7ab8ff;
-  --danger: #ff5c6e;
-  --neutral-chip: #8b94a0;
+  --act: var(--amber);
+  --act-ink: var(--amber-ink);
+  --focus: var(--amber);
+  --danger: #ef4a3e;
+  --neutral-chip: #8f8d85;
 
-  /* The describe signature: the whole spectrum in one sweep */
+  /* The rainbow signature: all eight inks in one sweep */
   --tri: linear-gradient(
     90deg,
-    #ff5c6e 0%,
-    #ff8b47 20%,
-    #ffd24d 38%,
-    #57d074 56%,
-    #3fd0d8 72%,
-    #4fa8ff 100%
+    #ef4a3e 0%,
+    #f58a30 14%,
+    #f5c343 28%,
+    #55c26a 43%,
+    #3dbdbf 57%,
+    #4f95e8 72%,
+    #8d7ef0 86%,
+    #d963b4 100%
   );
 
   --font-ui: "Barlow", system-ui, sans-serif;
   --font-cond: "Barlow Condensed", "Barlow", system-ui, sans-serif;
+  --font-brand: "Michroma", "Barlow Condensed", system-ui, sans-serif;
   --font-data: "Spline Sans Mono", ui-monospace, "Cascadia Mono", monospace;
+  --font-led14: "DSEG14 Classic", "Spline Sans Mono", monospace;
+  --font-led7: "DSEG7 Classic", "Spline Sans Mono", monospace;
 
-  --radius: 8px;
-  --radius-sm: 5px;
+  --radius: 3px;
+  --radius-sm: 2px;
+
+  /* One machined edge: panel gap below, hairline light above */
+  --machined: inset 0 1px 0 var(--edge-light);
 }
 
 /* ---------- Base, and the browser surfaces we did not draw. ---------- */
@@ -155,7 +207,7 @@ body {
 }
 
 ::selection {
-  background: rgba(79, 168, 255, 0.4);
+  background: rgba(255, 176, 58, 0.35);
   color: var(--text);
 }
 
@@ -166,18 +218,18 @@ select {
 }
 
 input {
-  caret-color: var(--high);
+  caret-color: var(--amber);
 }
 
 :focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: 2px;
-  border-radius: 3px;
+  border-radius: 2px;
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--seam-strong) transparent;
+  scrollbar-color: var(--deck-4) transparent;
 }
 
 *::-webkit-scrollbar {
@@ -186,12 +238,12 @@ input {
 }
 
 *::-webkit-scrollbar-thumb {
-  background: var(--seam-strong);
+  background: var(--deck-4);
   border-radius: 4px;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: #46505e;
+  background: #3a3a40;
 }
 
 *::-webkit-scrollbar-track {
@@ -205,8 +257,22 @@ input {
   min-width: 1140px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 10px;
+  gap: 7px;
+  padding: 9px;
+}
+
+/* Every mounted panel shares one construction: painted steel, a black
+   panel gap all round, a machined hairline along the top edge. */
+.top-rail,
+.glass,
+.app-main,
+.preset-browser,
+.match-panel,
+.keyboard-strip {
+  background: var(--deck-1);
+  border: 1px solid var(--seam);
+  border-radius: var(--radius);
+  box-shadow: var(--machined);
 }
 
 /* ---------- Top rail: the describe lane is the front door. ---------- */
@@ -218,46 +284,57 @@ input {
   gap: 14px;
   height: 58px;
   padding: 0 14px;
-  background: var(--deck-1);
-  border: 1px solid var(--seam);
-  border-radius: var(--radius);
 }
 
 .rail-divider {
   width: 1px;
   align-self: stretch;
-  margin: 10px 0;
-  background: var(--seam);
+  margin: 9px 0;
+  background: var(--frame-faint);
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 10px;
   flex: none;
 }
 
-.brand-mark {
-  width: 28px;
-  height: 28px;
-  display: block;
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .brand-name {
-  font-family: var(--font-cond);
-  font-weight: 600;
-  font-size: 17px;
-  letter-spacing: 0.22em;
+  font-family: var(--font-brand);
+  font-weight: 400;
+  font-size: 14.5px;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  line-height: 1.1;
+  line-height: 1;
+  color: var(--text);
+}
+
+/* The signature, quoted small: the eight inks as pinstripes. */
+.brand-stripes {
+  height: 8px;
+  background: repeating-linear-gradient(
+      180deg,
+      #0000 0,
+      #0000 1px,
+      var(--deck-1) 1px,
+      var(--deck-1) 2px
+    ),
+    var(--tri);
 }
 
 .brand-sub {
-  font-family: var(--font-data);
+  font-family: var(--font-cond);
+  font-weight: 500;
   font-size: 8.5px;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
   color: var(--text-faint);
-  margin-top: 2px;
 }
 
 /* Describe lane */
@@ -275,21 +352,21 @@ input {
   gap: 10px;
   height: 38px;
   padding: 0 5px 0 12px;
-  background: var(--screen);
-  border: 1px solid var(--seam-strong);
-  border-radius: 6px;
+  background: var(--well);
+  border: 1px solid var(--seam);
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.55);
 }
 
-/* The signature hairline: the whole spectrum under the sentence.
-   Grows in when the lane has focus; sweeps while the machine thinks. */
+/* The signature hairline: the rainbow under the sentence. Grows in
+   when the lane has focus; sweeps while the machine thinks. */
 .describe-slot::after {
   content: "";
   position: absolute;
-  left: 6px;
-  right: 6px;
+  left: 5px;
+  right: 5px;
   bottom: -1px;
   height: 2px;
-  border-radius: 1px;
   background: var(--tri);
   background-size: 200% 100%;
   transform: scaleX(0);
@@ -350,6 +427,15 @@ input {
   color: var(--text-dim);
 }
 
+/* Chromium autofill would repaint the well white; keep the glass dark. */
+.describe-input:-webkit-autofill,
+.describe-input:-webkit-autofill:hover,
+.describe-input:-webkit-autofill:focus {
+  -webkit-box-shadow: inset 0 0 0 100px var(--well);
+  -webkit-text-fill-color: var(--text);
+  caret-color: var(--amber);
+}
+
 .describe-submit {
   flex: none;
 }
@@ -366,9 +452,10 @@ input {
   gap: 12px;
   padding: 10px 14px;
   background: var(--deck-2);
-  border: 1px solid var(--seam-strong);
-  border-radius: 6px;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
+  border: 1px solid var(--seam);
+  border-top: 1px solid var(--seam-strong);
+  border-radius: var(--radius);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.65);
   font-size: 13px;
   color: var(--text);
 }
@@ -392,7 +479,8 @@ input {
   color: var(--text);
 }
 
-/* Loaded sound readout */
+/* Loaded sound readout: a red LED window. What the machine is holding,
+   said in light. */
 
 .sound-block {
   flex: none;
@@ -412,19 +500,37 @@ input {
 
 .current-preset {
   position: relative;
-  min-width: 150px;
-  max-width: 210px;
+  min-width: 168px;
+  max-width: 220px;
   overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
-  padding: 6px 12px;
+  padding: 8px 10px 6px;
   background: var(--screen);
-  border: 1px solid var(--seam-strong);
-  border-radius: 6px;
-  font-family: var(--font-data);
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text);
+  border: 1px solid var(--seam);
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 2px 7px rgba(0, 0, 0, 0.8);
+  font-family: var(--font-led14);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--led);
+  text-shadow: 0 0 5px var(--led-glow);
+}
+
+/* Unlit segments behind the message: the display is a real device. */
+.current-preset::before {
+  content: "~~~~~~~~~~~~~~";
+  position: absolute;
+  inset: 8px 10px 6px;
+  overflow: hidden;
+  color: var(--led-ghost);
+  text-shadow: none;
+  pointer-events: none;
+}
+
+.current-preset > span {
+  position: relative;
 }
 
 .header-right {
@@ -441,37 +547,43 @@ input {
 }
 
 .model-plate {
-  font-family: var(--font-data);
+  font-family: var(--font-cond);
+  font-weight: 500;
   font-size: 8px;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
   color: var(--text-faint);
 }
 
-/* ---------- Buttons. ---------- */
+/* ---------- Switches: every button is a tactile cap. ---------- */
 
 .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 7px;
   padding: 5px 12px;
-  background: var(--deck-3);
-  border: 1px solid var(--seam-strong);
+  background: linear-gradient(180deg, #242428, #1d1d20);
+  border: 1px solid var(--seam);
   border-radius: var(--radius-sm);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 1px 0 rgba(0, 0, 0, 0.7);
   color: var(--text-dim);
   font-size: 12.5px;
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.12s ease-out, color 0.12s ease-out;
+  transition: background 0.1s ease-out, color 0.1s ease-out;
 }
 
 .button:hover:not(:disabled) {
-  background: var(--deck-4);
+  background: linear-gradient(180deg, #2b2b30, #232327);
   color: var(--text);
 }
 
+/* Pressing a switch seats it: the cap travels, the ledge disappears. */
 .button:active:not(:disabled) {
-  transform: translateY(0.5px);
+  transform: translateY(1px);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .button:disabled {
@@ -479,43 +591,56 @@ input {
   cursor: default;
 }
 
-/* Commit actions: the go-green of a play button. */
+/* Commit actions are backlit amber: an armed switch shows its light. */
 .button.primary {
-  background: var(--act);
-  border-color: var(--act);
-  color: var(--act-ink);
+  background: var(--amber);
+  border-color: var(--seam);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 0 9px var(--amber-glow);
+  color: var(--amber-ink);
   font-weight: 600;
 }
 
 .button.primary:hover:not(:disabled) {
-  background: #6ee08a;
-  border-color: #6ee08a;
-  color: var(--act-ink);
+  background: #ffc05e;
+  color: var(--amber-ink);
 }
 
-/* The shape action carries the whole spectrum: this button is the
-   product's front door, and it dresses differently from every other
-   control on the deck. */
-.button.describe-submit {
-  background: var(--tri);
-  border: none;
-  color: #101215;
-  font-weight: 700;
+/* The shape switch: the front door wears the same backlight as every
+   commit action, plus the one red LED that blinks while the machine
+   is thinking. */
+.button.shape-switch {
+  padding: 7px 15px;
+  font-weight: 600;
   letter-spacing: 0.02em;
-  padding: 7px 16px;
 }
 
-.button.describe-submit:hover:not(:disabled) {
-  background: var(--tri);
-  color: #101215;
-  filter: brightness(1.12);
+.switch-led {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--led-ghost);
+  box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.5);
 }
 
-.button.describe-submit:disabled {
-  opacity: 0.4;
+.button.shape-switch:not(:disabled) .switch-led {
+  background: var(--led);
+  box-shadow: 0 0 5px var(--led-glow);
 }
 
-/* ---------- The display strip: one dark screen, two instruments. ---------- */
+.button.shape-switch.lit .switch-led {
+  animation: led-blink 0.5s steps(1) infinite;
+}
+
+@keyframes led-blink {
+  50% {
+    background: var(--led-ghost);
+    box-shadow: none;
+  }
+}
+
+/* ---------- The display: one glass window, two instruments. ---------- */
 
 .glass-deck {
   flex: none;
@@ -525,15 +650,14 @@ input {
   display: flex;
   height: 148px;
   background: var(--screen);
-  border: 1px solid var(--seam-strong);
-  border-radius: var(--radius);
+  box-shadow: var(--machined), inset 0 3px 14px rgba(0, 0, 0, 0.75);
   overflow: hidden;
 }
 
 .glass-divider {
   flex: none;
   width: 1px;
-  background: var(--seam);
+  background: var(--frame-faint);
 }
 
 .scope {
@@ -559,7 +683,7 @@ input {
   font-size: 10px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: rgba(214, 222, 232, 0.6);
+  color: rgba(234, 232, 225, 0.55);
   pointer-events: none;
 }
 
@@ -577,7 +701,7 @@ input {
   flex: 1;
   min-height: 0;
   display: flex;
-  gap: 8px;
+  gap: 7px;
 }
 
 .body-divider {
@@ -590,7 +714,7 @@ input {
   min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 7px;
 }
 
 .app-main {
@@ -599,13 +723,10 @@ input {
   min-height: 0;
   display: flex;
   flex-direction: column;
-  background: var(--deck-1);
-  border: 1px solid var(--seam);
-  border-radius: var(--radius);
   padding: 10px 14px 12px;
 }
 
-/* ---------- Section rails: condensed title, function chip, seam. ---------- */
+/* ---------- Silkscreen rules and frames. ---------- */
 
 .silk-rule {
   display: flex;
@@ -627,26 +748,17 @@ input {
   white-space: nowrap;
 }
 
-/* Function chip: the section's color identity, hot-cue shaped. */
-.silk-title::before {
-  content: "";
-  flex: none;
-  width: 8px;
-  height: 8px;
-  border-radius: 2px;
-  background: var(--rail-hue, var(--neutral-chip));
-}
-
 .silk-line {
   flex: 1;
   height: 1px;
-  background: var(--seam);
+  background: var(--frame-faint);
 }
 
 .silk-fine {
-  font-family: var(--font-data);
+  font-family: var(--font-cond);
+  font-weight: 500;
   font-size: 9px;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--text-faint);
   white-space: nowrap;
@@ -659,11 +771,7 @@ input {
   min-height: 0;
   display: flex;
   flex-direction: column;
-  background: var(--deck-1);
-  border: 1px solid var(--seam);
-  border-radius: var(--radius);
   padding: 10px 12px 12px;
-  --rail-hue: var(--neutral-chip);
 }
 
 .preset-list {
@@ -672,7 +780,8 @@ input {
   overflow-y: auto;
   background: var(--well);
   border: 1px solid var(--seam);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.5);
   padding: 5px;
 }
 
@@ -693,26 +802,26 @@ input {
   color: var(--text-dim);
 }
 
+/* Category mark: a square of the category's ink, silkscreen-framed. */
 .preset-group-header::before {
   content: "";
   flex: none;
   width: 7px;
   height: 7px;
-  border-radius: 2px;
   background: var(--cat, var(--neutral-chip));
 }
 
-/* The six vibes, colored by where they live in the sound. */
+/* The six vibes, each wearing one of the eight inks. */
 .preset-group[data-cat="Pads"] {
   --cat: var(--m-width);
 }
 
 .preset-group[data-cat="Basses"] {
-  --cat: var(--low);
+  --cat: var(--m-thickness);
 }
 
 .preset-group[data-cat="Leads"] {
-  --cat: var(--high);
+  --cat: var(--m-space);
 }
 
 .preset-group[data-cat="Plucks"] {
@@ -720,7 +829,7 @@ input {
 }
 
 .preset-group[data-cat="Keys and Bells"] {
-  --cat: var(--mid);
+  --cat: var(--m-movement);
 }
 
 .preset-group[data-cat="Motion and FX"] {
@@ -734,7 +843,7 @@ input {
 .preset-row {
   display: flex;
   align-items: center;
-  border-radius: 4px;
+  border-radius: 2px;
 }
 
 .preset-row:hover {
@@ -755,7 +864,6 @@ input {
   flex: none;
   width: 6px;
   height: 6px;
-  border-radius: 2px;
   margin-left: auto;
   background: var(--cat, var(--neutral-chip));
 }
@@ -804,7 +912,7 @@ input {
   font-weight: 500;
   color: var(--text-faint);
   cursor: pointer;
-  border-radius: 3px;
+  border-radius: 2px;
 }
 
 .preset-action:hover {
@@ -829,7 +937,7 @@ input {
   padding: 2px 4px;
   background: var(--screen);
   border: 1px solid var(--seam-strong);
-  border-radius: 3px;
+  border-radius: 2px;
   color: var(--text);
   font-size: 12.5px;
 }
@@ -847,6 +955,7 @@ input {
   background: var(--well);
   border: 1px solid var(--seam);
   border-radius: var(--radius-sm);
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.5);
   color: var(--text);
   font-size: 12.5px;
 }
@@ -859,11 +968,13 @@ input {
   border-color: var(--seam-strong);
 }
 
-/* Until a name is typed, Save stays in deck clothes; the go-green is
-   earned by having something to commit. */
+/* Until a name is typed, Save sits unlit; the backlight is earned by
+   having something to commit. */
 .preset-save:has(.preset-save-input:placeholder-shown) .button.primary {
-  background: var(--deck-3);
-  border-color: var(--seam-strong);
+  background: linear-gradient(180deg, #242428, #1d1d20);
+  border-color: var(--seam);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 1px 0 rgba(0, 0, 0, 0.7);
   color: var(--text-dim);
 }
 
@@ -884,63 +995,90 @@ input {
 
 .match-panel {
   flex: none;
-  background: var(--deck-1);
-  border: 1px solid var(--seam);
-  border-radius: var(--radius);
   padding: 9px 12px 10px;
-  --rail-hue: var(--m-thickness);
 }
 
-/* ---------- Performance: eight hot cues. ---------- */
+/* ---------- Performance: eight macro stations on one frame. ---------- */
 
 .macro-zone {
   flex: 1;
   min-height: 0;
+  position: relative;
   display: flex;
   flex-direction: column;
+  margin-top: 8px;
+  border: 1px solid var(--frame);
+  border-radius: var(--radius-sm);
+  padding: 12px 4px 4px;
 }
 
+/* The section title breaks the frame, hardware style. */
 .macro-zone > .silk-rule {
-  --rail-hue: var(--neutral-chip);
+  position: absolute;
+  top: -8px;
+  left: 12px;
+  right: auto;
+  padding: 0 7px;
+  background: var(--deck-1);
+  gap: 8px;
+}
+
+.macro-zone > .silk-rule .silk-line {
+  display: none;
 }
 
 .macro-row {
   flex: 1;
   min-height: 0;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 26px;
+  align-items: stretch;
 }
 
 .macro-group {
+  flex: 1;
   display: flex;
-  align-items: flex-end;
-  gap: 20px;
+  align-items: center;
 }
 
 .macro-divider {
+  flex: none;
   width: 1px;
-  height: 84px;
-  background: var(--seam);
+  align-self: stretch;
+  margin: 6px 0;
+  background: var(--frame-faint);
 }
 
 .macro-station {
+  flex: 1;
   display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 0 6px;
 }
 
-/* The station's color bar: hot-cue strip under the macro's name. */
-.macro-station .knob-label::after {
-  content: "";
-  display: block;
-  width: 26px;
-  height: 3px;
-  border-radius: 2px;
-  margin: 4px auto 0;
+.macro-station + .macro-station {
+  border-left: 1px solid var(--frame-faint);
+}
+
+.macro-station .knob-value {
+  margin-top: 5px;
+  font-size: 11px;
+}
+
+/* Each macro's name is silkscreened on a block of its own ink. */
+.macro-station .knob-label {
+  margin-top: 7px;
+  padding: 2px 9px 1px;
   background: var(--knob-hue, var(--neutral-chip));
+  color: #0b0b0c;
+  font-family: var(--font-cond);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
-/* ---------- Knobs: flat deck rotaries, hue in the arc. ---------- */
+/* ---------- Knobs: black caps on printed dials. ---------- */
 
 .knob {
   display: flex;
@@ -960,13 +1098,13 @@ input {
 }
 
 .knob-large .knob-svg {
-  width: 106px;
-  height: 106px;
+  width: 124px;
+  height: 124px;
 }
 
 .knob-medium .knob-svg {
-  width: 82px;
-  height: 82px;
+  width: 98px;
+  height: 98px;
 }
 
 .knob-small .knob-svg {
@@ -976,51 +1114,55 @@ input {
 
 .knob-track {
   fill: none;
-  stroke: var(--deck-4);
-  stroke-width: 5.5;
-  stroke-linecap: round;
+  stroke: #232327;
+  stroke-width: 4.5;
+  stroke-linecap: butt;
 }
 
 .knob-fill {
   fill: none;
   stroke: var(--knob-hue, var(--neutral-chip));
-  stroke-width: 5.5;
-  stroke-linecap: round;
-  opacity: 0.72;
+  stroke-width: 4.5;
+  stroke-linecap: butt;
+  opacity: 0.85;
   transition: opacity 0.15s ease-out;
 }
 
+/* The cap: turned black plastic, machined edge, deep skirt. */
 .knob-cap {
-  fill: var(--deck-3);
-  stroke: var(--seam-strong);
-  stroke-width: 1;
+  fill: #1c1c1f;
+  stroke: #000;
+  stroke-width: 1.2;
 }
 
 .knob-cap-face {
-  fill: rgba(255, 255, 255, 0.03);
+  fill: #151517;
+  stroke: rgba(255, 255, 255, 0.06);
+  stroke-width: 0.8;
 }
 
 .knob-pointer {
-  stroke: var(--text);
-  stroke-width: 3.4;
+  stroke: #f0eee7;
+  stroke-width: 3.2;
   stroke-linecap: round;
 }
 
+/* Printed dial ring. */
 .knob-tick {
-  stroke: #39404b;
+  stroke: rgba(234, 232, 225, 0.22);
   stroke-width: 1;
 }
 
 .knob-tick.major {
-  stroke: #4a5361;
+  stroke: rgba(234, 232, 225, 0.42);
 }
 
 .knob-dot {
-  fill: #4a5361;
+  fill: rgba(234, 232, 225, 0.42);
 }
 
 .knob-dial-num {
-  font-family: var(--font-data);
+  font-family: var(--font-cond);
   font-size: 8px;
   fill: var(--text-faint);
   text-anchor: middle;
@@ -1043,8 +1185,8 @@ input {
   transition: color 0.15s ease-out;
 }
 
-/* Machine glow: the arc burns its own hue while the AI turns the knob.
-   This is the describe interaction made visible; it must be unmissable. */
+/* Machine light: the arc burns its ink while the machine turns the
+   knob. Law 2: light means the machine is working here. */
 .knob-glowing .knob-fill {
   opacity: 1;
   filter: drop-shadow(0 0 3.5px var(--knob-hue, var(--neutral-chip)));
@@ -1058,7 +1200,7 @@ input {
   color: var(--text);
 }
 
-/* Rack knobs: quieter type, hue inherited from the group. */
+/* Rack knobs: quieter print, ink inherited from the group. */
 .param-group .knob-label {
   font-size: 10.5px;
   font-weight: 500;
@@ -1088,10 +1230,13 @@ input {
   align-items: center;
   gap: 10px;
   width: 100%;
+  margin-top: 8px;
   padding: 7px 10px;
-  background: var(--deck-2);
+  background: linear-gradient(180deg, #202024, #1a1a1d);
   border: 1px solid var(--seam);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 1px 0 rgba(0, 0, 0, 0.6);
   color: var(--text-dim);
   cursor: pointer;
   text-align: left;
@@ -1099,7 +1244,7 @@ input {
 }
 
 .advanced-toggle:hover {
-  background: var(--deck-3);
+  background: linear-gradient(180deg, #26262b, #202024);
   color: var(--text);
 }
 
@@ -1145,41 +1290,56 @@ input {
 .advanced-panel {
   flex: 1;
   min-height: 0;
-  margin-top: 8px;
+  margin-top: 10px;
   overflow-y: auto;
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
-  gap: 8px;
-  padding-right: 2px;
+  gap: 15px 10px;
+  padding: 5px 2px 2px;
 }
 
+/* Each engine section is a silkscreen-framed module whose title block
+   wears the section's ink: the panel of a real polysynth. */
 .param-group {
   flex: 1 1 auto;
-  background: var(--deck-2);
-  border: 1px solid var(--seam);
-  border-radius: 6px;
-  padding: 8px 12px 10px;
+  position: relative;
+  background: none;
+  border: 1px solid var(--frame-faint);
+  border-radius: var(--radius-sm);
+  padding: 14px 12px 10px;
   --rail-hue: var(--cat, var(--neutral-chip));
   --knob-hue: var(--cat, var(--neutral-chip));
 }
 
 .param-group .silk-rule {
-  padding: 0 0 6px;
+  position: absolute;
+  top: -8px;
+  left: 8px;
+  padding: 0;
+  background: var(--deck-1);
+}
+
+.param-group .silk-rule .silk-line,
+.param-group .silk-rule .silk-fine {
+  display: none;
 }
 
 .param-group .silk-title {
+  padding: 1px 8px 0;
+  background: var(--cat, var(--neutral-chip));
+  color: #0b0b0c;
   font-size: 10px;
-  color: var(--text-dim);
+  letter-spacing: 0.15em;
 }
 
-/* Function color by engine section, group level only. */
+/* Function ink by engine section, group level only. */
 .param-group[data-cat="osc-a"] {
-  --cat: var(--high);
+  --cat: var(--m-space);
 }
 
 .param-group[data-cat="osc-b"] {
-  --cat: var(--low);
+  --cat: var(--m-grit);
 }
 
 .param-group[data-cat="mix"] {
@@ -1199,7 +1359,7 @@ input {
 }
 
 .param-group[data-cat="lfo"] {
-  --cat: var(--mid);
+  --cat: var(--m-movement);
 }
 
 .param-group[data-cat="fx"] {
@@ -1222,7 +1382,7 @@ input {
   width: 62px;
 }
 
-/* ---------- Enum selectors. ---------- */
+/* ---------- Selector switches. ---------- */
 
 .enum-selector {
   display: flex;
@@ -1249,7 +1409,7 @@ input {
 .enum-option {
   background: none;
   border: none;
-  border-radius: 3px;
+  border-radius: 1px;
   padding: 3px 8px;
   font-size: 11px;
   font-weight: 500;
@@ -1262,25 +1422,51 @@ input {
   color: var(--text);
 }
 
+/* The chosen position is backlit. */
 .enum-option.selected {
-  background: var(--deck-4);
-  color: var(--text);
+  background: var(--amber);
+  color: var(--amber-ink);
+  font-weight: 600;
 }
 
-/* ---------- Keys deck. ---------- */
+/* ---------- Keys deck, under the rainbow. ---------- */
 
 .keyboard-strip {
   flex: none;
-  background: var(--deck-1);
-  border: 1px solid var(--seam);
-  border-radius: var(--radius);
-  padding: 10px 12px;
+  padding: 0 0 10px;
+  overflow: hidden;
+}
+
+/* The signature at full width: eight pinstripes, one per macro ink,
+   red to magenta, exactly where the flagship wore them. */
+.rainbow-band {
+  height: 23px;
+  margin-bottom: 9px;
+  background: linear-gradient(
+    180deg,
+    var(--m-grit) 0 2px,
+    var(--deck-1) 2px 3px,
+    var(--m-thickness) 3px 5px,
+    var(--deck-1) 5px 6px,
+    var(--m-brightness) 6px 8px,
+    var(--deck-1) 8px 9px,
+    var(--m-movement) 9px 11px,
+    var(--deck-1) 11px 12px,
+    var(--m-attack) 12px 14px,
+    var(--deck-1) 14px 15px,
+    var(--m-space) 15px 17px,
+    var(--deck-1) 17px 18px,
+    var(--m-width) 18px 20px,
+    var(--deck-1) 20px 21px,
+    var(--m-character) 21px 23px
+  );
 }
 
 .deck-rail {
   display: flex;
   gap: 14px;
   align-items: stretch;
+  padding: 0 12px;
 }
 
 .keyboard-side {
@@ -1288,7 +1474,6 @@ input {
   width: 190px;
   display: flex;
   flex-direction: column;
-  --rail-hue: var(--neutral-chip);
 }
 
 .deck-rule {
@@ -1314,9 +1499,11 @@ input {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--deck-3);
-  border: 1px solid var(--seam-strong);
-  border-radius: 4px;
+  background: linear-gradient(180deg, #242428, #1d1d20);
+  border: 1px solid var(--seam);
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 1px 0 rgba(0, 0, 0, 0.7);
   color: var(--text-dim);
   font-size: 13px;
   line-height: 1;
@@ -1324,8 +1511,13 @@ input {
 }
 
 .octave-cap:hover:not(:disabled) {
-  background: var(--deck-4);
+  background: linear-gradient(180deg, #2b2b30, #232327);
   color: var(--text);
+}
+
+.octave-cap:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .octave-cap:disabled {
@@ -1334,8 +1526,10 @@ input {
 }
 
 .octave-silk {
-  font-family: var(--font-data);
+  font-family: var(--font-cond);
+  font-weight: 500;
   font-size: 8.5px;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-faint);
 }
@@ -1344,7 +1538,8 @@ input {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 40px;
+  min-width: 46px;
+  gap: 1px;
 }
 
 .octave-label {
@@ -1356,11 +1551,20 @@ input {
   color: var(--text-faint);
 }
 
+/* The octave in seven segments: a little red window of its own. */
 .octave-value {
-  font-family: var(--font-data);
-  font-weight: 600;
-  font-size: 15px;
-  color: var(--text);
+  min-width: 40px;
+  text-align: center;
+  padding: 3px 6px 1px;
+  background: var(--screen);
+  border: 1px solid var(--seam);
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.8);
+  font-family: var(--font-led7);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--led);
+  text-shadow: 0 0 4px var(--led-glow);
 }
 
 .keyboard-hint {
@@ -1375,8 +1579,9 @@ input {
   min-width: 0;
   background: var(--well);
   border: 1px solid var(--seam);
-  border-radius: 6px;
-  padding: 5px;
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.55);
+  padding: 4px;
 }
 
 .piano {
@@ -1394,24 +1599,25 @@ input {
 .piano-key.white {
   position: relative;
   height: 100%;
-  background: linear-gradient(180deg, #eef0f3, #d9dde3);
-  border: 1px solid var(--well);
-  border-radius: 0 0 3px 3px;
+  background: #e9e6dd;
+  border: 1px solid #0b0b0d;
+  border-radius: 0 0 2px 2px;
 }
 
 .piano-key.white.active {
-  background: linear-gradient(180deg, #cfe2ff, #a8ccff);
+  background: #d4d1c6;
 }
 
+/* A held key lights its LED at the top of the key. */
 .piano-key.white.active::after {
   content: "";
   position: absolute;
   left: 2px;
   right: 2px;
-  bottom: 2px;
+  top: 2px;
   height: 3px;
-  border-radius: 2px;
-  background: var(--high);
+  background: var(--led);
+  box-shadow: 0 0 5px var(--led-glow);
 }
 
 .piano-key.black {
@@ -1419,13 +1625,13 @@ input {
   top: 0;
   height: 58%;
   z-index: 2;
-  background: linear-gradient(180deg, #23272e, #16181d);
-  border: 1px solid #0a0c0f;
-  border-radius: 0 0 3px 3px;
+  background: linear-gradient(180deg, #232326, #121214);
+  border: 1px solid #050506;
+  border-radius: 0 0 2px 2px;
 }
 
 .piano-key.black.active {
-  background: linear-gradient(180deg, #35507a, #274066);
+  background: linear-gradient(180deg, #1a1a1c, #0e0e10);
 }
 
 .piano-key.black.active::after {
@@ -1433,10 +1639,10 @@ input {
   position: absolute;
   left: 2px;
   right: 2px;
-  bottom: 2px;
+  top: 2px;
   height: 3px;
-  border-radius: 2px;
-  background: var(--high);
+  background: var(--led);
+  box-shadow: 0 0 5px var(--led-glow);
 }
 
 .piano-letter {
@@ -1446,25 +1652,25 @@ input {
   transform: translateX(-50%);
   font-family: var(--font-data);
   font-size: 9px;
-  color: #4f5a66;
+  color: #8b887d;
   pointer-events: none;
 }
 
 .piano-key.black .piano-letter {
-  color: #8b94a0;
+  color: #83817a;
 }
 
 .piano-key.white.active .piano-letter {
-  color: #1c3a66;
+  color: #5c594e;
 }
 
 .piano-c-label {
   position: absolute;
-  top: 3px;
+  top: 7px;
   left: 4px;
   font-family: var(--font-data);
   font-size: 8px;
-  color: #5a6472;
+  color: #8b887d;
   pointer-events: none;
 }
 
@@ -1481,10 +1687,11 @@ input {
   z-index: 60;
   width: 300px;
   background: var(--deck-2);
-  border: 1px solid var(--seam-strong);
+  border: 1px solid var(--seam);
+  border-top-color: var(--seam-strong);
   border-radius: var(--radius);
   padding: 14px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.65);
 }
 
 .settings-field {
@@ -1508,6 +1715,7 @@ input {
   background: var(--well);
   border: 1px solid var(--seam);
   border-radius: var(--radius-sm);
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.5);
   color: var(--text);
   font-size: 12.5px;
   font-family: var(--font-data);
@@ -1546,9 +1754,9 @@ input {
   max-width: 230px;
   padding: 6px 10px;
   background: var(--deck-4);
-  border: 1px solid #46505e;
+  border: 1px solid #3a3a40;
   border-radius: var(--radius-sm);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.55);
   color: var(--text);
   font-family: var(--font-ui);
   font-size: 11.5px;
@@ -1562,6 +1770,7 @@ input {
   pointer-events: none;
   transition: opacity 0.12s ease-out;
   transition-delay: 0s;
+  text-shadow: none;
 }
 
 .has-tooltip:hover::after {
