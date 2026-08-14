@@ -158,7 +158,7 @@ export function SpectrumAnalyzer({ source }: SpectrumAnalyzerProps) {
         }
         ctx.strokeStyle = triBandGradient(ctx, w, alpha);
         ctx.lineWidth = width;
-        ctx.shadowColor = "rgba(234, 232, 225, 0.3)";
+        ctx.shadowColor = "rgba(234, 232, 225, 0.5)";
         ctx.shadowBlur = blur;
         ctx.stroke();
         ctx.shadowBlur = 0;

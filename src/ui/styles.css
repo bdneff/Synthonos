@@ -143,7 +143,7 @@
 
   /* Light: what the machine says */
   --led: #ff3b2e;
-  --led-glow: rgba(255, 59, 46, 0.5);
+  --led-glow: rgba(255, 59, 46, 0.65);
   --led-ghost: rgba(255, 59, 46, 0.14);
   --amber: #ffb03a;
   --amber-ink: #241703;
@@ -308,7 +308,7 @@ input {
 .brand-name {
   font-family: var(--font-brand);
   font-weight: 400;
-  font-size: 14.5px;
+  font-size: 17px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   line-height: 1;
@@ -515,7 +515,7 @@ input {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--led);
-  text-shadow: 0 0 5px var(--led-glow);
+  text-shadow: 0 0 7px var(--led-glow);
 }
 
 /* Unlit segments behind the message: the display is a real device. */
@@ -647,11 +647,25 @@ input {
 }
 
 .glass {
+  position: relative;
   display: flex;
   height: 148px;
   background: var(--screen);
   box-shadow: var(--machined), inset 0 3px 14px rgba(0, 0, 0, 0.75);
   overflow: hidden;
+}
+
+.glass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    130% 100% at 50% 42%,
+    transparent 55%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
 }
 
 .glass-divider {
@@ -1065,6 +1079,19 @@ input {
   font-size: 11px;
 }
 
+.panel-spec {
+  flex: none;
+  padding: 7px 0 6px;
+  border-top: 1px solid var(--frame-faint);
+  font-family: var(--font-cond);
+  font-weight: 500;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--text-faint);
+}
+
 /* Each macro's name is silkscreened on a block of its own ink. */
 .macro-station .knob-label {
   margin-top: 7px;
@@ -1185,11 +1212,15 @@ input {
   transition: color 0.15s ease-out;
 }
 
+.macro-station .knob-fill {
+  filter: drop-shadow(0 0 1.5px var(--knob-hue, var(--neutral-chip)));
+}
+
 /* Machine light: the arc burns its ink while the machine turns the
    knob. Law 2: light means the machine is working here. */
 .knob-glowing .knob-fill {
   opacity: 1;
-  filter: drop-shadow(0 0 3.5px var(--knob-hue, var(--neutral-chip)));
+  filter: drop-shadow(0 0 5px var(--knob-hue, var(--neutral-chip)));
 }
 
 .knob-glowing .knob-value {
@@ -1806,6 +1837,89 @@ input {
 .current-preset.has-tooltip::after {
   left: auto;
   right: 0;
+}
+
+/* ---------- Power-on. ---------- */
+
+@keyframes panel-seat {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+.top-rail {
+  animation: panel-seat 0.45s cubic-bezier(0.16, 0.84, 0.28, 1) backwards;
+}
+
+.glass-deck {
+  animation: panel-seat 0.45s 0.07s cubic-bezier(0.16, 0.84, 0.28, 1) backwards;
+}
+
+.app-body {
+  animation: panel-seat 0.45s 0.14s cubic-bezier(0.16, 0.84, 0.28, 1) backwards;
+}
+
+.keyboard-strip {
+  animation: panel-seat 0.45s 0.21s cubic-bezier(0.16, 0.84, 0.28, 1) backwards;
+}
+
+@keyframes band-wipe {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+.rainbow-band {
+  transform-origin: left center;
+  animation: band-wipe 0.7s 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+
+.brand-stripes {
+  transform-origin: left center;
+  animation: band-wipe 0.55s 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+
+@keyframes led-boot {
+  0%,
+  38% {
+    opacity: 0;
+  }
+  42% {
+    opacity: 1;
+  }
+  48% {
+    opacity: 0.2;
+  }
+  56% {
+    opacity: 1;
+  }
+  64% {
+    opacity: 0.45;
+  }
+  72%,
+  100% {
+    opacity: 1;
+  }
+}
+
+.current-preset,
+.octave-value {
+  animation: led-boot 1.15s linear backwards;
+}
+
+@keyframes arc-up {
+  0%,
+  55% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0.85;
+  }
+}
+
+.knob-fill {
+  animation: arc-up 1.05s ease-out backwards;
 }
 
 /* ---------- Reduced motion. ---------- */

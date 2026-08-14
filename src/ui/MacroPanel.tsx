@@ -103,6 +103,11 @@ export function MacroPanel() {
           {secondary.map((def) => renderKnob(def, "medium"))}
         </div>
       </div>
+      {/* The spec line every flagship printed on its panel: all facts. */}
+      <div className="panel-spec" aria-hidden="true">
+        16 voices &middot; wavetable oscillators &middot; state variable
+        filter &middot; 53 parameters &middot; described in plain words
+      </div>
     </section>
   );
 }

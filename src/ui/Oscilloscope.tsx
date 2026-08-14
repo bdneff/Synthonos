@@ -101,7 +101,7 @@ export function Oscilloscope({ source }: OscilloscopeProps) {
         ctx.stroke();
       }
 
-      // White phosphor trace: soft wide halo pass, then the crisp line.
+      // Green phosphor trace: two halo passes, then the crisp line.
       // The waveform stays neutral on purpose: time is not frequency,
       // so it earns no band color.
       const trace = (width: number, style: string, blur: number) => {
@@ -120,8 +120,9 @@ export function Oscilloscope({ source }: OscilloscopeProps) {
         ctx.stroke();
         ctx.shadowBlur = 0;
       };
-      trace(5, "rgba(120, 240, 150, 0.08)", 0);
-      trace(1.5, "rgba(160, 245, 175, 0.93)", 6);
+      trace(9, "rgba(120, 240, 150, 0.07)", 0);
+      trace(3.5, "rgba(130, 242, 158, 0.22)", 0);
+      trace(1.5, "rgba(172, 248, 186, 0.98)", 10);
 
       // Silkscreened amplitude scale on the right edge of the glass.
       ctx.font = "500 8.5px 'Spline Sans Mono', monospace";
